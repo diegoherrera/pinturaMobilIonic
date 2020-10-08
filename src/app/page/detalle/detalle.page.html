@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons (click)="dismiss()" slot="start">
+      <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-buttons>
+    <ion-title>Detail Palette</ion-title>    
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div style=" width: 100%;height: {{altura}}px;width: 100%;text-align: center;background-color:{{ selected }} ; white-space: nowrap;">
+    <span class="helper"></span>
+    <!--<img src="{{ imagen }}" style="margin: auto;" class="img-logo">-->
+  </div>  
+</ion-content>
+<ion-footer>
+  <h2 style="margin-left: 20px;" (click)="toggleAccordion()">
+    <div style="width: 90%; float: left;">
+      Filter<div *ngIf="selected!=''" style="width: 30%; height: 30px; background-color:{{ selected }} ; float:right ; margin-right: 10px;"></div>
+    </div>    
+    <span *ngIf="!isMenuOpen">&#9650;</span>
+    <span *ngIf="isMenuOpen">&#9660;</span>
+  </h2>
+  <div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+    <ion-list>
+      <ion-list-header lines="inset" *ngFor="let sectioinArray of data.colores">
+        <div style="width: 80%; height: 30px; color:white; background-color:{{ sectioinArray.color }} ;">
+         <pan style="padding: 10px; margin-top: 10px;vertical-align: middle;"> {{sectioinArray.description}}</pan>
+        </div>
+        <ion-button (click)="seleccionColor(sectioinArray)"> select</ion-button>
+      </ion-list-header>      
+    </ion-list>
+  </div>
+</ion-footer>

@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Acount Verification</ion-title>    
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-card>
+    <ion-card-content>      
+      We will send an SMS message to verify your device. Remember that you can only access from a phone number
+      registered with the company
+      <div style="width: 100%; margin-top: 20px; margin-bottom: 20px;text-align: center;">
+        <img src="assets/notificationsms.png" style="height: 180px;margin: auto;" class="img-logo">
+      </div>
+      
+      Number Phone Register 
+      <b style="font-size: 30px;">{{ profile.user_mobile }}</b>
+    </ion-card-content>
+  </ion-card>
+  <br>
+  <ion-row style="margin: 10px;"  class="OTP-border">
+    <ion-col>
+      <div>
+        <ion-input name="1" style="font-size: 50px;" readonly type="tel" [(ngModel)]="OTP[0]" maxlength="6" class="otpinput" padding-horizontal>
+        </ion-input>
+      </div>
+    </ion-col>
+    <ion-col>
+      <div>
+        <ion-input name="2" style="font-size: 50px;" readonly type="tel" [(ngModel)]="OTP[1]" maxlength="6" class="otpinput" padding-horizontal>
+        </ion-input>
+      </div>
+    </ion-col>
+    <ion-col>
+      <div>
+        <ion-input name="3" style="font-size: 50px;" readonly type="tel" [(ngModel)]="OTP[2]" maxlength="6" class="otpinput" padding-horizontal>
+        </ion-input>
+      </div>
+    </ion-col>
+    <ion-col>
+      <div>
+        <ion-input name="4" style="font-size: 50px;" readonly type="tel" [(ngModel)]="OTP[3]" maxlength="6" class="otpinput" padding-horizontal>
+        </ion-input>
+      </div>
+    </ion-col>
+    <ion-col>
+      <div>
+        <ion-input name="5" style="font-size: 50px;" readonly type="tel" [(ngModel)]="OTP[4]" maxlength="6" class="otpinput" padding-horizontal>
+        </ion-input>
+      </div>
+    </ion-col>
+    <ion-col>
+      <div>
+        <ion-input name="6" style="font-size: 50px;" readonly type="tel" [(ngModel)]="OTP[5]" maxlength="6" class="otpinput" padding-horizontal>
+        </ion-input>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button (click)="VerificarEvent()" [disabled]="!isenabledBotton" expand="block"><ion-icon name="call-outline"></ion-icon>&nbsp;Check Phone</ion-button>
+  </ion-toolbar>
+</ion-footer>

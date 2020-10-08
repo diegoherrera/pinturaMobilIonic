@@ -1,5 +1,7 @@
 {
   "name": "IProduct",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

@@ -1,0 +1,414 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons (click)="dismiss()" slot="start">
+      <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-buttons>
+    <ion-title>Detail Producto Innovation</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-header style="padding: 5px;margin-bottom: 20px;margin-top: 10px;">
+      <ion-card-title style="font-size: 24px; font-weight: bolder;">{{ data.product_code }}</ion-card-title>
+    </ion-card-header>
+    <ion-row>
+      <ion-col>
+        <div>
+          Rgion
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          {{ data.product_IdRegion.region_name }}
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div>
+          Fanily Produc
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          {{ data.product_IdFamily.family_name }}
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div>
+          Type Produc
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          {{ data.product_IdCategory.category_name }}
+        </div>
+      </ion-col>
+    </ion-row>
+   
+    <ion-card-content> 
+      <ion-row>
+        <ion-col>
+          <div>
+            product_name
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_name }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_description
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_description }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_segmento_de_mercado
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_segmento_de_mercado }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_beneficio
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_beneficio }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Forma_Fisica
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Forma_Fisica }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Vehiculo
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Vehiculo }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_LDR
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_LDR }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Recomendation
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Recomendation }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Proposal
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Proposal }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Regulatoria
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Regulatoria }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Extrusion_de_peliculas_sopladas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_de_peliculas_sopladas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Extrusion_plana_de_películas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_plana_de_peliculas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Coextrusion_y_Laminacion_de_peliculas_sopladas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Coextrusion_y_Laminacion_de_peliculas_sopladas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_soplado
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_soplado | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Inyeccion_de_Piezas_o_Tapas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Inyeccion_de_Piezas_o_Tapas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Extrusion_de_Perfiles_y_Placas_Termo_formadas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_de_Perfiles_y_Placas_Termo_formadas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Extrusion_no_tejido_non_woven_Spunbond
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_no_tejido_non_woven_Spunbond | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Monofilamentos_de_PP
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Monofilamentos_de_PP | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            prodcut_Multifilamentos_de_PP
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.prodcut_Multifilamentos_de_PP | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Extrusion_de_tuberias_alambre_y_cables
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_de_tuberias_alambre_y_cables | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_BOPP_multi_capas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_BOPP_multi_capas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Envases_Soplados_multi_capas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Envases_Soplados_multi_capas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Extrusion_de_Perfiles_y_Placas_Termo_formadas_multi_capas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_de_Perfiles_y_Placas_Termo_formadas_multi_capas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Extrusion_Pelicula_Plana_cast_Film_para_Rafias_y_Coating
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_Pelicula_Plana_cast_Film_para_Rafias_y_Coating | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            product_Extrusion_de_Monofilamentos_Multifilamentos
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_de_Monofilamentos_Multifilamentos | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>     
+
+
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>

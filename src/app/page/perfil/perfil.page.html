@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Perfil</ion-title>
+
+    <!-- Side menu button -->
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-button slot="end">
+      <ion-icon slot="icon-only" name="camera"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form style="height: 100%;" [formGroup]="slideOneForm">
+    <div style="height: 85%;">
+      <div style="width: 100%; height: 200px; background-color: #0085CA;">
+        <ion-avatar style="width: 140px; height: 140px; align-content: center; margin: auto;">
+          <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="profile.user_picture==''"
+            src="assets/noimagen.png" />
+          <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="profile.user_picture!=''"
+            src="{{ profile.user_picture }}" />
+        </ion-avatar>
+      </div>
+
+      <div padding>
+        <ion-item>
+          <ion-label position="floating">First Name</ion-label>
+          <ion-input formControlName="user_first" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Last Name</ion-label>
+          <ion-input formControlName="user_last" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input formControlName="user_email" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">User Name</ion-label>
+          <ion-input formControlName="usuario" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input formControlName="password" type="password"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Language</ion-label>
+          <ion-select [(value)]="selectedLanguage" formControlName="language">
+            <ion-select-option [value]="sectioinArray._id" *ngFor="let sectioinArray of LanguageArray">
+              {{sectioinArray.language_name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Type User</ion-label>
+          <ion-select [(value)]="selectedType" formControlName="type">
+            <ion-select-option [value]="sectioinArray._id" *ngFor="let sectioinArray of TypeArray">
+              {{sectioinArray.type_name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+      <div style="margin-top: 10px; margin-bottom: 10px;" *ngIf="error">
+        <span style="color: red;">Error User or Password invalid </span>
+      </div>
+    </div>
+    <div padding style="margin-top: 50px;">
+      <ion-button size="smal" type="submit" expand="block"><ion-icon name="save-outline"></ion-icon>&nbsp;Save Profile</ion-button>
+    </div>
+  </form>
+</ion-content>

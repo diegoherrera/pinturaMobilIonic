@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Slow Movers</ion-title>
+    <!-- Side menu button -->
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar placeholder="Search" [(ngModel)]="searchString" (ionInput)="getItems($event)"
+      (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+
+    <div>
+      <h3 style="margin-left: 20px;" (click)="toggleAccordion()">
+        <div style="width: 90%; float: left;">
+          Pais<div *ngIf="selected!=''" style="width: 30%; height: 30px;float:right ; margin-right: 10px;">
+            {{ selected }}</div>
+        </div>
+        <span *ngIf="isMenuOpen">&#9650;</span>
+        <span *ngIf="!isMenuOpen">&#9660;</span>
+      </h3>
+      <div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+        <ion-list>
+          <ion-list-header lines="inset" *ngFor="let sectioinArray of paises">
+            <div style="width: 80%; height: 30px;  ">
+              <pan style="padding: 10px; margin-top: 10px;vertical-align: middle;"> {{sectioinArray}}</pan>
+            </div>
+            <ion-button (click)="seleccionPais(sectioinArray)"> select</ion-button>
+          </ion-list-header>
+        </ion-list>
+      </div>
+      <h3 style="margin-left: 20px;" (click)="toggleAccordionFamilia()">
+        <div style="width: 90%; float: left;">
+          Familia<div *ngIf="selected!=''" style="width: 30%; height: 30px;float:right ; margin-right: 10px;">
+            {{ selectedFamilia }}</div>
+        </div>
+        <span *ngIf="isMenuOpenFamilia">&#9650;</span>
+        <span *ngIf="!isMenuOpenFamilia">&#9660;</span>
+      </h3>
+      <div [ngClass]="this.isMenuOpenFamilia ? 'active' : 'inactive'">
+        <ion-list>
+          <ion-list-header lines="inset" *ngFor="let sectioinArray of familias">
+            <div style="width: 80%; height: 30px;  ">
+              <pan style="padding: 10px; margin-top: 10px;vertical-align: middle;"> {{sectioinArray}}</pan>
+            </div>
+            <ion-button (click)="seleccionFamilia(sectioinArray)"> select</ion-button>
+          </ion-list-header>
+        </ion-list>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+
+
+  <ion-card *ngFor="let sectioinArray of datos">
+    <ion-card-header>
+      <ion-card-title>{{sectioinArray.Item}}</ion-card-title>
+    </ion-card-header>
+    <!--<img src="assets/slow.png" style="width: 80px;" />-->
+    <ion-card-content>
+      Item : {{sectioinArray.Item}}<br>
+      Description : {{sectioinArray.Description}}<br>
+      Pais : {{sectioinArray.Pais}}<br>
+      Family : {{sectioinArray.Family}}<br>
+      Plant : {{sectioinArray.Plant}}<br>
+      Lote : {{sectioinArray.Lote}}<br>
+      OnHan : {{sectioinArray.OnHan}}<br>
+      UM : {{sectioinArray.UM}}<br>
+      Aplication : {{sectioinArray.Aplication}}<br>
+      State : {{sectioinArray.State}}<br>
+    </ion-card-content>
+    <ion-button *ngIf="sectioinArray.State" (click)="pushPage(sectioinArray)" expand="block">Change State</ion-button>
+    <ion-button *ngIf="!sectioinArray.State" disabled color="danger" expand="block">Disabled</ion-button>
+  </ion-card>
+</ion-content>

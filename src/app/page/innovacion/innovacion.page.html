@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Innovation Product</ion-title>
+    <!-- Side menu button -->
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar placeholder="Search" [(ngModel)]="searchString" (ionInput)="getItems($event)"
+      (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card *ngFor="let sectioinArray of datos">
+    <ion-card-header>
+      <ion-card-title>{{sectioinArray.product_code}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <b>product_name :</b> {{sectioinArray.product_name}}<br>
+      <b>Description :</b> {{sectioinArray.product_description}}<br>
+    </ion-card-content>
+    <ion-button (click)="pushPage(sectioinArray)" expand="block">Product Detail</ion-button>
+  </ion-card>
+</ion-content>

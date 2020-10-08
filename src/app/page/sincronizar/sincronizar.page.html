@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons (click)="dismiss()" slot="start">
+      <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-buttons>
+    <ion-title>ADD FILTER PRODUCT</ion-title>
+  </ion-toolbar>  
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event)"
+      #radioGroup>
+
+      <ion-item *ngFor="let item of radio_list" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+        (ionBlur)="radioBlur()">
+        <ion-label>{{item.text}}</ion-label>
+        <ion-radio slot="start" name="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"
+          color="{{item.color}}" disabled="{{item.disabled}}"></ion-radio>
+      </ion-item>
+
+    </ion-radio-group>
+  </ion-list>
+</ion-content>
+<ion-footer>      
+  <ion-row>
+    <ion-col>
+      <div>
+        <ion-button (click)="agregarFiltro()" expand="block">Add Filter</ion-button>
+      </div>
+    </ion-col>
+    <ion-col>
+      <div>
+        <ion-button (click)="cancelarFiltro()" expand="block">Cancel</ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+</ion-footer>

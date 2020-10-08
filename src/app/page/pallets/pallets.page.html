@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Palette Color</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>  
+  <ion-card *ngFor="let sectioinArray of PalletsArray">
+    <ion-item>
+      <ion-icon name="color-palette-outline" slot="start"></ion-icon>
+      <ion-label>{{ sectioinArray.respuesta.palette_name }}</ion-label>
+      <ion-button (click)="pushPage(sectioinArray)" fill="outline" slot="end">View Palette</ion-button>
+    </ion-item>  
+    <ion-card-content>
+      {{ sectioinArray.respuesta.palette_IdPais.pais_name }}
+    </ion-card-content>
+  </ion-card>  
+</ion-content>

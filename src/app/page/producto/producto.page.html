@@ -1,0 +1,510 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons (click)="dismiss()" slot="start">
+      <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-buttons>
+    <ion-title>Detail Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-header style="padding: 5px;margin-bottom: 20px;margin-top: 10px;">
+      <ion-card-title style="font-size: 24px; font-weight: bolder;">{{ data.product_code }}</ion-card-title>
+    </ion-card-header>
+    <ion-row>
+      <ion-col>
+        <div>
+          Segment
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          {{ data.product_IdSegment.segment_name }}
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div>
+          Fanily Produc
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          {{ data.product_IdFamily.family_name }}
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div>
+          Type Produc
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          {{ data.product_IdCategory.category_name }}
+        </div>
+      </ion-col>
+    </ion-row>
+    <img *ngIf="data.product_image==''" src="assets/noimagen.png" />
+    <img *ngIf="data.product_image!=''" src="{{ data.product_image | rutaarchivo}}" />
+    <ion-card-content>
+      {{ data.product_description }}
+
+      <ion-row>
+        <ion-col>
+          <div>
+            LDR tipico (%)
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_LDR_tipico }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Comercialization Country
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_field_comercializationCountry }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Production Country
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_production }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Influence on Optics
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Influencia_Optica }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Antiblocking Performance
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Antibloqueo_Performance }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Migración Lenta / Rápida
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Migracion_Lenta_Rapida }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Slip Performance
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Slip_Performance }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Chemical Resistance
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Chemical_Resistance }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            General Comment
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Comentario_General }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Example of Applications
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Ejemplo_de_aplicacion }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            Película agrícola solpada
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Pelicula_agricola_solpada | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Película de extrusión plana en PE
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Pelicula_de_extrusion_plana_en_PE | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            películas sopladas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_peliculas_sopladas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Película de extrusión plana en PE
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Pelicula_de_extrusion_plana_en_PE | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Película laminada
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Pelicula_laminada | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Película de extrusión plana en PP
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Pelicula_de_extrusion_plana_en_PP | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Film de PP biorientado
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Film_de_PP_biorientado | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Fibras-Raffia
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Fibras_Raffia | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Fibras- telas spun bonded y no tejidas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Fibras_telas_spun_bonded_y_no_tejidas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Fibras
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Fibras | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Moldeo por soplado
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Moldeo_por_soplado | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Moldeo por inyección
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Moldeo_por_inyeccion | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            Moldeo por compresión
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Moldeo_por_compresion | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            Compuestos
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Compuestos | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            Extrusión de tubería
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_de_tuberia | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            Tubería de irrigación por goteo
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Tuberia_de_irrigacion_por_goteo | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            Extrusión de láminas-placas
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_de_laminas_placas | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            Cables
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Cables | formatCheck}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Extrusión de perfiles
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Extrusion_de_perfiles | formatCheck }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            Moldeo-rotomoldeo
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ data.product_Moldeo_rotomoldeo | formatCheck }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>Document</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <li *ngFor="let archivo of data.product_link.split('|')">
+              <a target="blank" href="{{ archivo | rutaarchivo}}" mat-menu-item>{{ archivo }}</a>
+            </li>
+          </div>
+        </ion-col>
+      </ion-row>
+
+
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>
+<ion-footer>
+  <ion-button *ngIf="!procesando" (click)="pushPage(data._id)" expand="block">Quote Product</ion-button>
+  <ion-button *ngIf="procesando" disabled (click)="pushPage(data._id)" expand="block">Quote Product</ion-button>
+</ion-footer>

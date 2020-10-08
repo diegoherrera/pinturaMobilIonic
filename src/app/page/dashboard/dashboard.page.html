@@ -1,0 +1,42 @@
+<ion-app>
+  <ion-menu contentId="main-content" side="start">
+    <ion-header style="background-color:#0085CA;">
+      <div style="margin: 10px;">
+        <div style="width: 50px; float: left;">
+          <ion-avatar>
+            <img *ngIf="profile.user_picture==''" src="assets/noimagen.png" />
+            <img *ngIf="profile.user_picture!=''" src="{{ profile.user_picture }}" />
+          </ion-avatar>
+        </div>
+        <div style="float: left; margin-left: 30px; margin-bottom: 30px;">
+          <p style="margin: 5px; color: white;">{{ profile.user_name }} <br> {{ profile.user_email }}</p>
+          <ion-menu-toggle auto-hide="false">
+            <ion-button style="margin-top: 10px;" [routerLink]="pathprofile" routerDirection="root" size="small"><ion-icon name="person-outline"></ion-icon>&nbsp;View Profile</ion-button>
+          </ion-menu-toggle>
+        </div>
+      </div>
+
+      <br><br>
+    </ion-header>
+    <ion-content>
+
+      <ion-list>
+        <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
+          <ion-item [routerLink]="page.path" routerDirection="root" [class.active-menu]="activePath === page.path">
+            <ion-icon name="{{page.image}}"></ion-icon> &nbsp; {{page.name}}
+          </ion-item>
+        </ion-menu-toggle>
+       
+
+      </ion-list>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-button (click)="logout()" expand="block"><ion-icon name="log-in-outline"></ion-icon>&nbsp;Logout</ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-menu>
+
+  <ion-router-outlet id="main-content" main></ion-router-outlet>
+
+</ion-app>

@@ -1,0 +1,213 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Home</ion-title>
+
+    <!-- Side menu button -->
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar placeholder="Search" [(ngModel)]="searchString" (ionInput)="getItems($event)"
+      (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+    <div #primariob>
+      <h2 #opcion1 class="inactive" style="margin-left: 20px; width: 100%;" (click)="toggleAccordion()">
+
+        <div style="width: 85%; float: left;">
+          Filter Selected
+        </div>
+        <span>&#9650;</span>
+
+      </h2>
+      <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
+
+        <div style="width: 85%; float: left;">
+          Filter Selected
+        </div>
+        <span>&#9660;</span>
+      </h2>
+      <div #panel class="inactive">
+        <ion-list>
+          <ion-list-header lines="inset">
+            <ion-label>{{nivel1.segment_name}}</ion-label>
+            <ion-button (click)="limpiar(1)">Clear</ion-button>
+          </ion-list-header>
+          <ion-list-header lines="inset">
+            <ion-label>{{nivel2.family_name}}</ion-label>
+            <ion-button (click)="limpiar(2)">Clear</ion-button>
+          </ion-list-header>
+          <ion-list-header lines="inset">
+            <ion-label>{{nivel3.category_name}}</ion-label>
+            <ion-button (click)="limpiar(3)">Clear</ion-button>
+          </ion-list-header>
+          <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionado">
+            <ion-label>{{sectioinArray.texto}}</ion-label>
+            <ion-button (click)="removeFiltro(sectioinArray)">Clear</ion-button>
+          </ion-list-header>
+        </ion-list>        
+        <ion-button (click)="pushPageFilter()">Add Filter</ion-button>
+      </div>
+    </div>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div #primario>
+    <div #segmento class="inactive">
+      <h2 style="margin-left: 20px;">
+        Segment
+      </h2>
+
+      <ion-list>
+        <ion-item *ngFor="let sectioinArray of SegmentArray">
+          <ion-avatar slot="start">
+            <img src="assets/s.png">
+          </ion-avatar>
+          <ion-label>
+            <h2>{{sectioinArray.segment_name}}</h2>
+          </ion-label>
+          <ion-button (click)="seleccionarSegmento(sectioinArray)">Select</ion-button>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <div #family class="inactive">
+      <h2 style="margin-left: 20px;">
+        Family Product
+      </h2>
+
+      <ion-list>
+        <ion-item *ngFor="let sectioinArray of FamilyArray">
+          <ion-avatar slot="start">
+            <img src="assets/f.png">
+          </ion-avatar>
+          <ion-label>
+            <h2>{{sectioinArray.family_name}}</h2>
+          </ion-label>
+          <ion-button (click)="seleccionarFamilia(sectioinArray)">Select</ion-button>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <div #type class="inactive">
+      <h2 style="margin-left: 20px;">
+        Type Product
+      </h2>
+
+      <ion-list>
+        <ion-item *ngFor="let sectioinArray of TypeArray">
+          <ion-avatar slot="start">
+            <img src="assets/p.png">
+          </ion-avatar>
+          <ion-label>
+            <h2>{{sectioinArray.category_name}}</h2>
+          </ion-label>
+          <ion-button (click)="seleccionarType(sectioinArray)">Select</ion-button>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <div #producto class="inactive">
+      <h2 style="margin-left: 20px;">
+        Product
+      </h2>
+      <ion-card *ngFor="let sectioinArray of ProductArray">
+        <ion-card-header>
+          <ion-card-title>{{sectioinArray.product_code}}</ion-card-title>
+        </ion-card-header>
+        <img *ngIf="sectioinArray.product_image==''" src="assets/noimagen.png" />
+        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image | rutaarchivo }}" />
+        <ion-card-content>
+          {{sectioinArray.product_description | slice:0:200}}
+        </ion-card-content>
+        <ion-button (click)="pushPage(sectioinArray)" expand="block">Detail</ion-button>
+      </ion-card>
+    </div>
+  </div>
+  <div #secundario>
+    <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
+      <div style="width: 85%; float: left;">
+        Segment Filter ({{ SegmentArrayFilter.length }})
+      </div>
+      <span>&#9660;</span>
+    </h2>
+    <div #panelsegmento>
+      <ion-list>
+        <ion-item *ngFor="let sectioinArray of SegmentArrayFilter">
+          <ion-avatar slot="start">
+            <img src="assets/s.png">
+          </ion-avatar>
+          <ion-label>
+            <h2>{{sectioinArray.segment_name}}</h2>
+          </ion-label>
+          <ion-button (click)="seleccionarProductoPorSegmento(sectioinArray)">Select</ion-button>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
+      <div style="width: 85%; float: left;">
+        Family Filter ({{ FamilyArrayFilter.length }})
+      </div>
+      <span>&#9660;</span>
+    </h2>
+
+    <div #panelfamily>
+      <ion-list>
+        <ion-item *ngFor="let sectioinArray of FamilyArrayFilter">
+          <ion-avatar slot="start">
+            <img src="assets/f.png">
+          </ion-avatar>
+          <ion-label>
+            <h2>{{sectioinArray.family_name}}</h2>
+          </ion-label>
+          <ion-button (click)="seleccionarProductoPorFamilia(sectioinArray)">Select</ion-button>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
+      <div style="width: 85%; float: left;">
+        Category Filter ({{ TypeArrayFilter.length }})
+      </div>
+      <span>&#9660;</span>
+    </h2>
+
+    <div #paneltype>
+      <ion-list>
+        <ion-item *ngFor="let sectioinArray of TypeArrayFilter">
+          <ion-avatar slot="start">
+            <img src="assets/p.png">
+          </ion-avatar>
+          <ion-label>
+            <h2>{{sectioinArray.category_name}}</h2>
+          </ion-label>
+          <ion-button (click)="seleccionarProductoPorType(sectioinArray)">Select</ion-button>
+        </ion-item>
+      </ion-list>
+    </div>
+
+
+    <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
+      <div style="width: 85%; float: left;">
+        Product in Filter ({{ ProductArrayFilter.length }})
+      </div>
+      <span>&#9660;</span>
+    </h2>
+    <div #panelproducto>
+      <ion-card *ngFor="let sectioinArray of ProductArrayFilter">
+        <ion-card-header>
+          <ion-card-title>{{sectioinArray.product_code}}</ion-card-title>
+        </ion-card-header>
+        <img *ngIf="sectioinArray.product_image==''" src="assets/noimagen.png" />
+        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image }}" />
+        <ion-card-content>
+          {{sectioinArray.product_description}}
+        </ion-card-content>
+        <ion-button (click)="pushPage(sectioinArray)" expand="block">Detail Product</ion-button>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>
