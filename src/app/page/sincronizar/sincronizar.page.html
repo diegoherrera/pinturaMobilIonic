@@ -3,35 +3,99 @@
     <ion-buttons (click)="dismiss()" slot="start">
       <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
     </ion-buttons>
-    <ion-title>ADD FILTER PRODUCT</ion-title>
-  </ion-toolbar>  
+    <ion-title>{{ 'lblfiltrostitle' | translate }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="!isprincial" color="primary">
+    <ion-searchbar placeholder="{{ 'lblbuscarholder' | translate }}" [(ngModel)]="searchString"
+      (ionInput)="getItems($event)" (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event)"
-      #radioGroup>
-
-      <ion-item *ngFor="let item of radio_list" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
-        (ionBlur)="radioBlur()">
-        <ion-label>{{item.text}}</ion-label>
-        <ion-radio slot="start" name="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"
-          color="{{item.color}}" disabled="{{item.disabled}}"></ion-radio>
+  <div #panel0 class="active">
+    <ion-list>
+      <ion-list-header lines="inset">
+        <ion-label>Segment</ion-label>
+        <ion-button (click)="filtro(1)">Seleccionar</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset">
+        <ion-label>Familia</ion-label>
+        <ion-button (click)="filtro(2)">Seleccionar</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset">
+        <ion-label>Tipo de Producto</ion-label>
+        <ion-button (click)="filtro(3)">Seleccionar</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset">
+        <ion-label>Otros</ion-label>
+        <ion-button (click)="filtro(4)">Seleccionar</ion-button>
+      </ion-list-header>
+    </ion-list>
+  </div>
+  <div #panel4 class="inactive">
+    <ion-list>
+      <ion-item *ngFor="let item of radio_list">
+        <ion-label>{{ item.id | translate }}</ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
       </ion-item>
-
-    </ion-radio-group>
-  </ion-list>
+    </ion-list>
+  </div>
+  <div #panel3 class="inactive">
+    <ion-list>
+      <ion-item *ngFor="let item of TypeArray">
+        <ion-label>
+          <div *ngIf="language=='es' else elsecategory_name">
+            <h2>{{item.category_name}}</h2>
+          </div>
+          <ng-template #elsecategory_name>
+            <h2>{{item.category_name_pg}}</h2>
+          </ng-template>
+        </ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </div>
+  <div #panel2 class="inactive">
+    <ion-list>
+      <ion-item *ngFor="let item of FamilyArray">
+        <ion-label>
+          <div *ngIf="language=='es' else elsefamily_name">
+            <h2>{{item.family_name}}</h2>
+          </div>
+          <ng-template #elsefamily_name>
+            <h2>{{item.family_name_pg}}</h2>
+          </ng-template>
+        </ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </div>
+  <div #panel1 class="inactive">
+    <ion-list>
+      <ion-item *ngFor="let item of SegmentArray">
+        <ion-label>
+          <div *ngIf="language=='es' else elseidiomsegment_name_pg">
+            <h2>{{item.segment_name}}</h2>
+          </div>
+          <ng-template #elseidiomsegment_name_pg>
+            <h2>{{item.segment_name_pg}}</h2>
+          </ng-template>
+        </ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>
-<ion-footer>      
+<ion-footer *ngIf="!isprincial">
   <ion-row>
     <ion-col>
       <div>
-        <ion-button (click)="agregarFiltro()" expand="block">Add Filter</ion-button>
+        <ion-button (click)="agregarFiltro()" expand="block">{{ 'lblfiltrosbtnagregarfiltro' | translate }}</ion-button>
       </div>
     </ion-col>
     <ion-col>
       <div>
-        <ion-button (click)="cancelarFiltro()" expand="block">Cancel</ion-button>
+        <ion-button (click)="cancelarFiltro()" expand="block">{{ 'lblfiltrosbtnCancel' | translate }}</ion-button>
       </div>
     </ion-col>
   </ion-row>

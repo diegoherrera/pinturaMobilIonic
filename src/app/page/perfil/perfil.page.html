@@ -1,72 +1,113 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Perfil</ion-title>
+    <ion-title>{{ 'titlePaginaPerfil' | translate }}</ion-title>
 
     <!-- Side menu button -->
     <ion-buttons slot="start">
       <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
-    <ion-button slot="end">
+    <ion-button (click)="captureImage()" slot="end">
       <ion-icon slot="icon-only" name="camera"></ion-icon>
     </ion-button>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <form style="height: 100%;" [formGroup]="slideOneForm">
-    <div style="height: 85%;">
+  <form style="height: 100%;" (ngSubmit)="submitForm()" [formGroup]="slideOneForm" #testForm>
+    <div>
       <div style="width: 100%; height: 200px; background-color: #0085CA;">
         <ion-avatar style="width: 140px; height: 140px; align-content: center; margin: auto;">
-          <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="profile.user_picture==''"
+          <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="!fotonueva && profile.user_picture==''"
             src="assets/noimagen.png" />
-          <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="profile.user_picture!=''"
-            src="{{ profile.user_picture }}" />
+          <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="!fotonueva && profile.user_picture!=''"
+            src="{{ profile.user_picture | rutaarchivo}}" />
+          <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="fotonueva"
+            src="{{ clickedImage }}" />
         </ion-avatar>
       </div>
-
+      <ion-button (click)="captureImageGaleria()" size="smal"  expand="block">
+        <ion-icon name="save-outline"></ion-icon>&nbsp;Cargar Desde Galeria
+      </ion-button>
       <div padding>
         <ion-item>
-          <ion-label position="floating">First Name</ion-label>
+          <ion-label position="floating">{{ 'lblfirstname' | translate }}</ion-label>
           <ion-input formControlName="user_first" type="text"></ion-input>
         </ion-item>
+        <ion-label style="padding: 10px;" color="danger"
+          *ngIf="slideOneForm.controls.user_first.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
+          {{ 'lblValidFirstName' | translate }} </ion-label>
         <ion-item>
-          <ion-label position="floating">Last Name</ion-label>
+          <ion-label position="floating">{{ 'lbllastname' | translate }}</ion-label>
           <ion-input formControlName="user_last" type="text"></ion-input>
         </ion-item>
+        <ion-label style="padding: 10px;" color="danger"
+          *ngIf="slideOneForm.controls.user_last.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
+          {{ 'lblValidLastName' | translate }} </ion-label>
         <ion-item>
-          <ion-label position="floating">Email</ion-label>
-          <ion-input formControlName="user_email" type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">User Name</ion-label>
+          <ion-label position="floating">{{ 'lblusuario' | translate }}</ion-label>
           <ion-input formControlName="usuario" type="text"></ion-input>
         </ion-item>
+        <ion-label style="padding: 10px;" color="danger"
+          *ngIf="slideOneForm.controls.usuario.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
+          {{ 'lblvalidUsuario' | translate }} </ion-label>
         <ion-item>
-          <ion-label position="floating">Password</ion-label>
+          <ion-label position="floating">{{ 'lblclave' | translate }}</ion-label>
           <ion-input formControlName="password" type="password"></ion-input>
         </ion-item>
+        <ion-label style="padding: 10px;" color="danger"
+          *ngIf="slideOneForm.controls.password.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
+          {{ 'lblvalidclave' | translate }} </ion-label>
+        <ion-radio-group allow-empty-selection formControlName="idioma">
+          <ion-list-header>
+            <ion-label><b>{{ 'lblidioma' | translate }}</b></ion-label>
+          </ion-list-header>
+          <ion-item>
+            <ion-label>{{ 'idiomaEspanol' | translate }}</ion-label>
+            <ion-radio slot="end" color="primary" value="es"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'idiomaPortuguez' | translate }}</ion-label>
+            <ion-radio slot="end" color="secondary" value="pg"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
         <ion-item>
-          <ion-label position="floating">Language</ion-label>
-          <ion-select [(value)]="selectedLanguage" formControlName="language">
-            <ion-select-option [value]="sectioinArray._id" *ngFor="let sectioinArray of LanguageArray">
-              {{sectioinArray.language_name}}
-            </ion-select-option>
-          </ion-select>
+          <b>{{ 'lblComercializacion' | translate }}</b>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Type User</ion-label>
-          <ion-select [(value)]="selectedType" formControlName="type">
-            <ion-select-option [value]="sectioinArray._id" *ngFor="let sectioinArray of TypeArray">
-              {{sectioinArray.type_name}}
-            </ion-select-option>
-          </ion-select>
+          <ion-label>MX</ion-label>
+          <ion-checkbox formControlName="opcion1"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>CA</ion-label>
+          <ion-checkbox formControlName="opcion2"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>PA</ion-label>
+          <ion-checkbox formControlName="opcion3"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>AR</ion-label>
+          <ion-checkbox formControlName="opcion4"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>BZ</ion-label>
+          <ion-checkbox formControlName="opcion5"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>MTZ</ion-label>
+          <ion-checkbox formControlName="opcion6"></ion-checkbox>
         </ion-item>
       </div>
-      <div style="margin-top: 10px; margin-bottom: 10px;" *ngIf="error">
-        <span style="color: red;">Error User or Password invalid </span>
-      </div>
+      <ion-label style="padding: 10px;" color="danger" *ngIf="!validarCheckbox()"> {{ 'lblvalidCheckbox' | translate }}
+      </ion-label>
     </div>
-    <div padding style="margin-top: 50px;">
-      <ion-button size="smal" type="submit" expand="block"><ion-icon name="save-outline"></ion-icon>&nbsp;Save Profile</ion-button>
-    </div>
+
   </form>
 </ion-content>
+<ion-footer>
+  <!--<ion-button size="smal" type="submit" [disabled]="!slideOneForm.valid" expand="block">
+    <ion-icon name="save-outline"></ion-icon>&nbsp;{{ 'btnGuardarPerfil' | translate }}
+  </ion-button>-->
+  <ion-button size="smal" (click)="ejecutarFormulario()" [disabled]="!slideOneForm.valid" expand="block">
+    <ion-icon name="save-outline"></ion-icon>&nbsp;{{ 'btnGuardarPerfil' | translate }}
+  </ion-button>
+</ion-footer>

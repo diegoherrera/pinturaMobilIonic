@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Home</ion-title>
+    <ion-title>{{ 'lblTitleHome' | translate }}</ion-title>
 
     <!-- Side menu button -->
     <ion-buttons slot="start">
@@ -9,13 +9,13 @@
 
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar placeholder="Search" [(ngModel)]="searchString" (ionInput)="getItems($event)"
-      (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+    <ion-searchbar placeholder="{{ 'lblbuscarholder' | translate }}" [(ngModel)]="searchString"
+      (ionInput)="getItems($event)" (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
     <div #primariob>
       <h2 #opcion1 class="inactive" style="margin-left: 20px; width: 100%;" (click)="toggleAccordion()">
 
         <div style="width: 85%; float: left;">
-          Filter Selected
+          {{ 'lblFiltroSeleccionado' | translate }}
         </div>
         <span>&#9650;</span>
 
@@ -23,30 +23,44 @@
       <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
 
         <div style="width: 85%; float: left;">
-          Filter Selected
+          {{ 'lblFiltroSeleccionado' | translate }}
         </div>
         <span>&#9660;</span>
       </h2>
       <div #panel class="inactive">
+
         <ion-list>
-          <ion-list-header lines="inset">
+          <!--<ion-list-header lines="inset">
             <ion-label>{{nivel1.segment_name}}</ion-label>
-            <ion-button (click)="limpiar(1)">Clear</ion-button>
+            <ion-button (click)="limpiar(1)">{{ 'btnClear' | translate }}</ion-button>
           </ion-list-header>
           <ion-list-header lines="inset">
             <ion-label>{{nivel2.family_name}}</ion-label>
-            <ion-button (click)="limpiar(2)">Clear</ion-button>
+            <ion-button (click)="limpiar(2)">{{ 'btnClear' | translate }}</ion-button>
           </ion-list-header>
           <ion-list-header lines="inset">
             <ion-label>{{nivel3.category_name}}</ion-label>
-            <ion-button (click)="limpiar(3)">Clear</ion-button>
+            <ion-button (click)="limpiar(3)">{{ 'btnClear' | translate }}</ion-button>
+          </ion-list-header>-->
+          <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionadoSegmento">
+            <ion-label>[S] - {{ sectioinArray.segment_name }}</ion-label>
+            <ion-button (click)="removeFiltroSegment(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+          </ion-list-header>
+          <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionadoFamilia">
+            <ion-label>[F] - {{ sectioinArray.family_name }}</ion-label>
+            <ion-button (click)="removeFiltrofamilia(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+          </ion-list-header>
+          <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionadoTipo">
+            <ion-label>[T] - {{ sectioinArray.category_name }}</ion-label>
+            <ion-button (click)="removeFiltrocategoria(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
           </ion-list-header>
           <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionado">
-            <ion-label>{{sectioinArray.texto}}</ion-label>
-            <ion-button (click)="removeFiltro(sectioinArray)">Clear</ion-button>
+            <ion-label>[F] - {{ sectioinArray.id | translate }}</ion-label>
+            <ion-button (click)="removeFiltro(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
           </ion-list-header>
-        </ion-list>        
-        <ion-button (click)="pushPageFilter()">Add Filter</ion-button>
+        </ion-list>
+        <ion-button (click)="pushPageFilter()">{{ 'btnaddfilter' | translate }}</ion-button>
+        <ion-button (click)="limpiarFiltros()">{{ 'lblbtnclearfilter' | translate }}</ion-button>
       </div>
     </div>
 
@@ -54,10 +68,34 @@
 </ion-header>
 
 <ion-content>
+  <div #favorito class="active">
+    <h2 style="margin-left: 20px;">
+      Mis Favoritos
+    </h2>
+    <ion-card *ngFor="let sectioinArray of FavoritoArray">
+      <ion-card-header>
+        <ion-card-title>{{sectioinArray.favorito_product_Id.product_code}}</ion-card-title>
+      </ion-card-header>
+      <img *ngIf="sectioinArray.favorito_product_Id.product_image==''" src="assets/noimagen.png" />
+      <img *ngIf="sectioinArray.favorito_product_Id.product_image!=''"
+        src="{{ sectioinArray.favorito_product_Id.product_image | rutaarchivo }}" (error)="updateUrlFavorito($event, sectioinArray)" style="width: 100%;"/>
+      <ion-card-content>
+        <div *ngIf="language=='es' else elseproduct_descriptionxx">
+          {{sectioinArray.favorito_product_Id.product_description | slice:0:200}}
+        </div>
+        <ng-template #elseproduct_descriptionxx>
+          {{sectioinArray.favorito_product_Id.product_description_pg | slice:0:200}}
+        </ng-template>
+      </ion-card-content>
+      <ion-button (click)="pushPageFavorito(sectioinArray.favorito_product_Id)" expand="block">
+        {{ 'btndetalleProducto' | translate }}</ion-button>
+    </ion-card>
+  </div>
+
   <div #primario>
-    <div #segmento class="inactive">
+   <!-- <div #segmento class="inactive">
       <h2 style="margin-left: 20px;">
-        Segment
+        {{ 'titleSegment' | translate }}
       </h2>
 
       <ion-list>
@@ -66,16 +104,21 @@
             <img src="assets/s.png">
           </ion-avatar>
           <ion-label>
-            <h2>{{sectioinArray.segment_name}}</h2>
+            <div *ngIf="language=='es' else elseidiomsegment_name_pg">
+              <h2>{{sectioinArray.segment_name}}</h2>
+            </div>
+            <ng-template #elseidiomsegment_name_pg>
+              <h2>{{sectioinArray.segment_name_pg}}</h2>
+            </ng-template>
           </ion-label>
-          <ion-button (click)="seleccionarSegmento(sectioinArray)">Select</ion-button>
+          <ion-button (click)="seleccionarSegmento(sectioinArray)">{{ 'lblSeleccionar' | translate }}</ion-button>
         </ion-item>
       </ion-list>
     </div>
 
     <div #family class="inactive">
       <h2 style="margin-left: 20px;">
-        Family Product
+        {{ 'titlefamilia' | translate }}
       </h2>
 
       <ion-list>
@@ -84,16 +127,21 @@
             <img src="assets/f.png">
           </ion-avatar>
           <ion-label>
-            <h2>{{sectioinArray.family_name}}</h2>
+            <div *ngIf="language=='es' else elsefamily_name">
+              <h2>{{sectioinArray.family_name}}</h2>
+            </div>
+            <ng-template #elsefamily_name>
+              <h2>{{sectioinArray.family_name_pg}}</h2>
+            </ng-template>
           </ion-label>
-          <ion-button (click)="seleccionarFamilia(sectioinArray)">Select</ion-button>
+          <ion-button (click)="seleccionarFamilia(sectioinArray)">{{ 'lblSeleccionar' | translate }}</ion-button>
         </ion-item>
       </ion-list>
     </div>
 
     <div #type class="inactive">
       <h2 style="margin-left: 20px;">
-        Type Product
+        {{ 'titleCategoria' | translate }}
       </h2>
 
       <ion-list>
@@ -102,34 +150,48 @@
             <img src="assets/p.png">
           </ion-avatar>
           <ion-label>
-            <h2>{{sectioinArray.category_name}}</h2>
+            <div *ngIf="language=='es' else elsecategory_name">
+              <h2>{{sectioinArray.category_name}}</h2>
+            </div>
+            <ng-template #elsecategory_name>
+              <h2>{{sectioinArray.category_name_pg}}</h2>
+            </ng-template>
           </ion-label>
-          <ion-button (click)="seleccionarType(sectioinArray)">Select</ion-button>
+          <ion-button (click)="seleccionarType(sectioinArray)">{{ 'lblSeleccionar' | translate }}</ion-button>
         </ion-item>
       </ion-list>
     </div>
-
+      -->
     <div #producto class="inactive">
       <h2 style="margin-left: 20px;">
-        Product
+        {{ 'titleProducto' | translate }} - {{micantidad}}
       </h2>
       <ion-card *ngFor="let sectioinArray of ProductArray">
         <ion-card-header>
           <ion-card-title>{{sectioinArray.product_code}}</ion-card-title>
         </ion-card-header>
         <img *ngIf="sectioinArray.product_image==''" src="assets/noimagen.png" />
-        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image | rutaarchivo }}" />
+        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image | rutaarchivo }}" (error)="updateUrlHome($event, sectioinArray)" style="width: 100%;" />
         <ion-card-content>
-          {{sectioinArray.product_description | slice:0:200}}
+          <div *ngIf="language=='es' else elseproduct_descriptionxx">
+            {{sectioinArray.product_description | slice:0:200}}
+          </div>
+          <ng-template #elseproduct_descriptionxx>
+            {{sectioinArray.product_description_pg | slice:0:200}}
+          </ng-template>
         </ion-card-content>
-        <ion-button (click)="pushPage(sectioinArray)" expand="block">Detail</ion-button>
+        <ion-button (click)="pushPage(sectioinArray)" expand="block">{{ 'btndetalleProducto' | translate }}</ion-button>
       </ion-card>
+      <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </div>
   </div>
   <div #secundario>
     <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
       <div style="width: 85%; float: left;">
-        Segment Filter ({{ SegmentArrayFilter.length }})
+        {{ 'lblSegmentFilter' | translate }} ({{ SegmentArrayFilter.length }})
       </div>
       <span>&#9660;</span>
     </h2>
@@ -140,16 +202,22 @@
             <img src="assets/s.png">
           </ion-avatar>
           <ion-label>
-            <h2>{{sectioinArray.segment_name}}</h2>
+            <div *ngIf="language=='es' else elseidiomsegment_name_pg2">
+              <h2>{{sectioinArray.segment_name}}</h2>
+            </div>
+            <ng-template #elseidiomsegment_name_pg2>
+              <h2>{{sectioinArray.segment_name_pg}}</h2>
+            </ng-template>
           </ion-label>
-          <ion-button (click)="seleccionarProductoPorSegmento(sectioinArray)">Select</ion-button>
+          <ion-button (click)="seleccionarProductoPorSegmento(sectioinArray)">{{ 'lblSeleccionar' | translate }}
+          </ion-button>
         </ion-item>
       </ion-list>
     </div>
 
     <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
       <div style="width: 85%; float: left;">
-        Family Filter ({{ FamilyArrayFilter.length }})
+        {{ 'lblFamilyFilter' | translate }} ({{ FamilyArrayFilter.length }})
       </div>
       <span>&#9660;</span>
     </h2>
@@ -161,16 +229,22 @@
             <img src="assets/f.png">
           </ion-avatar>
           <ion-label>
-            <h2>{{sectioinArray.family_name}}</h2>
+            <div *ngIf="language=='es' else elsefamily_name2">
+              <h2>{{sectioinArray.family_name}}</h2>
+            </div>
+            <ng-template #elsefamily_name2>
+              <h2>{{sectioinArray.family_name_pg}}</h2>
+            </ng-template>
           </ion-label>
-          <ion-button (click)="seleccionarProductoPorFamilia(sectioinArray)">Select</ion-button>
+          <ion-button (click)="seleccionarProductoPorFamilia(sectioinArray)">{{ 'lblSeleccionar' | translate }}
+          </ion-button>
         </ion-item>
       </ion-list>
     </div>
 
     <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
       <div style="width: 85%; float: left;">
-        Category Filter ({{ TypeArrayFilter.length }})
+        {{ 'lblCategoriyFilter' | translate }} ({{ TypeArrayFilter.length }})
       </div>
       <span>&#9660;</span>
     </h2>
@@ -182,9 +256,15 @@
             <img src="assets/p.png">
           </ion-avatar>
           <ion-label>
-            <h2>{{sectioinArray.category_name}}</h2>
+            <div *ngIf="language=='es' else elsecategory_name2">
+              <h2>{{sectioinArray.category_name}}</h2>
+            </div>
+            <ng-template #elsecategory_name2>
+              <h2>{{sectioinArray.category_name_pg}}</h2>
+            </ng-template>
           </ion-label>
-          <ion-button (click)="seleccionarProductoPorType(sectioinArray)">Select</ion-button>
+          <ion-button (click)="seleccionarProductoPorType(sectioinArray)">{{ 'lblSeleccionar' | translate }}
+          </ion-button>
         </ion-item>
       </ion-list>
     </div>
@@ -192,7 +272,7 @@
 
     <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
       <div style="width: 85%; float: left;">
-        Product in Filter ({{ ProductArrayFilter.length }})
+        {{ 'lblProductFilter' | translate }} ({{ ProductArrayFilter.length }})
       </div>
       <span>&#9660;</span>
     </h2>
@@ -202,11 +282,16 @@
           <ion-card-title>{{sectioinArray.product_code}}</ion-card-title>
         </ion-card-header>
         <img *ngIf="sectioinArray.product_image==''" src="assets/noimagen.png" />
-        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image }}" />
+        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image  | rutaarchivo }}" />
         <ion-card-content>
-          {{sectioinArray.product_description}}
+          <div *ngIf="language=='es' else elseproduct_descriptionxx2">
+            {{sectioinArray.product_description | slice:0:200}}
+          </div>
+          <ng-template #elseproduct_descriptionxx2>
+            {{sectioinArray.product_description_pg | slice:0:200}}
+          </ng-template>
         </ion-card-content>
-        <ion-button (click)="pushPage(sectioinArray)" expand="block">Detail Product</ion-button>
+        <ion-button (click)="pushPage(sectioinArray)" expand="block">{{ 'btndetalleProducto' | translate }}</ion-button>
       </ion-card>
     </div>
   </div>

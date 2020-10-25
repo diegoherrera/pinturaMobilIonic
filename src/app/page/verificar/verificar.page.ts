@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Storage } from '@ionic/storage';
+import { TranslateService } from '@ngx-translate/core';
+import { AutentificacionService } from 'src/app/autentificacion.service';
 
 declare var SMS: any;
 declare var SMSReceive: any;
@@ -12,7 +14,7 @@ declare var SMSReceive: any;
   templateUrl: './verificar.page.html',
   styleUrls: ['./verificar.page.scss'],
 })
-export class VerificarPage implements OnInit {
+export class VerificarPage implements OnInit, AfterViewInit {
 
   OTP: string = '2345';
   isenabledBotton: any = false;
@@ -30,17 +32,33 @@ export class VerificarPage implements OnInit {
     , private storage: Storage
     , public loadingCtrl: LoadingController
     , public autentificacionService: UsuarioService
+    , private auth: AutentificacionService
+    , private translateService: TranslateService
   ) {
+   
 
-    console.log('contructor de verificar');
+    console.log('evento del contructor ');
+    this.auth.getLanguage((retorno) => {
+      console.log('idiona **************** ' + retorno);
+      this.translateService.use(retorno);
+    });
+
+    this.auth.getProfile((retorno) => {
+      this.profile = JSON.parse(retorno);
+      this.OTP = '';
+      //pongo a escuchar los sms 
+      //this.ExpectingSMS();
+      //solicito verificacion de Numero por sm 
+      this.solicitarVerificacion();
+    });
+    /*console.log('contructor de verificar');
     storage.get('profile').then((val) => {
       this.profile = JSON.parse(val);
-    });
-    this.OTP = '';
-    //pongo a escuchar los sms 
-    //this.ExpectingSMS();
-    //solicito verificacion de Numero por sm 
-    this.solicitarVerificacion();
+    });*/
+
+  }
+  ngAfterViewInit(): void {
+    console.log('Method not implemented.');
   }
 
   ExpectingSMS() {
@@ -105,141 +123,150 @@ export class VerificarPage implements OnInit {
 
   }
 
+  traduccionMensajes(variable: string, callback) {
+    this.translateService.get(variable).subscribe((res: string) => {
+      callback(res);
+    });
+  }
 
   solicitarVerificacion() {
-    //GENERACION DE CODIGO DE 4 DIGITOS
-    this.miCodigo = this.makeid();
-    //PONEMOS LOADER PARA VERIFICAR VALIDACION DE NUMERO
-    this.loader = this.loadingCtrl.create({
-      message: "Validating the phone number registered in the system",
-      duration: 5000
-    }).then((res) => {
-      res.present();
-      //LLAMAMOS AL  SERVICIO PARA VERIFICAR EL NUMERO INGRESADO
-      console.log("NUMERO A VERIFICAR " + this.profile.user_mobile);
+    this.traduccionMensajes("bllvalidandonumerotelefono", (traduccion) => {
+      //GENERACION DE CODIGO DE 4 DIGITOS
+      this.miCodigo = this.makeid();
+      //PONEMOS LOADER PARA VERIFICAR VALIDACION DE NUMERO
+      this.loader = this.loadingCtrl.create({
+        message: traduccion,
+        duration: 5000
+      }).then((res) => {
+        res.present();
+        //LLAMAMOS AL  SERVICIO PARA VERIFICAR EL NUMERO INGRESADO
+        console.log("NUMERO A VERIFICAR " + this.profile.user_mobile);
 
-      this.autentificacionService
-        .verificNumberPhone({ telefono: this.profile.user_mobile }).subscribe(
-          data => {
-            res.dismiss(); //sierro el dialogo
-            console.log("LO QUE RETORNO LA VERIFICACION DEL NUMERO DE TELEFONO" + JSON.stringify(data));
-            //ASIGNO EL RETORNO A RESPUESTA
-            this.respuesta = data;
-            console.log("this.respuesta.error " + this.respuesta.error);
-            if (this.respuesta.error == 0) {
-              this.loader = this.loadingCtrl.create({
-                message: "Wait for the verification code that we send by SMS",
-                duration: 5000
-              }).then((res2) => {
-                res2.present();
-                console.log('ENVIO CODIGO ' + this.miCodigo);
-                this.autentificacionService
-                  .sendSMS({ telefono: this.profile.user_mobile, codigo: this.miCodigo })
-                  .subscribe(data2 => {
+        this.autentificacionService
+          .verificNumberPhone({ telefono: this.profile.user_mobile }).subscribe(
+            data => {
+              res.dismiss(); //sierro el dialogo
+              console.log("LO QUE RETORNO LA VERIFICACION DEL NUMERO DE TELEFONO" + JSON.stringify(data));
+              //ASIGNO EL RETORNO A RESPUESTA
+              this.respuesta = data;
+              console.log("this.respuesta.error " + this.respuesta.error);
+              if (this.respuesta.error == 0) {
+                this.traduccionMensajes("LblEnviandocodigosms", (traduccion) => {
+                  this.loader = this.loadingCtrl.create({
+                    message: traduccion,
+                    duration: 5000
+                  }).then((res2) => {
+                    res2.present();
+                    console.log('ENVIO CODIGO ' + this.miCodigo);
+                    this.autentificacionService
+                      .sendSMS({ telefono: this.profile.user_mobile, codigo: this.miCodigo })
+                      .subscribe(data2 => {
+                        console.log("lo que responde luego de enviar sms " + JSON.stringify(data));
+                        //ASIGNO EL RETORNO A RESPUESTA
+                        this.respuesta = data;
+                        this.autentificacionService.verificarAcount(this.profile._id).subscribe(data => {
+                          console.log(JSON.stringify(data));
+                        });
+
+                      });
+                    res2.onDidDismiss().then((dis) => {
+                      console.log('Loading dismissed! after 2 Seconds', dis);
+                      this.OTP = this.miCodigo;
+                      this.isenabledBotton = true;
+                    });
+                  });
+
+                });
+
+
+              } else {
+                //si no es valido el numero 
+
+                let alert = this.alertCtrl.create({
+                  title: 'App',
+                  subTitle: 'The registered phone number is not valid, contact the administrator.',
+                  buttons: [
+                    {
+                      text: 'Ok',
+                      handler: data => {
+
+                      }
+                    }
+                  ]
+                });
+                alert.present();
+
+
+              }
+            }
+          );
+
+        res.onDidDismiss().then((dis) => {
+          console.log('Loading dismissed! after 2 Seconds', dis);
+        });
+      });
+
+
+
+      /*
+          this.autentificacionService
+            .verificNumberPhone({ telefono: this.profile.user_mobile })
+            .subscribe(data => {
+              //CERRAMOS EL LOADER
+              this.loader.dismiss();
+              //SALIMOS  POR CONSOLA
+              console.log("LO QUE RETORNO LA VERIFICACION DEL NUMERO DE TELEFONO" + JSON.stringify(data));
+              //ASIGNO EL RETORNO A RESPUESTA
+              this.respuesta = data;
+              //SI EL ERROR ES 0 EL TELEFONO ES VALIDO
+              console.log("this.respuesta.error " + this.respuesta.error);
+              if (this.respuesta.error == 0) {
+                //LLAMO EL SERVICIO PARA ENVIAR SMS CON EL NUMERO INGRESADO
+                this.autentificacionService.sendSMS({ telefono: this.miTelefono, codigo: this.miCodigo })
+                  .subscribe(data => {
+                    //loader.dismiss();
                     console.log("lo que responde luego de enviar sms " + JSON.stringify(data));
                     //ASIGNO EL RETORNO A RESPUESTA
                     this.respuesta = data;
-
-
-                    this.autentificacionService.verificarAcount(this.profile._id).subscribe(data => {
-                      console.log(JSON.stringify(data));
-                    });
-
-                  });
-                res2.onDidDismiss().then((dis) => {
-                  console.log('Loading dismissed! after 2 Seconds', dis);
-                  this.OTP = this.miCodigo;
-                  this.isenabledBotton = true;
-
-
+                    //SI LA OPERACION ES CORRECTA
+                    if (this.respuesta.operacion) {
+                      //LEVANTO LOADER ESPERANDO LA LLEGADA DEL SMS
+                      this.loader = this.loadingCtrl.create({
+                        message: "Wait for the verification code that we send by SMS",
+                        duration: 3000
+                      });
+                      this.loader.present();
+                    }
+                  }, error => {
+                    this.loader.dismiss();
+                    console.log(error);
+                  })
+              } else {
+                //SI EL TELEFONO NO ES VALIDO 
+                //BAJO EL LOADER
+                this.loader.dismiss();
+                //GENERO CUADRO DE DIALOGO INDICANDO ERROR EN EL NUMEOR INGRESADO
+                let alert = this.alertCtrl.create({
+                  title: 'App',
+                  subTitle: 'The registered phone number is not valid, contact the administrator.',
+                  buttons: [
+                    {
+                      text: 'Ok',
+                      handler: data => {
+      
+                      }
+                    }
+                  ]
                 });
-              });
-
-            } else {
-              //si no es valido el numero 
-
-              let alert = this.alertCtrl.create({
-                title: 'App',
-                subTitle: 'The registered phone number is not valid, contact the administrator.',
-                buttons: [
-                  {
-                    text: 'Ok',
-                    handler: data => {
-
-                    }
-                  }
-                ]
-              });
-              alert.present();
-
-
-            }
-          }
-        );
-
-      res.onDidDismiss().then((dis) => {
-        console.log('Loading dismissed! after 2 Seconds', dis);
-      });
-    });
-
-
-
-    /*
-        this.autentificacionService
-          .verificNumberPhone({ telefono: this.profile.user_mobile })
-          .subscribe(data => {
-            //CERRAMOS EL LOADER
-            this.loader.dismiss();
-            //SALIMOS  POR CONSOLA
-            console.log("LO QUE RETORNO LA VERIFICACION DEL NUMERO DE TELEFONO" + JSON.stringify(data));
-            //ASIGNO EL RETORNO A RESPUESTA
-            this.respuesta = data;
-            //SI EL ERROR ES 0 EL TELEFONO ES VALIDO
-            console.log("this.respuesta.error " + this.respuesta.error);
-            if (this.respuesta.error == 0) {
-              //LLAMO EL SERVICIO PARA ENVIAR SMS CON EL NUMERO INGRESADO
-              this.autentificacionService.sendSMS({ telefono: this.miTelefono, codigo: this.miCodigo })
-                .subscribe(data => {
-                  //loader.dismiss();
-                  console.log("lo que responde luego de enviar sms " + JSON.stringify(data));
-                  //ASIGNO EL RETORNO A RESPUESTA
-                  this.respuesta = data;
-                  //SI LA OPERACION ES CORRECTA
-                  if (this.respuesta.operacion) {
-                    //LEVANTO LOADER ESPERANDO LA LLEGADA DEL SMS
-                    this.loader = this.loadingCtrl.create({
-                      message: "Wait for the verification code that we send by SMS",
-                      duration: 3000
-                    });
-                    this.loader.present();
-                  }
-                }, error => {
-                  this.loader.dismiss();
-                  console.log(error);
-                })
-            } else {
-              //SI EL TELEFONO NO ES VALIDO 
-              //BAJO EL LOADER
+                alert.present();
+              }
+            }, error => {
               this.loader.dismiss();
-              //GENERO CUADRO DE DIALOGO INDICANDO ERROR EN EL NUMEOR INGRESADO
-              let alert = this.alertCtrl.create({
-                title: 'App',
-                subTitle: 'The registered phone number is not valid, contact the administrator.',
-                buttons: [
-                  {
-                    text: 'Ok',
-                    handler: data => {
-    
-                    }
-                  }
-                ]
-              });
-              alert.present();
-            }
-          }, error => {
-            this.loader.dismiss();
-            console.log(JSON.stringify(error));
-          })*/
+              console.log(JSON.stringify(error));
+            })*/
+
+
+    })
   }
 
 
@@ -262,7 +289,8 @@ export class VerificarPage implements OnInit {
 
   VerificarEvent() {
     console.log('paso por el evento de verificar');
-    this.router.navigate(['/dashboard']);
+    this.auth.registrarisLogin();
+    //this.router.navigate(['/dashboard/buscador']);
   }
 
 }

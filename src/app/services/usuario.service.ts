@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
 
-  base_path = 'http://192.168.1.12:9000/api';
+  base_path = environment.Servidor + '/api';
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -96,14 +97,46 @@ export class UsuarioService {
     return this.http.get(`${this.base_path}/all-product-image-download`)
   }
 
+  GetFavorito(usuarioId) {
+    return this.http.post<any>(`${this.base_path}/find-favorito`, { favorito_user_Id: usuarioId }, { headers: this.headers })
+  }
+
+  GetUserProfile(usuarioId) {
+    console.log('usuarioId' + usuarioId);
+    return this.http.get(`${this.base_path}/get-user/` + usuarioId)
+  }
+
   getProductById(id: string) {
-    
+
     return this.http.post<any>(`${this.base_path}/find-get-product-id`, { buscar: id }, { headers: this.headers })
   }
 
   getProductByLike(buscar: string) {
     console.log('llegue ' + buscar);
     return this.http.post<any>(`${this.base_path}/find-like-product-ionic`, { buscar: buscar }, { headers: this.headers })
+  }
+
+
+  SendDataProfile(
+    id: string,
+    user_name: string,
+    user_password: string,
+    user_first: string,
+    user_last: string,
+    language: string,
+    user_comercializacion: string,
+    picture: string) {
+    
+    return this.http.post<any>(`${this.base_path}/update-profile-ionic/${id}`, 
+    { 
+      user_name: user_name, 
+      user_password: user_password,
+      user_first: user_first,
+      user_last: user_last,
+      language: language,
+      user_comercializacion:  user_comercializacion,
+      picture: picture
+    }, { headers: this.headers })
   }
 
   GetProduc(
@@ -119,6 +152,52 @@ export class UsuarioService {
         "product_IdSegment": product_IdSegment
         , "product_IdFamily": product_IdFamily
         , "product_IdCategory": product_IdCategory
+      }, this.httpOptions)
+  }
+
+  GetProducByHome(
+    segmentos: string,
+    familias: string,
+    categorias: string,
+    acciones: string,
+    buscar: string,
+    comercializacion: string, 
+    pagina: number): Observable<any> {
+    var formData: any = new FormData();
+
+    return this.http.post<any>(`${this.base_path}/find-get-product-home`,
+      {
+        "segmentos": segmentos
+        , "familias": familias
+        , "categorias": categorias
+        , "acciones": acciones
+        , "buscar": buscar
+        , "comercializacion": comercializacion
+        , "pagina" : pagina
+      }, this.httpOptions)
+  }
+
+
+
+  GetProducByHomeCount(
+    segmentos: string,
+    familias: string,
+    categorias: string,
+    acciones: string,
+    buscar: string,
+    comercializacion: string, 
+    pagina: number): Observable<any> {
+    var formData: any = new FormData();
+
+    return this.http.post<any>(`${this.base_path}/find-get-product-home-count`,
+      {
+        "segmentos": segmentos
+        , "familias": familias
+        , "categorias": categorias
+        , "acciones": acciones
+        , "buscar": buscar
+        , "comercializacion": comercializacion
+        , "pagina" : pagina
       }, this.httpOptions)
   }
 
@@ -158,7 +237,7 @@ export class UsuarioService {
     console.log(errorMessage);
     return throwError(errorMessage);
   }
-  
+
   loginUser(
     user_name: string,
     user_password: string): Observable<any> {
@@ -178,9 +257,9 @@ export class UsuarioService {
     id: string,
     buscar: string,
     paginado: number): Observable<any> {
-    
+
     return this.http.get(`${this.base_path}/all-group-product/${id}/${buscar}`,
-       this.httpOptions)
+      this.httpOptions)
   }
 
   getProductByLikeInnovation(buscar: string) {
@@ -188,10 +267,19 @@ export class UsuarioService {
     return this.http.post<any>(`${this.base_path}/find-like-innovation-ionic`, { buscar: buscar }, { headers: this.headers })
   }
 
+  sendCotizacion(usuario: string, producto: string) {
+    return this.http.post<any>(`${this.base_path}/add-cotizacion`, { cotizacion_user_Id: usuario, cotizacion_product_Id: producto }, { headers: this.headers })
+  }
 
-  getProductByLikeSlowFiltros(buscar: string, pais:string, familia:string) {
+  addFavorito(usuario: string, producto: string) {
+    return this.http.post<any>(`${this.base_path}/add-favorito`, { favorito_user_Id: usuario, favorito_product_Id: producto }, { headers: this.headers })
+  }
+
+
+
+  getProductByLikeSlowFiltros(buscar: string, pais: string, familia: string, page: number) {
     console.log('llegue ' + buscar);
-    return this.http.post<any>(`${this.base_path}/find-like-slow-filtro`, { buscar: buscar, pais: pais, familia: familia }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/find-like-slow-filtro`, { buscar: buscar, pais: pais, familia: familia, pagina: page }, { headers: this.headers })
   }
 
   getProductByLikeSlow(buscar: string) {
@@ -215,9 +303,9 @@ export class UsuarioService {
   GetProducSlow(
     buscar: string,
     paginado: number): Observable<any> {
-    
+
     return this.http.get(`${this.base_path}/all-slow-paginado/${buscar}/${paginado}`,
-       this.httpOptions)
+      this.httpOptions)
   }
 
 }

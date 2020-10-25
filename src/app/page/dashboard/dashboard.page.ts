@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterEvent } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { NgForm } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { AutentificacionService } from 'src/app/autentificacion.service';
 //import { TraductionService } from 'src/app/traduction.service';
 
 @Component({
@@ -21,11 +23,11 @@ export class DashboardPage implements OnInit {
   pages = [
     {
       name: 'Home',
-      path: '/dashboard/dashboard/buscador',
+      path: '/dashboard/buscador',
       image: 'home-outline'
     }, {
       name: 'My Profile',
-      path: '/dashboard/dashboard/perfil',
+      path: '/dashboard/perfil',
       image: 'person-outline'
     },
     {
@@ -51,7 +53,12 @@ export class DashboardPage implements OnInit {
   ]
 
 
-  constructor(private router: Router, private storage: Storage) {
+  constructor(private router: Router, private translateService: TranslateService, private storage: Storage, public autentificacionService: AutentificacionService) {
+
+   this.storage.get('Language').then((val) => {
+      console.log('idioma tomando variable en BuscadorPage ******************** ' + val);
+      this.translateService.setDefaultLang(val); // add this
+    });
 
     storage.get('profile').then((val) => {
       this.profile = JSON.parse(val);
@@ -64,7 +71,8 @@ export class DashboardPage implements OnInit {
   }
   logout() {
     console.log('evento logout');
-    this.router.navigate(['/login']);
+    //this.router.navigate(['/login']);
+    this.autentificacionService.logout();
   }
   ngOnInit() {
   }

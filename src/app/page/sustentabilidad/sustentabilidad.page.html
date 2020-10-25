@@ -1,14 +1,14 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Sustentability Product</ion-title>
+    <ion-title>{{ 'titleSustentable' | translate }}</ion-title>
     <!-- Side menu button -->
     <ion-buttons slot="start">
       <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar placeholder="Search" [(ngModel)]="searchString" (ionInput)="getItems($event)"
-      (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+    <ion-searchbar placeholder="{{ 'titleSustentablebuscar' | translate }}" [(ngModel)]="searchString"
+      (ionInput)="getItems($event)" (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -17,10 +17,17 @@
       <ion-card-title>{{sectioinArray.agrupacion_product_Id.product_code}}</ion-card-title>
     </ion-card-header>
     <img *ngIf="sectioinArray.agrupacion_product_Id.product_image==''" src="assets/noimagen.png" />
-    <img *ngIf="sectioinArray.agrupacion_product_Id.product_image!=''" src="{{ sectioinArray.agrupacion_product_Id.product_image | rutaarchivo}}" />
+    <img *ngIf="sectioinArray.agrupacion_product_Id.product_image!=''"
+      src="{{ sectioinArray.agrupacion_product_Id.product_image | rutaarchivo}}" (error)="updateUrl($event, sectioinArray)" style="width: 100%;" />
     <ion-card-content>
-      {{sectioinArray.agrupacion_product_Id.product_description}}
+      <div *ngIf="language=='es' else elseidioma">
+        {{sectioinArray.agrupacion_product_Id.product_description}}
+      </div>
+      <ng-template #elseidioma>
+        {{sectioinArray.agrupacion_product_Id.product_description_pg}}
+      </ng-template>
     </ion-card-content>
-    <ion-button (click)="pushPage(sectioinArray)" expand="block">Product Detail</ion-button>
+    <ion-button (click)="pushPage(sectioinArray)" expand="block">{{ 'lblTitleSustentableDetalle' | translate }}
+    </ion-button>
   </ion-card>
 </ion-content>

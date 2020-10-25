@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { DetallePage } from '../detalle/detalle.page';
 import { ModalController } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-pallets',
@@ -11,11 +12,19 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 export class PalletsPage implements OnInit, AfterViewInit {
   PalletsArray: any =[];
 
-  constructor(public modalController: ModalController, private usuarioService: UsuarioService ) { 
-    this.getPallets();
+  constructor(public modalController: ModalController, private usuarioService: UsuarioService
+    , private translateService: TranslateService
+    //, private storage: Storage 
+    ) { 
+  /*  this.storage.get('Language').then((val) => {
+      console.log('idioma tomando variable en PalletsPage ******************** ' + val);
+      this.translateService.setDefaultLang(val); // add this
+    });*/
+
+    
   }
   ngAfterViewInit(): void {
-    
+    this.getPallets();
   }
 
   getPallets() {

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Palette Color</ion-title>
+    <ion-title>{{ 'titlepallete' | translate }}</ion-title>
     <ion-buttons slot="start">
       <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
@@ -11,10 +11,12 @@
     <ion-item>
       <ion-icon name="color-palette-outline" slot="start"></ion-icon>
       <ion-label>{{ sectioinArray.respuesta.palette_name }}</ion-label>
-      <ion-button (click)="pushPage(sectioinArray)" fill="outline" slot="end">View Palette</ion-button>
+      
     </ion-item>  
     <ion-card-content>
-      {{ sectioinArray.respuesta.palette_IdPais.pais_name }}
+      <b>{{ 'titlepais' | translate }} </b> {{ sectioinArray.respuesta.palette_IdPais.pais_name }}
+      <br>
+      <ion-button (click)="pushPage(sectioinArray)" fill="outline" slot="end">{{ 'detallepaletacolores' | translate }}</ion-button>
     </ion-card-content>
   </ion-card>  
 </ion-content>

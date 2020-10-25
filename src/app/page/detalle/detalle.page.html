@@ -3,7 +3,7 @@
     <ion-buttons (click)="dismiss()" slot="start">
       <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
     </ion-buttons>
-    <ion-title>Detail Palette</ion-title>    
+    <ion-title>{{ 'titledetallepallete' | translate }}</ion-title>    
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -15,7 +15,7 @@
 <ion-footer>
   <h2 style="margin-left: 20px;" (click)="toggleAccordion()">
     <div style="width: 90%; float: left;">
-      Filter<div *ngIf="selected!=''" style="width: 30%; height: 30px; background-color:{{ selected }} ; float:right ; margin-right: 10px;"></div>
+      {{ 'lblSeleccionColor' | translate }}<div *ngIf="selected!=''" style="width: 30%; height: 30px; background-color:{{ selected }} ; float:right ; margin-right: 10px;"></div>
     </div>    
     <span *ngIf="!isMenuOpen">&#9650;</span>
     <span *ngIf="isMenuOpen">&#9660;</span>
@@ -26,7 +26,7 @@
         <div style="width: 80%; height: 30px; color:white; background-color:{{ sectioinArray.color }} ;">
          <pan style="padding: 10px; margin-top: 10px;vertical-align: middle;"> {{sectioinArray.description}}</pan>
         </div>
-        <ion-button (click)="seleccionColor(sectioinArray)"> select</ion-button>
+        <ion-button (click)="seleccionColor(sectioinArray)"> {{ 'lblbtnSeleccionColor' | translate }}</ion-button>
       </ion-list-header>      
     </ion-list>
   </div>

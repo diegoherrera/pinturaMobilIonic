@@ -1,19 +1,18 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Acount Verification</ion-title>    
+    <ion-title>{{ 'lblTitleVerification' | translate }}</ion-title>    
   </ion-toolbar>
 </ion-header>
 <ion-content>
 
   <ion-card>
     <ion-card-content>      
-      We will send an SMS message to verify your device. Remember that you can only access from a phone number
-      registered with the company
+      {{ 'lblTextVerification' | translate }}
       <div style="width: 100%; margin-top: 20px; margin-bottom: 20px;text-align: center;">
         <img src="assets/notificationsms.png" style="height: 180px;margin: auto;" class="img-logo">
       </div>
       
-      Number Phone Register 
+      {{ 'lblNumberRegister' | translate }}
       <b style="font-size: 30px;">{{ profile.user_mobile }}</b>
     </ion-card-content>
   </ion-card>
@@ -59,6 +58,6 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar>
-    <ion-button (click)="VerificarEvent()" [disabled]="!isenabledBotton" expand="block"><ion-icon name="call-outline"></ion-icon>&nbsp;Check Phone</ion-button>
+    <ion-button (click)="VerificarEvent()" [disabled]="!isenabledBotton" expand="block"><ion-icon name="call-outline"></ion-icon>&nbsp;{{ 'btnVerificarNumero' | translate }}</ion-button>
   </ion-toolbar>
 </ion-footer>

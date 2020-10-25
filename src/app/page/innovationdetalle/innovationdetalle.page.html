@@ -3,7 +3,7 @@
     <ion-buttons (click)="dismiss()" slot="start">
       <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
     </ion-buttons>
-    <ion-title>Detail Producto Innovation</ion-title>
+    <ion-title>{{ 'lblinnovationdetalletitle' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -16,37 +16,46 @@
     <ion-row>
       <ion-col>
         <div>
-          Rgion
+          {{ 'lblinnovationdetalleRegion' | translate }}
         </div>
       </ion-col>
       <ion-col>
-        <div>
+        <div *ngIf="language=='es' else elseproduct_IdRegion">
           {{ data.product_IdRegion.region_name }}
         </div>
+        <ng-template #elseproduct_IdRegion>
+          <b>{{ data.product_IdRegion.region_name_pg }}pg</b>
+        </ng-template>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
         <div>
-          Fanily Produc
+          {{ 'lblinnovationdetalleFamilia' | translate }}
         </div>
       </ion-col>
       <ion-col>
-        <div>
+        <div *ngIf="language=='es' else elseproduct_IdFamily">
           {{ data.product_IdFamily.family_name }}
         </div>
+        <ng-template #elseproduct_IdFamily>
+          <b>{{ data.product_IdFamily.family_name_pg }}pg</b>
+        </ng-template>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
         <div>
-          Type Produc
+          {{ 'lblinnovationdetalleTipo' | translate }}
         </div>
       </ion-col>
       <ion-col>
-        <div>
+        <div *ngIf="language=='es' else elseproduct_IdCategory">
           {{ data.product_IdCategory.category_name }}
         </div>
+        <ng-template #elseproduct_IdCategory>
+          <b>{{ data.product_IdCategory.category_name_pg }}pg</b>
+        </ng-template>
       </ion-col>
     </ion-row>
    
@@ -54,148 +63,178 @@
       <ion-row>
         <ion-col>
           <div>
-            product_name
+            {{ 'lblinnovationdetalleNombre' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_name">
             <b>{{ data.product_name }}</b>
           </div>
+          <ng-template #elseproduct_name>
+            <b>{{ data.product_name_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            product_description
+            {{ 'lblinnovationdetalleDescripcion' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_description"> 
             <b>{{ data.product_description }}</b>
           </div>
+          <ng-template #elseproduct_description>
+            <b>{{ data.product_description_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            product_segmento_de_mercado
+            {{ 'lblinnovationdetalleSegmentomercado' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_segmento_de_mercado">
             <b>{{ data.product_segmento_de_mercado }}</b>
           </div>
+          <ng-template #elseproduct_segmento_de_mercado>
+            <b>{{ data.product_segmento_de_mercado_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            product_beneficio
+            {{ 'lblinnovationdetallebeneficioproducto' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_beneficio">
             <b>{{ data.product_beneficio }}</b>
           </div>
+          <ng-template #elseproduct_beneficio>
+            <b>{{ data.product_beneficio_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            product_Forma_Fisica
+            {{ 'lblinnovationdetalleformafisica' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Forma_Fisica">
             <b>{{ data.product_Forma_Fisica }}</b>
           </div>
+          <ng-template #elseproduct_Forma_Fisica>
+            <b>{{ data.product_Forma_Fisica_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            product_Vehiculo
+            {{ 'lblinnovationdetallevehiculo' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Vehiculo_pg">
             <b>{{ data.product_Vehiculo }}</b>
           </div>
+          <ng-template #elseproduct_Vehiculo_pg>
+            <b> {{ data.product_Vehiculo_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            product_LDR
+            {{ 'lblinnovationdetalleldr' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_LDR">
             <b>{{ data.product_LDR }}</b>
           </div>
+          <ng-template #elseproduct_LDR>
+            <b>{{ data.product_LDR_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            product_Recomendation
+            {{ 'lblinnovationdetallerecomendacion' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Recomendation">
             <b>{{ data.product_Recomendation }}</b>
           </div>
+          <ng-template #elseproduct_Recomendation>
+            <b>{{ data.product_Recomendation_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            product_Proposal
+            {{ 'lblinnovationdetalleproposito' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Proposal">
             <b>{{ data.product_Proposal }}</b>
           </div>
+          <ng-template #elseproduct_Proposal>
+            <b>{{ data.product_Proposal_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            product_Regulatoria
+            {{ 'lblinnovationdetalleregulatoria' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Regulatoria">
             <b>{{ data.product_Regulatoria }}</b>
           </div>
+          <ng-template #elseproduct_Regulatoria>
+            <b>{{ data.product_Regulatoria_pg }}pg</b>
+          </ng-template>
         </ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col>
           <div>
-            product_Extrusion_de_peliculas_sopladas
+            {{ 'lblinnovationdetalleestrusionpeliculasoplada' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -209,7 +248,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Extrusion_plana_de_películas
+            {{ 'lblinnovationproduct_Extrusion_plana_de_películas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -223,7 +262,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Coextrusion_y_Laminacion_de_peliculas_sopladas
+            {{ 'lblinnovationproduct_Coextrusion_y_Laminacion_de_peliculas_sopladas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -237,7 +276,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_soplado
+            {{ 'lblinnovationproduct_soplado' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -251,7 +290,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Inyeccion_de_Piezas_o_Tapas
+            {{ 'lblinnovationproduct_Inyeccion_de_Piezas_o_Tapas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -265,7 +304,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Extrusion_de_Perfiles_y_Placas_Termo_formadas
+            {{ 'lblinnovationproduct_Extrusion_de_Perfiles_y_Placas_Termo_formadas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -279,7 +318,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Extrusion_no_tejido_non_woven_Spunbond
+            {{ 'lblinnovationproduct_Extrusion_no_tejido_non_woven_Spunbond' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -293,7 +332,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Monofilamentos_de_PP
+            {{ 'lblinnovationproduct_Monofilamentos_de_PP' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -307,7 +346,7 @@
       <ion-row>
         <ion-col>
           <div>
-            prodcut_Multifilamentos_de_PP
+            {{ 'lblinnovationprodcut_Multifilamentos_de_PP' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -321,7 +360,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Extrusion_de_tuberias_alambre_y_cables
+            {{ 'lblinnovationproduct_Extrusion_de_tuberias_alambre_y_cables' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -335,7 +374,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_BOPP_multi_capas
+            {{ 'lblinnovationproduct_BOPP_multi_capas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -349,7 +388,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Envases_Soplados_multi_capas
+            {{ 'lblinnovationproduct_Envases_Soplados_multi_capas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -364,7 +403,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Extrusion_de_Perfiles_y_Placas_Termo_formadas_multi_capas
+            {{ 'lblinnovationproduct_Extrusion_de_Perfiles_y_Placas_Termo_formadas_multi_capas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -379,7 +418,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Extrusion_Pelicula_Plana_cast_Film_para_Rafias_y_Coating
+            {{ 'lblinnovationproduct_Extrusion_Pelicula_Plana_cast_Film_para_Rafias_y_Coating' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -394,7 +433,7 @@
       <ion-row>
         <ion-col>
           <div>
-            product_Extrusion_de_Monofilamentos_Multifilamentos
+            {{ 'lblinnovationproduct_Extrusion_de_Monofilamentos_Multifilamentos' | translate }}
           </div>
         </ion-col>
       </ion-row>

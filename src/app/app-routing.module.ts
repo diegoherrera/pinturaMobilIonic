@@ -1,6 +1,48 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { BuscadorPage } from './page/buscador/buscador.page';
+import { DashboardPage } from './page/dashboard/dashboard.page';
+import { InnovacionPage } from './page/innovacion/innovacion.page';
+import { LoginPage } from './page/login/login.page';
+import { PalletsPage } from './page/pallets/pallets.page';
+import { PerfilPage } from './page/perfil/perfil.page';
+import { SlowPage } from './page/slow/slow.page';
+import { SustentabilidadPage } from './page/sustentabilidad/sustentabilidad.page';
+import { VerificarPage } from './page/verificar/verificar.page';
+import { SeguridadGuardService } from './seguridad-guard.service';
 
+
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'dashboard/buscador',
+    pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    component: LoginPage
+  },
+  {
+    path: 'dashboard',
+    component: DashboardPage,
+    canActivate: [SeguridadGuardService],
+    children: [
+      { path: 'buscador', component: BuscadorPage },
+      { path: 'perfil', component: PerfilPage },
+      { path: 'palette', component: PalletsPage },
+      { path: 'sustainability', component: SustentabilidadPage },
+      { path: 'innovation', component: InnovacionPage },
+      { path: 'slow', component: SlowPage }
+    ]
+  },
+  {
+    path: 'verificar',
+    component: VerificarPage
+  }
+];
+
+
+/*
 const routes: Routes = [
   {
     path: '',
@@ -71,11 +113,11 @@ const routes: Routes = [
     path: 'innovationdetalle',
     loadChildren: () => import('./page/innovationdetalle/innovationdetalle.module').then( m => m.InnovationdetallePageModule)
   },
-];
+];*/
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes)
   ],
   exports: [RouterModule]
 })

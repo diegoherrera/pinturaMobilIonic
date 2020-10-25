@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone, Renderer2, AfterViewInit } from '@angular/core';
 import { ModalController, LoadingController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ProductoPage } from '../producto/producto.page';
 
@@ -13,16 +14,36 @@ export class SustentabilidadPage implements OnInit, AfterViewInit {
   searchString: string = '';
   regForPage: number = 10;
   datos: any = [];
+  language: any = 'pg';
+
 
   constructor(public modalController: ModalController
     , private ngZone: NgZone
+    // , private storage: Storage
     , private renderer: Renderer2
     , public loadingCtrl: LoadingController
-    , private usuarioService: UsuarioService) { }
+    , private translateService: TranslateService
+    , private usuarioService: UsuarioService) {
+
+    /* this.storage.get('Language').then((val) => {
+       console.log('idioma tomando variable en SustentabilidadPage ******************** ' + val);
+       this.translateService.setDefaultLang(val); // add this
+     });*/
+  }
 
 
   ngAfterViewInit(): void {
     this.buscarInfo(this.page, '');
+  }
+
+  updateUrl($event, sectioinArray) {
+    console.log('$event.target.src ' + $event.target.src);
+    sectioinArray.agrupacion_product_Id.product_image = '';
+    /*if ($event.target.src != '') {
+      console.log('llego por aquiiiiiiiiiiiiiii');
+      //console.log(JSON.stringify())
+      $event.target.src = '';
+    }*/
   }
 
   ngOnInit() {
@@ -64,8 +85,6 @@ export class SustentabilidadPage implements OnInit, AfterViewInit {
       });
       return await modal.present();
     });
-
-
   }
 
   onCancel($event) {

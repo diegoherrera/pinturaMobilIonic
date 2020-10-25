@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone, Renderer2, AfterViewInit } from '@angular/core';
 import { ModalController, LoadingController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -33,28 +34,44 @@ export class SlowPage implements OnInit, AfterViewInit {
   regForPage: number = 10;
   datos: any = [];
 
+
   constructor(public modalController: ModalController
     , private ngZone: NgZone
     , private renderer: Renderer2
+    //, private storage: Storage
     , public loadingCtrl: LoadingController
-    , private usuarioService: UsuarioService) { }
+    , private translateService: TranslateService
+    , private usuarioService: UsuarioService) {
+    /* this.storage.get('Language').then((val) => {
+       console.log('idioma tomando variable en modalController ******************** ' + val);
+       this.translateService.setDefaultLang(val); // add this
+     });*/
 
+    this.page = 0;
+  }
+
+
+  traduccionMensajes(variable: string, callback) {
+    this.translateService.get(variable).subscribe((res: string) => {
+      callback(res);
+    });
+  }
 
   ngAfterViewInit(): void {
     var loader: any;
-    loader = this.loadingCtrl.create({
-      message: "Waiting for Data",
-      duration: 2000
-    }).then((res2) => {
-      res2.present();
+    this.traduccionMensajes("lblslowprocesando", (traduccion) => {
+      loader = this.loadingCtrl.create({
+        message: traduccion,
+        duration: 2000
+      }).then((res2) => {
+        res2.present();
 
-      this.buscarInfo('');
-      res2.onDidDismiss().then((dis) => {
-        console.log('Loading dismissed! after 2 Seconds', dis);
+        this.buscarInfo('');
+        res2.onDidDismiss().then((dis) => {
+          console.log('Loading dismissed! after 2 Seconds', dis);
+        });
       });
     });
-
-
   }
 
   ngOnInit() {
@@ -94,10 +111,27 @@ export class SlowPage implements OnInit, AfterViewInit {
     });
   }
 
+  doInfinite(event) {
+    this.page = this.page + 1;
+    this.usuarioService.getProductByLikeSlowFiltros(this.buscartexto, this.selected, this.selectedFamilia, this.page).subscribe(data => {
+      if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          this.datos.push(data[i]);
+        }
+      }
+      event.target.complete();
+      // this.datos = data;
+    });
+
+
+  }
+
+
   seleccionPais(sectioinArray) {
     this.selected = sectioinArray;
     console.log('paso por aqui ' + this.selected);
     this.toggleAccordion();
+    this.page = 0;
     this.buscarDatos();
   }
 
@@ -105,6 +139,7 @@ export class SlowPage implements OnInit, AfterViewInit {
     this.selectedFamilia = sectioinArray;
     console.log('paso por aqui ' + this.selectedFamilia);
     this.toggleAccordionFamilia();
+    this.page = 0;
     this.buscarDatos();
   }
 
@@ -129,14 +164,14 @@ export class SlowPage implements OnInit, AfterViewInit {
     if (val.length > 3) {
       this.buscarDatos();
     }
-    
+
     if (val.length == 0) {
       this.buscarDatos();
     }
   }
 
   buscarInfo(buscar: string) {
-    this.usuarioService.getProductByLikeSlowFiltros(buscar, this.selected, this.selectedFamilia).subscribe(data => {
+    this.usuarioService.getProductByLikeSlowFiltros(buscar, this.selected, this.selectedFamilia, this.page).subscribe(data => {
       console.log(data);
       this.datos = data;
     });

@@ -3,7 +3,7 @@
     <ion-buttons (click)="dismiss()" slot="start">
       <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
     </ion-buttons>
-    <ion-title>Detail Producto</ion-title>
+    <ion-title>{{ 'lbldetalleproductotitle' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -16,62 +16,78 @@
     <ion-row>
       <ion-col>
         <div>
-          Segment
+          {{ 'lbldetalleproductoSegment' | translate }}
         </div>
       </ion-col>
       <ion-col>
-        <div>
+        <div *ngIf="language=='es' else elsesegment_name">
           {{ data.product_IdSegment.segment_name }}
         </div>
+        <ng-template #elsesegment_name>
+          {{ data.product_IdSegment.segment_name_pg }}
+        </ng-template>        
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
         <div>
-          Fanily Produc
+          {{ 'lbldetalleproductoFanilyProduc' | translate }}
         </div>
       </ion-col>
       <ion-col>
-        <div>
+        <div *ngIf="language=='es' else elsefamily_name">
           {{ data.product_IdFamily.family_name }}
         </div>
+        <ng-template #elsefamily_name>
+          {{ data.product_IdFamily.family_name_pg }}
+        </ng-template>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
         <div>
-          Type Produc
+          {{ 'lbldetalleproductoTypeProduc' | translate }}
         </div>
       </ion-col>
       <ion-col>
-        <div>
+        <div *ngIf="language=='es' else elsecategory_name">
           {{ data.product_IdCategory.category_name }}
         </div>
+        <ng-template #elsecategory_name>
+          {{ data.product_IdCategory.category_name_pg }}
+        </ng-template>
       </ion-col>
     </ion-row>
     <img *ngIf="data.product_image==''" src="assets/noimagen.png" />
-    <img *ngIf="data.product_image!=''" src="{{ data.product_image | rutaarchivo}}" />
+    <img *ngIf="data.product_image!=''" src="{{ data.product_image | rutaarchivo}}" (error)="updateUrl($event, data)" style="width: 100%;" />
     <ion-card-content>
+      <div *ngIf="language=='es' else elseproduct_description">
       {{ data.product_description }}
-
+      </div>
+      <ng-template #elseproduct_description>
+        {{ data.product_description_pg }}pg
+      </ng-template>
       <ion-row>
         <ion-col>
           <div>
-            LDR tipico (%)
+            {{ 'lbldetalleproductoldrtipico' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_LDR_tipico">
             <b>{{ data.product_LDR_tipico }}</b>
           </div>
+          <ng-template #elseproduct_LDR_tipico>
+            {{ data.product_LDR_tipico_pg }}
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            Comercialization Country
+            {{ 'lbldetalleproductoComercializationCountry' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -85,120 +101,144 @@
       <ion-row>
         <ion-col>
           <div>
-            Production Country
+            {{ 'lbldetalleproductoProductionCountry' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_production">
             <b>{{ data.product_production }}</b>
           </div>
+          <ng-template #elseproduct_production>
+            {{ data.product_production_pg }}
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            Influence on Optics
+            {{ 'lbldetalleproductoInfluenceonOptics' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Influencia_Optica">
             <b>{{ data.product_Influencia_Optica }}</b>
           </div>
+          <ng-template #elseproduct_Influencia_Optica>
+            {{ data.product_Influencia_Optica_pg }}
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            Antiblocking Performance
+            {{ 'lbldetalleproductoproduct_Antibloqueo_Performance' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Antibloqueo_Performance_pg">
             <b>{{ data.product_Antibloqueo_Performance }}</b>
           </div>
+          <ng-template #elseproduct_Antibloqueo_Performance_pg>
+            {{ data.product_Antibloqueo_Performance_pg }}
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            Migración Lenta / Rápida
+            {{ 'lbldetalleproductoproduct_Migracion_Lenta_Rapida' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Migracion_Lenta_Rapida">
             <b>{{ data.product_Migracion_Lenta_Rapida }}</b>
           </div>
+          <ng-template #elseproduct_Migracion_Lenta_Rapida>
+            {{ data.product_Migracion_Lenta_Rapida_pg }}
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            Slip Performance
+            {{ 'lbldetalleproductoproduct_Slip_Performance' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Slip_Performance">
             <b>{{ data.product_Slip_Performance }}</b>
           </div>
+          <ng-template #elseproduct_Slip_Performance>
+            {{ data.product_Slip_Performance_pg }}
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            Chemical Resistance
+            {{ 'lbldetalleproductoproduct_Chemical_Resistance' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Chemical_Resistance">
             <b>{{ data.product_Chemical_Resistance }}</b>
           </div>
+          <ng-template #elseproduct_Chemical_Resistance>
+            {{ data.product_Chemical_Resistance_pg }}
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            General Comment
+            {{ 'lbldetalleproductoproduct_Comentario_General' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Comentario_General">
             <b>{{ data.product_Comentario_General }}</b>
           </div>
+          <ng-template #elseproduct_Comentario_General>
+            {{ data.product_Comentario_General_pg }}
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <div>
-            Example of Applications
+            {{ 'lbldetalleproductoproduct_Ejemplo_de_aplicacion' | translate }}
           </div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div>
+          <div *ngIf="language=='es' else elseproduct_Ejemplo_de_aplicacion">
             <b>{{ data.product_Ejemplo_de_aplicacion }}</b>
           </div>
+          <ng-template #elseproduct_Ejemplo_de_aplicacion>
+            {{ data.product_Ejemplo_de_aplicacion_pg }}
+          </ng-template>
         </ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col>
           <div>
-            Película agrícola solpada
+            {{ 'lbldetalleproductoproduct_Pelicula_agricola_solpada' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -212,7 +252,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Película de extrusión plana en PE
+            {{ 'lbldetalleproductoproduct_Pelicula_de_extrusion_plana_en_PE' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -226,7 +266,7 @@
       <ion-row>
         <ion-col>
           <div>
-            películas sopladas
+            {{ 'lbldetalleproductoproduct_peliculas_sopladas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -236,25 +276,11 @@
             <b>{{ data.product_peliculas_sopladas | formatCheck}}</b>
           </div>
         </ion-col>
-      </ion-row>
+      </ion-row>      
       <ion-row>
         <ion-col>
           <div>
-            Película de extrusión plana en PE
-          </div>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <div>
-            <b>{{ data.product_Pelicula_de_extrusion_plana_en_PE | formatCheck}}</b>
-          </div>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <div>
-            Película laminada
+            {{ 'lbldetalleproductoproduct_Pelicula_laminada' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -268,7 +294,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Película de extrusión plana en PP
+            {{ 'lbldetalleproductoproduct_Pelicula_de_extrusion_plana_en_PP' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -282,7 +308,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Film de PP biorientado
+            {{ 'lbldetalleproductoproduct_Film_de_PP_biorientado' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -296,7 +322,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Fibras-Raffia
+            {{ 'lbldetalleproductoproduct_Fibras_Raffia' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -310,7 +336,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Fibras- telas spun bonded y no tejidas
+            {{ 'lbldetalleproductoproduct_Fibras_telas_spun_bonded_y_no_tejidas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -324,7 +350,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Fibras
+            {{ 'lbldetalleproductoproduct_Fibras' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -338,7 +364,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Moldeo por soplado
+            {{ 'lbldetalleproductoproduct_Moldeo_por_soplado' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -352,7 +378,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Moldeo por inyección
+            {{ 'lbldetalleproductoproduct_Moldeo_por_inyeccion' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -367,7 +393,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Moldeo por compresión
+            {{ 'lbldetalleproductoproduct_Moldeo_por_compresion' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -382,7 +408,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Compuestos
+            {{ 'lbldetalleproductoproduct_Compuestos' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -397,7 +423,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Extrusión de tubería
+            {{ 'lbldetalleproductoproduct_Extrusion_de_tuberia' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -412,7 +438,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Tubería de irrigación por goteo
+            {{ 'lbldetalleproductoproduct_Tuberia_de_irrigacion_por_goteo' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -427,7 +453,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Extrusión de láminas-placas
+            {{ 'lbldetalleproductoproduct_Extrusion_de_laminas_placas' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -442,7 +468,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Cables
+            {{ 'lbldetalleproductoproduct_Cables' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -456,7 +482,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Extrusión de perfiles
+            {{ 'lbldetalleproductoproduct_Extrusion_de_perfiles' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -470,7 +496,7 @@
       <ion-row>
         <ion-col>
           <div>
-            Moldeo-rotomoldeo
+            {{ 'lbldetalleproductoproduct_Moldeo_rotomoldeo' | translate }}
           </div>
         </ion-col>
       </ion-row>
@@ -484,7 +510,7 @@
       <ion-row>
         <ion-col>
           <div>
-            <b>Document</b>
+            <b>{{ 'lbldetalleproductosectiondocument' | translate }} Español</b>
           </div>
         </ion-col>
       </ion-row>
@@ -497,7 +523,22 @@
           </div>
         </ion-col>
       </ion-row>
-
+      <ion-row>
+        <ion-col>
+          <div>
+            <b>{{ 'lbldetalleproductosectiondocument' | translate }} Portuguez</b>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div>
+            <li *ngFor="let archivo of data.product_link_pg.split('|')">
+              <a target="blank" href="{{ archivo | rutaarchivo}}" mat-menu-item>{{ archivo }}</a>
+            </li>
+          </div>
+        </ion-col>
+      </ion-row>
 
     </ion-card-content>
 

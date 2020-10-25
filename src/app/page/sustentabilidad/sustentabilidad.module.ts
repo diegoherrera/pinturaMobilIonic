@@ -8,13 +8,23 @@ import { SustentabilidadPageRoutingModule } from './sustentabilidad-routing.modu
 
 import { SustentabilidadPage } from './sustentabilidad.page';
 import { RutaarchivoPipe } from 'src/app/rutaarchivo.pipe';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { createTranslateLoader } from 'src/app/app.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SustentabilidadPageRoutingModule
+    SustentabilidadPageRoutingModule,
+    TranslateModule.forRoot({ // <--- add this
+      loader: { // <--- add this 
+        provide: TranslateLoader, // <--- add this
+        useFactory: (createTranslateLoader),  // <--- add this
+        deps: [HttpClient] // <--- add this
+      } // <--- add this
+    }) // <--- add this
   ],
   declarations: [SustentabilidadPage, RutaarchivoPipe]
 })

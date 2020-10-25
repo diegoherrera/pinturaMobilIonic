@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Innovation Product</ion-title>
+    <ion-title>{{ 'titleinnovation' | translate }}</ion-title>
     <!-- Side menu button -->
     <ion-buttons slot="start">
       <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar placeholder="Search" [(ngModel)]="searchString" (ionInput)="getItems($event)"
+    <ion-searchbar placeholder="{{ 'innovationbuscar' | translate }}" [(ngModel)]="searchString" (ionInput)="getItems($event)"
       (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
@@ -17,9 +17,15 @@
       <ion-card-title>{{sectioinArray.product_code}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <b>product_name :</b> {{sectioinArray.product_name}}<br>
-      <b>Description :</b> {{sectioinArray.product_description}}<br>
+      <div *ngIf="language=='es' else elseidioma">
+        <b>{{ 'innovationproducto' | translate }} :</b> {{sectioinArray.product_name}}<br>
+        <b>{{ 'innovationdescription' | translate }} :</b> {{sectioinArray.product_description}}<br>
+      </div>
+      <ng-template #elseidioma>
+        <b>{{ 'innovationproducto' | translate }} :</b> {{sectioinArray.product_name_pg}}<br>
+        <b>{{ 'innovationdescription' | translate }} :</b> {{sectioinArray.product_description_pg}}<br>
+      </ng-template>
     </ion-card-content>
-    <ion-button (click)="pushPage(sectioinArray)" expand="block">Product Detail</ion-button>
+    <ion-button (click)="pushPage(sectioinArray)" expand="block">{{ 'innovationdetalleproducto' | translate }}</ion-button>
   </ion-card>
 </ion-content>

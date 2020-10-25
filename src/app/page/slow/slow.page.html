@@ -1,19 +1,19 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Slow Movers</ion-title>
+    <ion-title>{{ 'titleSlowMovers' | translate }}</ion-title>
     <!-- Side menu button -->
     <ion-buttons slot="start">
       <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar placeholder="Search" [(ngModel)]="searchString" (ionInput)="getItems($event)"
+    <ion-searchbar placeholder="{{ 'lblslowbuscar' | translate }}" [(ngModel)]="searchString" (ionInput)="getItems($event)"
       (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
 
     <div>
       <h3 style="margin-left: 20px;" (click)="toggleAccordion()">
         <div style="width: 90%; float: left;">
-          Pais<div *ngIf="selected!=''" style="width: 30%; height: 30px;float:right ; margin-right: 10px;">
+          {{ 'lblslowfiltropais' | translate }}<div *ngIf="selected!=''" style="width: 40%; height: 30px;float:right ; margin-right: 10px;">
             {{ selected }}</div>
         </div>
         <span *ngIf="isMenuOpen">&#9650;</span>
@@ -25,13 +25,13 @@
             <div style="width: 80%; height: 30px;  ">
               <pan style="padding: 10px; margin-top: 10px;vertical-align: middle;"> {{sectioinArray}}</pan>
             </div>
-            <ion-button (click)="seleccionPais(sectioinArray)"> select</ion-button>
+            <ion-button (click)="seleccionPais(sectioinArray)"> {{ 'lblslowbtnseleccionar' | translate }}</ion-button>
           </ion-list-header>
         </ion-list>
       </div>
       <h3 style="margin-left: 20px;" (click)="toggleAccordionFamilia()">
         <div style="width: 90%; float: left;">
-          Familia<div *ngIf="selected!=''" style="width: 30%; height: 30px;float:right ; margin-right: 10px;">
+          {{ 'lblslowfiltrofamilia' | translate }}<div *ngIf="selected!=''" style="width: 40%; height: 30px;float:right ; margin-right: 10px;">
             {{ selectedFamilia }}</div>
         </div>
         <span *ngIf="isMenuOpenFamilia">&#9650;</span>
@@ -43,7 +43,7 @@
             <div style="width: 80%; height: 30px;  ">
               <pan style="padding: 10px; margin-top: 10px;vertical-align: middle;"> {{sectioinArray}}</pan>
             </div>
-            <ion-button (click)="seleccionFamilia(sectioinArray)"> select</ion-button>
+            <ion-button (click)="seleccionFamilia(sectioinArray)"> {{ 'lblslowbtnseleccionar' | translate }}</ion-button>
           </ion-list-header>
         </ion-list>
       </div>
@@ -60,18 +60,22 @@
     </ion-card-header>
     <!--<img src="assets/slow.png" style="width: 80px;" />-->
     <ion-card-content>
-      Item : {{sectioinArray.Item}}<br>
-      Description : {{sectioinArray.Description}}<br>
-      Pais : {{sectioinArray.Pais}}<br>
-      Family : {{sectioinArray.Family}}<br>
-      Plant : {{sectioinArray.Plant}}<br>
-      Lote : {{sectioinArray.Lote}}<br>
-      OnHan : {{sectioinArray.OnHan}}<br>
-      UM : {{sectioinArray.UM}}<br>
-      Aplication : {{sectioinArray.Aplication}}<br>
-      State : {{sectioinArray.State}}<br>
+      {{ 'lblslowItem' | translate }} : {{sectioinArray.Item}}<br>
+      {{ 'lblslowDescripcion' | translate }} : {{sectioinArray.Description}}<br>
+      {{ 'lblslowPais' | translate }} : {{sectioinArray.Pais}}<br>
+      {{ 'lblslowFamilia' | translate }} : {{sectioinArray.Family}}<br>
+      {{ 'lblslowPlanta' | translate }} : {{sectioinArray.Plant}}<br>
+      {{ 'lblslowLote' | translate }} : {{sectioinArray.Lote}}<br>
+      {{ 'lblslowOnHan' | translate }} : {{sectioinArray.OnHan}}<br>
+      {{ 'lblslowUm' | translate }} : {{sectioinArray.UM}}<br>
+      {{ 'lblslowAplicacion' | translate }} : {{sectioinArray.Aplication}}<br>
+      {{ 'lblslowEstado' | translate }} : {{sectioinArray.State}}<br>
     </ion-card-content>
-    <ion-button *ngIf="sectioinArray.State" (click)="pushPage(sectioinArray)" expand="block">Change State</ion-button>
-    <ion-button *ngIf="!sectioinArray.State" disabled color="danger" expand="block">Disabled</ion-button>
+    <ion-button *ngIf="sectioinArray.State" (click)="pushPage(sectioinArray)" expand="block">{{ 'lblslowbtnCambiarEstado' | translate }}</ion-button>
+    <ion-button *ngIf="!sectioinArray.State" disabled color="danger" expand="block">{{ 'lblslowbtnEstadonodisponible' | translate }}</ion-button>
   </ion-card>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

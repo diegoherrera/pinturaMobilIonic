@@ -5,24 +5,24 @@ import { Injectable } from '@angular/core';
 })
 export class TraductionService {
 
-  traducciones: any = [];
-  constructor(private storage: Storage) {
+  traducciones: any = {};
+  language: any = 'es';
 
+  constructor(private storage: Storage) {
   }
 
-  obtenerTraducciones(callback) {
-    this.storage.get('traduction').then((val) => {
-      this.traducciones = JSON.parse(val);
-      callback(true);
+  getLanguage() {
+    this.storage.get('Language').then((val) => {
+      this.language = val;
     });
   }
-
-  traduction(value: string): any {
-    this.obtenerTraducciones((retorno) => {
-      var desc = this.traducciones.find(function (e) {
-        return e.key_name == value
-      })
-      return desc.traduction_name;
-    })  
+  
+  setLanguageEs() {
+    this.storage.set('Language', 'es');
+    this.language = 'es';
+  }
+  setLanguagePg() {
+    this.storage.set('Language', 'pg');
+    this.language = 'pg';
   }
 }

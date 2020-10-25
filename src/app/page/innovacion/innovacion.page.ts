@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone, Renderer2, AfterViewInit } from '@angular/core';
 import { ModalController, LoadingController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { InnovationdetallePage } from '../innovationdetalle/innovationdetalle.page';
 import { ProductoPage } from '../producto/producto.page';
@@ -14,12 +15,22 @@ export class InnovacionPage implements OnInit, AfterViewInit {
   searchString: string = '';
   regForPage: number = 10;
   datos: any = [];
+  language: any = 'pg';
+
 
   constructor(public modalController: ModalController
     , private ngZone: NgZone
     , private renderer: Renderer2
+   // , private storage: Storage
     , public loadingCtrl: LoadingController
-    , private usuarioService: UsuarioService) { }
+    , private translateService: TranslateService
+    , private usuarioService: UsuarioService) {
+
+    /*this.storage.get('Language').then((val) => {
+      console.log('idioma tomando variable en InnovacionPage ******************** ' + val);
+      this.translateService.setDefaultLang(val); // add this
+    });*/
+  }
 
   ngAfterViewInit(): void {
     this.buscarInfo(this.page, '');
@@ -32,7 +43,7 @@ export class InnovacionPage implements OnInit, AfterViewInit {
     const modal = await this.modalController.create({
       component: InnovationdetallePage,
       cssClass: 'my-custom-class',
-      componentProps: { 'data': registro }
+      componentProps: { 'data': registro, 'language': this.language }
     });
     return await modal.present();
 
