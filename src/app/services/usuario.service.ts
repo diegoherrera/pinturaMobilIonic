@@ -93,6 +93,47 @@ export class UsuarioService {
   GetProductAll() {
     return this.http.get(`${this.base_path}/all-product`)
   }
+
+
+  DownloadAllImage() {
+    return this.http.post<any>(`${this.base_path}/download-imagen`, { }, { headers: this.headers })
+  }
+
+  DownloadAllProductos() {
+    return this.http.post<any>(`${this.base_path}/download-producto`, { }, { headers: this.headers })
+  }
+
+  DownloadAllSlowProduct() {
+    return this.http.post<any>(`${this.base_path}/download-slow-movers`, { }, { headers: this.headers })
+  }
+  DownloadAllSegment() {
+    return this.http.post<any>(`${this.base_path}/download-segment`, { }, { headers: this.headers })
+  }
+  DownloadAllFamily() {
+    return this.http.post<any>(`${this.base_path}/download-family`, { }, { headers: this.headers })
+  }
+  DownloadAllCategory() {
+    return this.http.post<any>(`${this.base_path}/download-category`, { }, { headers: this.headers })
+  }
+
+  DownloadAllPallete() {
+    return this.http.post<any>(`${this.base_path}/download-palette`, { }, { headers: this.headers })
+  }
+
+  DownloadAllProductSustentable() {
+    return this.http.post<any>(`${this.base_path}/download-sustentables`, { }, { headers: this.headers })
+  }
+
+  DownloadAllFavoritos() {
+    return this.http.post<any>(`${this.base_path}/download-favoritos`, { }, { headers: this.headers })
+  }
+
+  DownloadAllInnovation() {
+    return this.http.post<any>(`${this.base_path}/download-innovations`, { }, { headers: this.headers })
+  }
+
+
+
   GetProductAllImage() {
     return this.http.get(`${this.base_path}/all-product-image-download`)
   }

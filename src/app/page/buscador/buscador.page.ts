@@ -1,11 +1,13 @@
 import { Component, OnInit, NgZone, ViewChild, ElementRef, Renderer2, AfterViewInit, ɵConsole } from '@angular/core';
 import { ProductoPage } from '../producto/producto.page';
-import { ModalController, LoadingController } from '@ionic/angular';
+import { ModalController, LoadingController, IonContent } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { zip } from 'rxjs';
 import { SincronizarPage } from '../sincronizar/sincronizar.page';
 import { TranslateService } from '@ngx-translate/core';
 import { AutentificacionService } from 'src/app/autentificacion.service';
+import { ConnectionStatus, NetworkService } from 'src/app/network.service';
+import { DbcacheService } from 'src/app/dbcache.service';
 
 @Component({
   selector: 'app-buscador',
@@ -13,6 +15,7 @@ import { AutentificacionService } from 'src/app/autentificacion.service';
   styleUrls: ['./buscador.page.scss'],
 })
 export class BuscadorPage implements OnInit, AfterViewInit {
+  @ViewChild(IonContent, { static: false }) content: IonContent;
   @ViewChild("favorito") favorito: ElementRef;
   @ViewChild("family") family: ElementRef;
   @ViewChild("segmento") segmento: ElementRef;
@@ -52,7 +55,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
   FavoritoArray: any = [];
   buscando: string = '';
   language: any = 'pg';
-  pagina : number = 0;
+  pagina: number = 0;
   micantidad: number = 0;
 
   constructor(
@@ -62,6 +65,8 @@ export class BuscadorPage implements OnInit, AfterViewInit {
     , public loadingCtrl: LoadingController
     , private translateService: TranslateService
     , private auth: AutentificacionService
+    , private dbcacheService: DbcacheService
+    , private networkService: NetworkService
     , private usuarioService: UsuarioService) {
 
     /* this.storage.get('Language').then((val) => {
@@ -78,6 +83,11 @@ export class BuscadorPage implements OnInit, AfterViewInit {
     this.pagina = 0;
 
 
+  }
+
+  isHasConnection() {
+    return false;
+    // return this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline ? false: true;
   }
 
   traduccionMensajes(variable: string, callback) {
@@ -117,13 +127,22 @@ export class BuscadorPage implements OnInit, AfterViewInit {
 
   GetFavorito() {
     this.auth.getProfile((retorno) => {
-
-      console.log('xxxxxxx ' + JSON.stringify(retorno));
-      console.log('xxxxxxx ' + JSON.parse(retorno)._id);
-      this.usuarioService.GetFavorito(JSON.parse(retorno)._id).subscribe(data => {
-        this.FavoritoArray = data;
-        console.log(JSON.stringify(data));
-      });
+      if (this.isHasConnection()) {
+        this.usuarioService.GetFavorito(JSON.parse(retorno)._id).subscribe(data => {
+          this.content.scrollToTop(0);
+          this.FavoritoArray = data;
+        });
+      } else {
+        //modo offline
+        console.log('trabajando modo offline  GetFavorito');
+        this.dbcacheService.GetFavoritos(JSON.parse(retorno)._id, (resultado) => {
+          console.log('favoritos devueltos ' + resultado.length);
+          console.log('favoritos devueltos ' + JSON.stringify(resultado));
+          this.content.scrollToTop(0);
+          this.FavoritoArray = [];
+          this.FavoritoArray = resultado;
+        })
+      }
     });
   }
 
@@ -139,43 +158,77 @@ export class BuscadorPage implements OnInit, AfterViewInit {
         this.buscando,
         JSON.parse(retorno).user_comercializacion,
         this.pagina).subscribe(data => {
-          console.log('llego xxxxxxxxxxxxxxx ' + data.total);
-         this.micantidad = data.total;
+          // console.log('llego xxxxxxxxxxxxxxx ' + data.total);
+
+          this.micantidad = data.total;
         });
     });
   }
 
 
   getProduct() {
-    this.getProductCount();
-    this.pagina = 0;
     this.auth.getProfile((retorno) => {
-      this.usuarioService.GetProducByHome(
-        this.filtrosSeleccionadoSegmento,
-        this.filtrosSeleccionadoFamilia,
-        this.filtrosSeleccionadoTipo,
-        this.filtrosSeleccionado,
-        this.buscando,
-        JSON.parse(retorno).user_comercializacion,
-        this.pagina).subscribe(data => {
-          console.log('informacion ' + JSON.stringify(data));
-          this.ProductArray = data.products;
-        });
+      if (this.isHasConnection()) {
+        this.getProductCount();
+        this.pagina = 0;
+        this.usuarioService.GetProducByHome(
+          this.filtrosSeleccionadoSegmento,
+          this.filtrosSeleccionadoFamilia,
+          this.filtrosSeleccionadoTipo,
+          this.filtrosSeleccionado,
+          this.buscando,
+          JSON.parse(retorno).user_comercializacion,
+          this.pagina).subscribe(data => {
+            //console.log('informacion ' + JSON.stringify(data));
+            this.content.scrollToTop(0);
+            this.ProductArray = data.products;
+          });
+
+      } else {
+        // modo offline
+        console.log('Modo offline getProduct()');
+        this.dbcacheService.GetProductos(
+          this.filtrosSeleccionadoSegmento,
+          this.filtrosSeleccionadoFamilia,
+          this.filtrosSeleccionadoTipo,
+          this.filtrosSeleccionado,
+          this.buscando,
+          JSON.parse(retorno).user_comercializacion, (resultado) => {
+            this.micantidad = resultado.length;
+            console.log('informacion ' + JSON.stringify(resultado));
+            this.content.scrollToTop(0);
+            this.ProductArray = resultado.slice(1, 14); 
+          });
+      }
     });
+
   }
 
 
   async pushPageFavorito(registro) {
-    this.usuarioService.getProductById(registro._id).subscribe(async data => {
-      console.log('registro completo ' + JSON.stringify(data));
-      //console.log(JSON.stringify(registro));
-      const modal = await this.modalController.create({
-        component: ProductoPage,
-        cssClass: 'my-custom-class',
-        componentProps: { 'data': data.products }
+    if (this.isHasConnection()) {
+      this.usuarioService.getProductById(registro._id).subscribe(async data => {
+        console.log('registro completo ' + JSON.stringify(data));
+        //console.log(JSON.stringify(registro));
+        const modal = await this.modalController.create({
+          component: ProductoPage,
+          cssClass: 'my-custom-class',
+          componentProps: { 'data': data.products }
+        });
+        return await modal.present();
       });
-      return await modal.present();
-    });
+    } else {
+      console.log('trabajando modo offline para detalle');
+      this.dbcacheService.GetProductoFavorito(registro._id, async (resultado) => {
+        console.log(JSON.stringify(resultado));
+        const modal = await this.modalController.create({
+          component: ProductoPage,
+          cssClass: 'my-custom-class',
+          componentProps: { 'data': resultado[0] }
+        });
+        return await modal.present();
+      });
+    }
   }
 
   seleccionarSegmento(selected) {
@@ -333,6 +386,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
     this.renderer.removeClass(this.producto.nativeElement, "active");
 
     this.searchString = '';
+    this.buscando = '';
     this.GetFavorito();
   }
 
@@ -359,27 +413,31 @@ export class BuscadorPage implements OnInit, AfterViewInit {
 
 
   doInfinite(event) {
-    this.pagina = this.pagina + 1; 
-    this.auth.getProfile((retorno) => {
-      this.usuarioService.GetProducByHome(
-        this.filtrosSeleccionadoSegmento,
-        this.filtrosSeleccionadoFamilia,
-        this.filtrosSeleccionadoTipo,
-        this.filtrosSeleccionado,
-        this.buscando,
-        JSON.parse(retorno).user_comercializacion,
-        this.pagina).subscribe(data => {
-          if (data.products.length > 0) {
-            for (let i = 0; i < data.products.length; i++) {
-              this.ProductArray.push(data.products[i]);
+    if (this.isHasConnection()) {
+      this.pagina = this.pagina + 1;
+      this.auth.getProfile((retorno) => {
+        this.usuarioService.GetProducByHome(
+          this.filtrosSeleccionadoSegmento,
+          this.filtrosSeleccionadoFamilia,
+          this.filtrosSeleccionadoTipo,
+          this.filtrosSeleccionado,
+          this.buscando,
+          JSON.parse(retorno).user_comercializacion,
+          this.pagina).subscribe(data => {
+            if (data.products.length > 0) {
+              for (let i = 0; i < data.products.length; i++) {
+                this.ProductArray.push(data.products[i]);
+              }
             }
-          }
-          event.target.complete();
-        });
-    });
+            event.target.complete();
+          });
+      });
+    }    
   }
 
   async pushPageFilter() {
+    console.log('lelgo al pushPageFilter ' + JSON.stringify({ value: this.filtrosSeleccionado, segmento: this.filtrosSeleccionadoSegmento, familia: this.filtrosSeleccionadoFamilia, tipo: this.filtrosSeleccionadoTipo }));
+
     var registro = {};
     let modal = await this.modalController.create({
       component: SincronizarPage,
@@ -431,6 +489,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
     });
 
     return await modal.present();
+
   }
 
   async pushPage(registro) {

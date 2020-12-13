@@ -17,8 +17,9 @@
       <ion-card-title>{{sectioinArray.agrupacion_product_Id.product_code}}</ion-card-title>
     </ion-card-header>
     <img *ngIf="sectioinArray.agrupacion_product_Id.product_image==''" src="assets/noimagen.png" />
+    <!--(error)="updateUrl($event, sectioinArray)"-->
     <img *ngIf="sectioinArray.agrupacion_product_Id.product_image!=''"
-      src="{{ sectioinArray.agrupacion_product_Id.product_image | rutaarchivo}}" (error)="updateUrl($event, sectioinArray)" style="width: 100%;" />
+      src="{{ sectioinArray.agrupacion_product_Id.product_image | rutaarchivo | async}}"  style="width: 100%;" />
     <ion-card-content>
       <div *ngIf="language=='es' else elseidioma">
         {{sectioinArray.agrupacion_product_Id.product_description}}

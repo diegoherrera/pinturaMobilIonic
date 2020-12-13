@@ -12,7 +12,7 @@ export class AutentificacionService {
   language = new BehaviorSubject<string>('es');
 
   constructor(private storage: Storage, private platform: Platform) {
-   
+
 
     this.platform.ready().then(() => {
       this.ifLoggedIn();
@@ -30,12 +30,12 @@ export class AutentificacionService {
   registrarisLogin() {
     console.log('is registrarLogin ');
     this.storage.set('isLogin', 'true').then((response) => {
-      console.log('is login ' + response);      
+      console.log('is login ' + response);
       this.islogin.next(true);
     });
   }
 
-  registrarLogin(profile: any) {  
+  registrarLogin(profile: any) {
     this.storage.set('profile', JSON.stringify(profile)).then((response) => {
       console.log('is profile ' + response);
       this.profile.next(JSON.stringify(profile));
@@ -49,7 +49,7 @@ export class AutentificacionService {
       console.log('valor de is login ' + response);
       if (response) {
         console.log('paso por condicion ');
-        this.islogin.next(true);    
+        this.islogin.next(true);
         this.inicializado = true;
       } else {
         this.islogin.next(false);
@@ -71,6 +71,138 @@ export class AutentificacionService {
     });
   }
 
+  isHasImageCache(url, callback) {
+    this.storage.get('img-cache-' + url).then((response) => {
+      if (response) {
+        callback(true);
+      } else {
+        callback(false);
+      }
+    });
+  }
+
+  SetHasImageCach(url, callback) {
+    this.storage.get('img-cache-' + url).then((response) => {
+      callback(response);
+    });
+  }
+
+  GetImageCache(url, callback) {
+    this.storage.get('img-cache-content' + url).then((response) => {
+      callback(response);
+    });
+  }
+
+  /************************************************************/
+  SetFavoritCache(contenido, callback) {
+    this.storage.set('favorito-cache', contenido).then((response) => {
+      callback(true);
+    });
+  }
+
+  GetFavoritCache(callback) {
+    this.storage.get('favorito-cache').then((response) => {
+      callback(response);
+    });
+  }
+
+  SetSustentabilidadCache(contenido, callback) {
+    this.storage.set('Sustentabilidad-cache', contenido).then((response) => {
+      callback(true);
+    });
+  }
+
+  GetSustentabilidadCache(callback) {
+    this.storage.get('Sustentabilidad-cache').then((response) => {
+      callback(response);
+    });
+  }
+
+  SetSlowCache(contenido, callback) {
+    this.storage.set('Slow-cache', contenido).then((response) => {
+      callback(true);
+    });
+  }
+
+  GetSlowCache(callback) {
+    this.storage.get('Slow-cache').then((response) => {
+      callback(response);
+    });
+  }
+
+
+  SetProductCache(contenido, callback) {
+    this.storage.set('Product-cache', contenido).then((response) => {
+      callback(true);
+    });
+  }
+
+  GetProductCache(callback) {
+    this.storage.get('Product-cache').then((response) => {
+      callback(response);
+    });
+  }
+
+  SetInnovableCache(contenido, callback) {
+    this.storage.set('Innovable-cache', contenido).then((response) => {
+      callback(true);
+    });
+  }
+
+  GetInnovableCache(callback) {
+    this.storage.get('Innovable-cache').then((response) => {
+      callback(response);
+    });
+  }
+
+  SetUserCache(contenido, callback) {
+    this.storage.set('User-cache', contenido).then((response) => {
+      callback(true);
+    });
+  }
+
+  GetUserCache(callback) {
+    this.storage.get('User-cache').then((response) => {
+      callback(response);
+    });
+  }
+
+
+  /************************************************************/
+
+  SetImageCache(url, content, callback) {
+    this.storage.set('img-cache-' + url, url).then((response) => {
+      this.storage.set('img-cache-content' + url, content).then((response) => {
+        callback(true);
+      });
+    });
+  }
+
+  SetTimeCache(time, callback) {
+    this.storage.set('time-cache', time).then((response) => {
+      callback(time);
+    });
+  }
+  GetTimeCache(callback) {
+    this.storage.get('time-cache').then((response) => {
+      callback(response);
+    });
+  }
+
+
+  SetRespaldoCache(tabla, contenido, callback) {
+    this.storage.set(tabla, contenido).then((response) => {
+      callback(true);
+    });
+  }
+
+  GetRespaldoCache(tabla, callback) {
+    this.storage.get(tabla).then((response) => {
+      if (response) {
+        callback(response);
+      }
+    });
+  }
 
   isAuthenticated(callback) {
     this.storage.get('isLogin').then((response) => {

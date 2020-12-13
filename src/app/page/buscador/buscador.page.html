@@ -67,7 +67,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [scrollEvents]="true">
   <div #favorito class="active">
     <h2 style="margin-left: 20px;">
       Mis Favoritos
@@ -78,7 +78,7 @@
       </ion-card-header>
       <img *ngIf="sectioinArray.favorito_product_Id.product_image==''" src="assets/noimagen.png" />
       <img *ngIf="sectioinArray.favorito_product_Id.product_image!=''"
-        src="{{ sectioinArray.favorito_product_Id.product_image | rutaarchivo }}" (error)="updateUrlFavorito($event, sectioinArray)" style="width: 100%;"/>
+        src="{{ sectioinArray.favorito_product_Id.product_image | rutaarchivo | async}}"  style="width: 100%;"/>
       <ion-card-content>
         <div *ngIf="language=='es' else elseproduct_descriptionxx">
           {{sectioinArray.favorito_product_Id.product_description | slice:0:200}}
@@ -168,10 +168,11 @@
       </h2>
       <ion-card *ngFor="let sectioinArray of ProductArray">
         <ion-card-header>
-          <ion-card-title>{{sectioinArray.product_code}}</ion-card-title>
+          <ion-card-title>{{sectioinArray.product_code}} {{sectioinArray.product_image}}</ion-card-title>
         </ion-card-header>
         <img *ngIf="sectioinArray.product_image==''" src="assets/noimagen.png" />
-        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image | rutaarchivo }}" (error)="updateUrlHome($event, sectioinArray)" style="width: 100%;" />
+        <!--(error)="updateUrlHome($event, sectioinArray)"-->
+        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image | rutaarchivo | async }}"  style="width: 100%;" />
         <ion-card-content>
           <div *ngIf="language=='es' else elseproduct_descriptionxx">
             {{sectioinArray.product_description | slice:0:200}}
@@ -282,7 +283,7 @@
           <ion-card-title>{{sectioinArray.product_code}}</ion-card-title>
         </ion-card-header>
         <img *ngIf="sectioinArray.product_image==''" src="assets/noimagen.png" />
-        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image  | rutaarchivo }}" />
+        <img *ngIf="sectioinArray.product_image!=''" src="{{ sectioinArray.product_image  | rutaarchivo | async }}" />
         <ion-card-content>
           <div *ngIf="language=='es' else elseproduct_descriptionxx2">
             {{sectioinArray.product_description | slice:0:200}}

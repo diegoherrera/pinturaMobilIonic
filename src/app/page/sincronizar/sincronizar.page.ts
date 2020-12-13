@@ -3,6 +3,8 @@ import { ModalController, LoadingController } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { DbService } from 'src/app/services/db.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NetworkService } from 'src/app/network.service';
+import { DbcacheService } from 'src/app/dbcache.service';
 
 @Component({
   selector: 'app-sincronizar',
@@ -217,6 +219,8 @@ export class SincronizarPage implements OnInit, AfterViewInit {
     , public loadingCtrl: LoadingController
     , private usuarioService: UsuarioService
     , private translateService: TranslateService
+    , private networkService: NetworkService
+    , private dbcacheService: DbcacheService
     , private db: DbService) {
     this.opcionDeFiltro = 0;
     this.isprincial = true;
@@ -227,45 +231,91 @@ export class SincronizarPage implements OnInit, AfterViewInit {
 
   }
 
+  isHasConnection() {
+    return false;
+    // return this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline ? false: true;
+  }
+
+
   getSegment() {
-    this.usuarioService.GetSegment().subscribe(data => {
-      console.log(data);
-
-      let temporal: any = data; 
-      for (let result of this.segmento) {
-       temporal = temporal.filter(obj => obj._id !== result._id);
-     }
-
-      this.SegmentArray = temporal;
-      this.SegmentArrayFilter = temporal;
-    });
+    console.log('getSegment');
+    if (this.isHasConnection()) {
+      this.usuarioService.GetSegment().subscribe(data => {
+        console.log(data);
+        let temporal: any = data;
+        for (let result of this.segmento) {
+          temporal = temporal.filter(obj => obj._id !== result._id);
+        }
+        this.SegmentArray = temporal;
+        this.SegmentArrayFilter = temporal;
+      });
+    } else {
+      //modo offline
+      console.log('modo offline en getSegment()');
+      this.dbcacheService.GetSegmentos((data) => {
+        console.log(data);
+        let temporal: any = data;
+        for (let result of this.segmento) {
+          temporal = temporal.filter(obj => obj._id !== result._id);
+        }
+        this.SegmentArray = temporal;
+        this.SegmentArrayFilter = temporal;
+      });
+    }
   }
 
   GetFamily() {
-    this.usuarioService.GetFamily().subscribe(data => {
-      console.log(data);
-
-      let temporal: any = data; 
-       for (let result of this.familia) {
-        temporal = temporal.filter(obj => obj._id !== result._id);
-      }
-
-      this.FamilyArray = temporal;
-      this.FamilyArrayFilter = temporal;
-    });
+    if (this.isHasConnection()) {
+      this.usuarioService.GetFamily().subscribe(data => {
+        console.log(data);
+        let temporal: any = data;
+        for (let result of this.familia) {
+          temporal = temporal.filter(obj => obj._id !== result._id);
+        }
+        this.FamilyArray = temporal;
+        this.FamilyArrayFilter = temporal;
+      });
+    } else {
+      //modo offline
+      console.log('modo offline en GetFamily()');
+      this.dbcacheService.GetFamilias((data) => {
+        console.log(data);
+        let temporal: any = data;
+        for (let result of this.familia) {
+          temporal = temporal.filter(obj => obj._id !== result._id);
+        }
+        this.FamilyArray = temporal;
+        this.FamilyArrayFilter = temporal;
+      });
+    }
   }
 
   GetType() {
-    this.usuarioService.GetType().subscribe(data => {
-      console.log('seleccionados ' + JSON.stringify(this.tipo));
-      console.log('consulta' + data);
-      let temporal: any = data; 
-       for (let result of this.tipo) {
-        temporal = temporal.filter(obj => obj._id !== result._id);
-      }
-      this.TypeArray = temporal;
-      this.TypeArrayFilter = temporal;
-    });
+    if (this.isHasConnection()) {
+      this.usuarioService.GetType().subscribe(data => {
+        console.log('seleccionados ' + JSON.stringify(this.tipo));
+        console.log('consulta' + data);
+        let temporal: any = data;
+        for (let result of this.tipo) {
+          temporal = temporal.filter(obj => obj._id !== result._id);
+        }
+        this.TypeArray = temporal;
+        this.TypeArrayFilter = temporal;
+      });
+    } else {
+      //modo offline
+      console.log('modo offline en GetType()');
+      this.dbcacheService.GetCategorias((data) => {
+        console.log('seleccionados ' + JSON.stringify(this.tipo));
+        console.log('consulta' + data);
+        let temporal: any = data;
+        for (let result of this.tipo) {
+          temporal = temporal.filter(obj => obj._id !== result._id);
+        }
+        this.TypeArray = temporal;
+        this.TypeArrayFilter = temporal;
+      });
+    }
   }
 
   getFiltroCampos() {
@@ -451,7 +501,7 @@ export class SincronizarPage implements OnInit, AfterViewInit {
   ngOnInit() {
     console.log(this.value);
 
-   
+
 
 
   }

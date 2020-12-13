@@ -33,6 +33,7 @@
     "menusustentabilidad": "Sustentável",
     "menuinnoation": "Inovativa",
     "menuslowmover": "Slow Movers",
+    "menusoffline": "fora de linha",
     "btnlogout": "Sair do aplicativo",
     "titlePaginaPerfil": "Editar Perfil",
     "lblfirstname": "Nome",
@@ -168,5 +169,8 @@
     "20": "Molding-Rotomolding",
     "21": "Foams",
     "lblfiltrosbtnagregarfiltro": "Agregar Filtro",
-    "lblfiltrosbtnCancel": "Cancelar"
+    "lblfiltrosbtnCancel": "Cancelar",
+    "titleOffline": "Modo Fuera de Linea",
+    "leyendaOffline": "Ultima Actualizacion de datos ",
+    "btnOffline": "Guardar En Dispositivo"
 }

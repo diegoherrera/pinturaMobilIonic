@@ -9,7 +9,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { IonicStorageModule } from '@ionic/storage';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
@@ -34,6 +34,10 @@ import { DetallePage } from './page/detalle/detalle.page';
 import { InnovationdetallePage } from './page/innovationdetalle/innovationdetalle.page';
 import { Camera } from '@ionic-native/camera/ngx';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+import { RutaarchivopdfPipe } from './rutaarchivopdf.pipe';
+import { CacheInterceptorService } from './cache-interceptor.service';
+import { Network } from '@ionic-native/network/ngx';
+import { DownloadContentPage } from './page/download-content/download-content.page';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -58,7 +62,9 @@ export function createTranslateLoader(http: HttpClient) {
     SlowPage,
     DetallePage,
     InnovationdetallePage, 
-    DetallePage
+    DownloadContentPage,
+    DetallePage, 
+    RutaarchivopdfPipe
   ],
   entryComponents: [],
   imports: [
@@ -84,7 +90,13 @@ export function createTranslateLoader(http: HttpClient) {
     AutentificacionService,
     Camera,
     FileTransfer,
+    Network,
     SQLitePorter,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CacheInterceptorService,
+      multi: true 
+    },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

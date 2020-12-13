@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { BuscadorPage } from './page/buscador/buscador.page';
 import { DashboardPage } from './page/dashboard/dashboard.page';
+import { DownloadContentPage } from './page/download-content/download-content.page';
 import { InnovacionPage } from './page/innovacion/innovacion.page';
 import { LoginPage } from './page/login/login.page';
 import { PalletsPage } from './page/pallets/pallets.page';
@@ -32,7 +33,8 @@ const routes: Routes = [
       { path: 'palette', component: PalletsPage },
       { path: 'sustainability', component: SustentabilidadPage },
       { path: 'innovation', component: InnovacionPage },
-      { path: 'slow', component: SlowPage }
+      { path: 'slow', component: SlowPage },
+      { path: 'offline', component: DownloadContentPage }
     ]
   },
   {

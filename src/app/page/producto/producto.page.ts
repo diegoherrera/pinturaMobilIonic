@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AutentificacionService } from 'src/app/autentificacion.service';
+import { NetworkService } from 'src/app/network.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -18,6 +19,7 @@ export class ProductoPage implements OnInit {
     , private translateService: TranslateService
     , private usuarioService: UsuarioService
     , private auth: AutentificacionService
+    , private networkService: NetworkService
     //, private storage: Storage
   ) {
     this.procesando = false;
@@ -30,6 +32,12 @@ export class ProductoPage implements OnInit {
 
   }
 
+  isHasConnection() {
+    return false;
+    // return this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline ? false: true;
+  }
+
+
   ngOnInit() {
     console.log(this.data);
 
@@ -38,13 +46,16 @@ export class ProductoPage implements OnInit {
       this.translateService.use(retorno);
       this.language = retorno;
     });
-
-    this.auth.getProfile((retorno) => {
-      console.log('usuario actual login' + JSON.parse(retorno)._id);
-      this.usuarioService.addFavorito(JSON.parse(retorno)._id, this.data._id).subscribe(data => {
-        this.procesando = true;
+    if (this.isHasConnection()) {
+      this.auth.getProfile((retorno) => {
+        console.log('usuario actual login' + JSON.parse(retorno)._id);
+        this.usuarioService.addFavorito(JSON.parse(retorno)._id, this.data._id).subscribe(data => {
+          this.procesando = true;
+        });
       });
-    });
+    }   else {
+      console.log('condicion modo offline');
+    }
 
   }
 
@@ -60,12 +71,16 @@ export class ProductoPage implements OnInit {
 
 
   pushPage(id) {
-    this.auth.getProfile((retorno) => {
-      console.log('usuario actual login' + JSON.parse(retorno)._id);
-      this.usuarioService.sendCotizacion(JSON.parse(retorno)._id, id).subscribe(data => {
-        this.procesando = true;
+    if (this.isHasConnection()) {
+      this.auth.getProfile((retorno) => {
+        console.log('usuario actual login' + JSON.parse(retorno)._id);
+        this.usuarioService.sendCotizacion(JSON.parse(retorno)._id, id).subscribe(data => {
+          this.procesando = true;
+        });
       });
-    });
+    } else {
+      console.log('condicion modo offline');
+    }    
   }
 
   dismiss() {

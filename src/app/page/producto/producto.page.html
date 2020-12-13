@@ -59,7 +59,8 @@
       </ion-col>
     </ion-row>
     <img *ngIf="data.product_image==''" src="assets/noimagen.png" />
-    <img *ngIf="data.product_image!=''" src="{{ data.product_image | rutaarchivo}}" (error)="updateUrl($event, data)" style="width: 100%;" />
+    <!--(error)="updateUrl($event, data)"-->
+    <img *ngIf="data.product_image!=''" src="{{ data.product_image | rutaarchivo | async }}"  style="width: 100%;" />
     <ion-card-content>
       <div *ngIf="language=='es' else elseproduct_description">
       {{ data.product_description }}
@@ -518,7 +519,7 @@
         <ion-col>
           <div>
             <li *ngFor="let archivo of data.product_link.split('|')">
-              <a target="blank" href="{{ archivo | rutaarchivo}}" mat-menu-item>{{ archivo }}</a>
+              <a target="blank" href="{{ archivo | rutaarchivopdf}}" mat-menu-item>{{ archivo }}</a>
             </li>
           </div>
         </ion-col>
@@ -534,7 +535,7 @@
         <ion-col>
           <div>
             <li *ngFor="let archivo of data.product_link_pg.split('|')">
-              <a target="blank" href="{{ archivo | rutaarchivo}}" mat-menu-item>{{ archivo }}</a>
+              <a target="blank" href="{{ archivo | rutaarchivopdf}}" mat-menu-item>{{ archivo }}</a>
             </li>
           </div>
         </ion-col>

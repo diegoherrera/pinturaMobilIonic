@@ -1,6 +1,6 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>downloadContent</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'titleOffline' | translate }}</ion-title>
     <!-- Side menu button -->
     <ion-buttons slot="start">
       <ion-menu-button autoHide="false"></ion-menu-button>
@@ -9,18 +9,66 @@
 </ion-header>
 
 <ion-content>
-  <h4>Inderminate</h4>
-  
-  
-  <ion-button color="primary" size="small" (click)="getPosts()">Fetch Server API</ion-button>
+  <form style="height: 100%;" (ngSubmit)="submitForm()" [formGroup]="slideOneForm" #testForm>
 
-  <ul>
-    <ion-card *ngFor="let sectioinArray of ProductArray">
+    <div #favorito class="active" style="margin-left: 20px; margin-right: 20px;">
+      <br>
+      <b>{{ 'leyendaOffline' | translate }}</b> {{ timecache }}
 
-    </ion-card>
-    <ion-item *ngFor="let book of ProductArray;let indexOfelement=index;">
-      ngFor index: {{indexOfelement}} value : {{book.product_code}} 
-    </ion-item>
-</ul>
+      <h2>
+        Estructuras de Datos
+      </h2>
+      <ion-item>
+        <ion-label>Mis Favoritos</ion-label>
+        <img style="width: 30px;" *ngIf="opcion1"  src="assets/ok.png" />
+        <img style="width: 30px;" *ngIf="!opcion1"  src="assets/no.png" />
+      </ion-item>
+      <ion-item>
+        <ion-label>Productos</ion-label>
+        <img style="width: 30px;" *ngIf="opcion2"  src="assets/ok.png" />
+        <img style="width: 30px;" *ngIf="!opcion2"  src="assets/no.png" />
+      </ion-item>
+      <ion-item>
+        <ion-label>Innovacion</ion-label>
+        <img style="width: 30px;" *ngIf="opcion3"  src="assets/ok.png" />
+        <img style="width: 30px;" *ngIf="!opcion3"  src="assets/no.png" />
+      </ion-item>
+      <ion-item>
+        <ion-label>Sustentabilidad</ion-label>
+        <img style="width: 30px;" *ngIf="opcion4"  src="assets/ok.png" />
+        <img style="width: 30px;" *ngIf="!opcion4"  src="assets/no.png" />
+      </ion-item>
+      <ion-item>
+        <ion-label>Slow Movers</ion-label>
+        <img style="width: 30px;" *ngIf="opcion5"  src="assets/ok.png" />
+        <img style="width: 30px;" *ngIf="!opcion5"  src="assets/no.png" />
+      </ion-item>
+      <ion-item>
+        <ion-label>Palleta de Colores</ion-label>
+        <img style="width: 30px;" *ngIf="opcion6"  src="assets/ok.png" />
+        <img style="width: 30px;" *ngIf="!opcion6"  src="assets/no.png" />
+      </ion-item>
 
+       
+      
+
+      <ul>
+        <ion-item *ngFor="let book of ProductArray;let indexOfelement=index;">
+          ngFor index: {{indexOfelement}} value : {{book.product_code}}
+        </ion-item>
+      </ul>
+    </div>
+  </form>
 </ion-content>
+<ion-footer>
+  <div style="margin: 20px;" class="inactive" #progreso>
+    Esado de Accion
+    <ion-progress-bar [type]="'indeterminate'"></ion-progress-bar>
+   </div>
+  <ion-button *ngIf="!procesando" size="smal" (click)="ejecutarFormulario()" expand="block">
+    <ion-icon name="save-outline"></ion-icon>&nbsp;{{ 'btnOffline' | translate }}
+  </ion-button>
+  <ion-button *ngIf="procesando" size="smal" disabled (click)="ejecutarFormulario()" expand="block">
+    <ion-icon name="save-outline"></ion-icon>&nbsp;{{ 'btnOffline' | translate }}
+  </ion-button>
+</ion-footer>

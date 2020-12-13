@@ -1,0 +1,11 @@
+.active {
+    display: block
+ }
+ 
+ .inactive {
+    display: none;
+ }
+
+ ion-checkbox.checkbox-disabled {
+   --opacity : 1;
+}

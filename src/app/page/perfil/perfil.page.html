@@ -19,7 +19,7 @@
           <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="!fotonueva && profile.user_picture==''"
             src="assets/noimagen.png" />
           <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="!fotonueva && profile.user_picture!=''"
-            src="{{ profile.user_picture | rutaarchivo}}" />
+            src="{{ profile.user_picture | rutaarchivo | async}}" />
           <img style="margin-top: 30px; margin-bottom: 30px;" *ngIf="fotonueva"
             src="{{ clickedImage }}" />
         </ion-avatar>
