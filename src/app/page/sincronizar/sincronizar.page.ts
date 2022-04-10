@@ -5,6 +5,8 @@ import { DbService } from 'src/app/services/db.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NetworkService } from 'src/app/network.service';
 import { DbcacheService } from 'src/app/dbcache.service';
+import { AutentificacionService } from 'src/app/autentificacion.service';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 @Component({
   selector: 'app-sincronizar',
@@ -29,11 +31,20 @@ export class SincronizarPage implements OnInit, AfterViewInit {
   @ViewChild("panel2") panel2: ElementRef;
   @ViewChild("panel3") panel3: ElementRef;
   @ViewChild("panel4") panel4: ElementRef;
+  @ViewChild("panel5") panel5: ElementRef;
 
   @Input("value") value;
   @Input("segmento") segmento;
   @Input("familia") familia;
   @Input("tipo") tipo;
+  @Input("regulatory") regulatory;
+  @Input() language: any;
+
+  loadin1: boolean = false;
+  loadin2: boolean = false;
+  loadin3: boolean = false;
+  loadin4: boolean = false;
+  loadin5: boolean = false;
 
   radio_list: any = [];
   radio_list_tmp = [
@@ -42,6 +53,8 @@ export class SincronizarPage implements OnInit, AfterViewInit {
       name: 'radio_list',
       value: 'product_Pelicula_agricola_solpada|Pelicula Agricola Solpada',
       text: 'Pelicula Agricola Solpada',
+      es: 'Película agrícola soplada',
+      pg: 'Filme Balão AGRO',
       disabled: false,
       checked: false,
       color: 'primary'
@@ -50,6 +63,8 @@ export class SincronizarPage implements OnInit, AfterViewInit {
       name: 'radio_list',
       value: 'product_Pelicula_de_extrusion_plana_en_PE|Pelicula de extrusion plana en PE',
       text: 'Pelicula de extrusion plana en PE',
+      es: 'Película de extrusión plana en PE',
+      pg: 'Filme Plano/Cast PE',
       disabled: false,
       checked: false,
       color: 'secondary'
@@ -58,159 +73,271 @@ export class SincronizarPage implements OnInit, AfterViewInit {
       name: 'radio_list',
       value: 'product_peliculas_sopladas|Peliculas Sopladas',
       text: 'Peliculas Sopladas',
+      es: 'Películas sopladas',
+      pg: 'Filme Balão Outros',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '4',
       name: 'radio_list',
-      value: 'product_Pelicula_laminada|Pelicula Laminada',
-      text: 'Pelicula Laminada',
+      value: 'product_Pelicula_de_extrusion_plana_en_PE_otros|Pelicula de extrusion plana en PE otros',
+      text: 'Pelicula de extrusion plana en PE otros',
+      es: 'Película de extrusión plana en PE otros',
+      pg: 'Filme Plano/Cast PE outros',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '5',
       name: 'radio_list',
-      value: 'product_Pelicula_de_extrusion_plana_en_PP|Pelicula de extrusion plana en PP',
-      text: 'Pelicula de extrusion plana en PP',
+      value: 'product_Pelicula_laminada|Pelicula Laminada',
+      text: 'Pelicula Laminada',
+      es: 'Película laminada',
+      pg: 'Coating/Laminação',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '6',
       name: 'radio_list',
-      value: 'product_Film_de_PP_biorientado|Film de PP biorientado',
-      text: 'Film de PP biorientado',
+      value: 'product_Pelicula_de_extrusion_plana_en_PP|Pelicula de extrusion plana en PP',
+      text: 'Pelicula de extrusion plana en PP',
+      es: 'Película de extrusión plana en PP',
+      pg: 'Filme Plano/Cast PP',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '7',
       name: 'radio_list',
-      value: 'product_Fibras_Raffia|Fibras Raffia',
-      text: 'Fibras Raffia',
+      value: 'product_Film_de_PP_biorientado|Film de PP biorientado',
+      text: 'Film de PP biorientado',
+      es: 'Film de PP biorientado',
+      pg: 'BOPP Filmes orientados',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '8',
       name: 'radio_list',
-      value: 'product_Fibras_telas_spun_bonded_y_no_tejidas|Fibras telas spun bonded y no tejidas',
-      text: 'Fibras telas spun bonded y no tejidas',
+      value: 'product_Fibras_Raffia|Fibras Raffia',
+      text: 'Fibras Raffia',
+      es: 'Fibras Raffia',
+      pg: 'Fibras/Rafia',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '9',
       name: 'radio_list',
-      value: 'product_Fibras|Fibras',
-      text: 'Fibras',
+      value: 'product_Fibras_telas_spun_bonded_y_no_tejidas|Fibras telas spun bonded y no tejidas',
+      text: 'Fibras telas spun bonded y no tejidas',
+      es: 'Fibras telas spun bonded y no tejidas',
+      pg: 'Fibras Tecnidos não-tecidos',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '10',
       name: 'radio_list',
-      value: 'product_Moldeo_por_soplado|Moldeo por soplado',
-      text: 'Moldeo por soplado',
+      value: 'product_Fibras|Fibras',
+      text: 'Fibras',
+      es: 'Fibras',
+      pg: 'Fibras',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '11',
       name: 'radio_list',
-      value: 'product_Moldeo_por_inyeccion|Moldeo por inyeccion',
-      text: 'Moldeo por inyeccion',
+      value: 'product_Moldeo_por_soplado|Moldeo por soplado',
+      text: 'Moldeo por soplado',
+      es: 'Moldeo por soplado',
+      pg: 'Moldagem por sopro',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '12',
       name: 'radio_list',
-      value: 'product_Moldeo_por_compresion|Moldeo por compresion',
-      text: 'Moldeo por compresion',
+      value: 'product_Moldeo_por_inyeccion|Moldeo por inyeccion',
+      text: 'Moldeo por inyeccion',
+      es: 'Moldeo por inyección',
+      pg: 'Moldagem por injeção',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '13',
       name: 'radio_list',
-      value: 'product_Compuestos|Compuestos',
-      text: 'Compuestos',
+      value: 'product_Moldeo_por_compresion|Moldeo por compresion',
+      text: 'Moldeo por compresion',
+      es: 'Moldeo por compresión',
+      pg: 'Moldagem por Compressão',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '14',
       name: 'radio_list',
-      value: 'product_Extrusion_de_tuberia|Extrusion de tuberia',
-      text: 'Extrusion de tuberia',
+      value: 'product_Compuestos|Compuestos',
+      text: 'Compuestos',
+      es: 'Compuestos',
+      pg: 'Compostos',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '15',
       name: 'radio_list',
-      value: 'product_Tuberia_de_irrigacion_por_goteo|Tuberia de irrigacion por goteo',
-      text: 'Tuberia de irrigacion por goteo',
+      value: 'product_Extrusion_de_tuberia|Extrusion de tuberia',
+      text: 'Extrusion de tuberia',
+      es: 'Extrusión de tubería',
+      pg: 'Extrusão de tubos',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '16',
       name: 'radio_list',
-      value: 'product_Extrusion_de_laminas_placas|Extrusion de laminas placas',
-      text: 'Extrusion de laminas placas',
+      value: 'product_Tuberia_de_irrigacion_por_goteo|Tuberia de irrigacion por goteo',
+      text: 'Tuberia de irrigacion por goteo',
+      es: 'Tubería de irrigación por goteo',
+      pg: 'Tubos Irrigação e gotejamento',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '17',
       name: 'radio_list',
-      value: 'product_Cables|Cables',
-      text: 'Cables',
+      value: 'product_Extrusion_de_laminas_placas|Extrusion de laminas placas',
+      text: 'Extrusion de laminas placas',
+      es: 'Extrusión de láminas placas',
+      pg: 'Extrusão de Chapas',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '18',
       name: 'radio_list',
-      value: 'product_Extrusion_de_perfiles|Extrusion de perfiles',
-      text: 'Extrusion de perfiles',
+      value: 'product_Cables|Cables',
+      text: 'Cables',
+      es: 'Cables',
+      pg: 'Fios & Cabos',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '19',
       name: 'radio_list',
-      value: 'product_Moldeo_rotomoldeo|Moldeo rotomoldeo',
-      text: 'Moldeo rotomoldeo',
+      value: 'product_Extrusion_de_perfiles|Extrusion de perfiles',
+      text: 'Extrusion de perfiles',
+      es: 'Extrusión de perfiles',
+      pg: 'Extrusão de Perfis',
       disabled: false,
       checked: false,
       color: 'danger'
     }, {
       id: '20',
       name: 'radio_list',
+      value: 'product_Moldeo_rotomoldeo|Moldeo rotomoldeo',
+      text: 'Moldeo rotomoldeo',
+      es: 'Moldeo rotomoldeo',
+      pg: 'Rotomoldagem',
+      disabled: false,
+      checked: false,
+      color: 'danger'
+    }, {
+      id: '21',
+      name: 'radio_list',
       value: 'product_Espumados|Espumados',
       text: 'Espumados',
+      es: 'Espumados',
+      pg: 'Espumas',
+      disabled: false,
+      checked: false,
+      color: 'danger'
+    }, {
+      id: '22',
+      name: 'radio_list',
+      value: 'product_Non_Woven|Non Woven',
+      text: 'Non Woven',
+      es: 'Non Woven',
+      pg: 'Non Woven',
+      disabled: false,
+      checked: false,
+      color: 'danger'
+    }, {
+      id: '23',
+      name: 'radio_list',
+      value: 'product_Caps_Closures|Caps Closures',
+      text: 'Caps Closures',
+      es: 'Caps Closures',
+      pg: 'Caps Closures',
+      disabled: false,
+      checked: false,
+      color: 'danger'
+    }, {
+      id: '24',
+      name: 'radio_list',
+      value: 'product_Picasso_Aprovacion|Picasso Aprovacion',
+      text: 'Picasso Aprovacion',
+      es: 'Picasso Aprovacion',
+      pg: 'Picasso Aprovacion',
+      disabled: false,
+      checked: false,
+      color: 'danger'
+    }, {
+      id: '25',
+      name: 'radio_list',
+      value: 'product_Econoblend|Econoblend',
+      text: 'Econoblend',
+      es: 'Econoblend',
+      pg: 'Econoblend',
       disabled: false,
       checked: false,
       color: 'danger'
     }
   ];
 
+
+  dataSegmentArray: any = [];
+  dataFamilyArray: any = [];
+  dataTypeArray: any = [];
+  dataAplicacion: any = [];
+  dataRegulatory: any = [];
+
   SegmentArray: any = [];
   FamilyArray: any = [];
   TypeArray: any = [];
+  RegulatoryArray: any = [];
 
   SegmentArrayFilter: any = [];
   FamilyArrayFilter: any = [];
   TypeArrayFilter: any = [];
 
   filtroArrayFilter: any = [];
+  RegulatoryArrayFilter: any = [];
+
 
   opcionDeFiltro: number = 0;
+
+
+  sortOn(arr, prop) {
+    console.log('llamo al metodo por propiedad ' + prop);
+    return arr.sort(
+      function (a, b) {
+        if (a[prop] < b[prop]) {
+          return -1;
+        } else if (a[prop] > b[prop]) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    );
+  }
 
 
   constructor(public modalController: ModalController
@@ -219,41 +346,124 @@ export class SincronizarPage implements OnInit, AfterViewInit {
     , public loadingCtrl: LoadingController
     , private usuarioService: UsuarioService
     , private translateService: TranslateService
+    , private auth: AutentificacionService
+    , private keyboard: Keyboard
     , private networkService: NetworkService
     , private dbcacheService: DbcacheService
     , private db: DbService) {
     this.opcionDeFiltro = 0;
     this.isprincial = true;
-    console.log('paso por el contructor del sincronizar page');
+    //console.log('paso por el contructor del sincronizar page');
   }
   ngAfterViewInit(): void {
     //this.getPosts();
+    console.log('idioma ******************* ' + this.language);
+
 
   }
 
   isHasConnection() {
-    return false;
+    return true;
     // return this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline ? false: true;
+  }
+
+  restablecerFiltro() {
+    this.auth.getPreferencia((retorno) => {
+      console.log('getPreferencia **************** ' + retorno);
+      let data = JSON.parse(retorno);
+
+      console.log('data.segmento', data.segmento);
+      console.log('data.familia', data.familia);
+      console.log('data.regulatory', data.regulatory);
+      this.tipo = [];
+      this.value = [];
+      this.segmento = data.segmento;
+      this.familia = data.familia;
+      this.regulatory = data.regulatory;
+    });
+  }
+
+  removeFiltro(item: any) {
+    this.value = this.value.filter(obj => obj !== item);
+    //this.getProduct();
+  }
+
+  removeFiltroSegment(item: any) {
+    this.segmento = this.segmento.filter(obj => obj !== item);
+    //this.getProduct();
+  }
+
+  removeFiltrofamilia(item: any) {
+    this.familia = this.familia.filter(obj => obj !== item);
+    //this.getProduct();
+  }
+
+  removeFiltrocategoria(item: any) {
+    this.tipo = this.tipo.filter(obj => obj !== item);
+    //this.getProduct();
+  }
+
+  removeFiltroregulatory(item: any) {
+    this.regulatory = this.regulatory.filter(obj => obj !== item);
+    //this.getProduct();
   }
 
 
   getSegment() {
-    console.log('getSegment');
+    //this.loadin1 = false;
+    //console.log('getSegment');
     if (this.isHasConnection()) {
-      this.usuarioService.GetSegment().subscribe(data => {
-        console.log(data);
+
+      if (this.dataSegmentArray.length == 0) {
+        this.usuarioService.GetSegment().subscribe(data => {
+          //console.log(data);
+          let temporal: any = data;
+          for (let result of this.segmento) {
+            temporal = temporal.filter(obj => obj._id !== result._id);
+          }
+          this.SegmentArray = temporal;
+          this.SegmentArrayFilter = temporal;
+          this.dataSegmentArray = temporal;
+
+          for (let result of this.SegmentArray) {
+            result.checked = false;
+          }
+        });
+      } else {
+        let temporal: any = this.dataSegmentArray;
+          for (let result of this.segmento) {
+            temporal = temporal.filter(obj => obj._id !== result._id);
+          }
+          this.SegmentArray = temporal;
+          this.SegmentArrayFilter = temporal;
+
+          for (let result of this.SegmentArray) {
+            result.checked = false;
+          }
+      }
+
+      /*this.usuarioService.GetFiltro(this.segmento, this.familia, this.tipo, this.regulatory, 3).subscribe(data => {
+        //console.log(data);
         let temporal: any = data;
         for (let result of this.segmento) {
           temporal = temporal.filter(obj => obj._id !== result._id);
         }
         this.SegmentArray = temporal;
         this.SegmentArrayFilter = temporal;
-      });
+        this.dataSegmentArray = temporal;
+
+        for (let result of this.SegmentArray) {
+          result.checked = false;
+        }
+        this.loadin1 = true;
+      });*/
+
+
     } else {
       //modo offline
-      console.log('modo offline en getSegment()');
+      //console.log('modo offline en getSegment()');
       this.dbcacheService.GetSegmentos((data) => {
-        console.log(data);
+        //console.log(data);
         let temporal: any = data;
         for (let result of this.segmento) {
           temporal = temporal.filter(obj => obj._id !== result._id);
@@ -265,21 +475,58 @@ export class SincronizarPage implements OnInit, AfterViewInit {
   }
 
   GetFamily() {
+    
     if (this.isHasConnection()) {
-      this.usuarioService.GetFamily().subscribe(data => {
-        console.log(data);
+      if (this.dataFamilyArray.length == 0) {
+        this.usuarioService.GetFamily().subscribe(data => {
+          //console.log(data);
+          let temporal: any = data;
+          for (let result of this.familia) {
+            temporal = temporal.filter(obj => obj._id !== result._id);
+          }
+          this.FamilyArray = temporal;
+          this.FamilyArrayFilter = temporal;
+          this.dataFamilyArray = temporal;
+
+          for (let result of this.FamilyArray) {
+            result.checked = false;
+          }
+
+        });
+      } else {
+        let temporal: any = this.dataFamilyArray;
+          for (let result of this.familia) {
+            temporal = temporal.filter(obj => obj._id !== result._id);
+          }
+          this.FamilyArray = temporal;
+          this.FamilyArrayFilter = temporal;
+
+          for (let result of this.FamilyArray) {
+            result.checked = false;
+          }
+      }
+
+      /*this.usuarioService.GetFiltro(this.segmento, this.familia, this.tipo, this.regulatory, 2).subscribe(data => {
         let temporal: any = data;
         for (let result of this.familia) {
           temporal = temporal.filter(obj => obj._id !== result._id);
         }
         this.FamilyArray = temporal;
         this.FamilyArrayFilter = temporal;
-      });
+        this.dataFamilyArray = temporal;
+
+        for (let result of this.FamilyArray) {
+          result.checked = false;
+        }
+
+        this.loadin2 = true;
+      });*/
+
     } else {
       //modo offline
-      console.log('modo offline en GetFamily()');
+      //console.log('modo offline en GetFamily()');
       this.dbcacheService.GetFamilias((data) => {
-        console.log(data);
+        //console.log(data);
         let temporal: any = data;
         for (let result of this.familia) {
           temporal = temporal.filter(obj => obj._id !== result._id);
@@ -290,24 +537,161 @@ export class SincronizarPage implements OnInit, AfterViewInit {
     }
   }
 
+  getRegulatory() {
+
+    if (this.dataRegulatory.length == 0) {
+
+      this.usuarioService.GetRegulatory().subscribe(data => {
+
+        console.log('consulta' + JSON.stringify(data));
+        let temporal: any = data;
+        for (let result of this.regulatory) {
+          temporal = temporal.filter(obj => obj._id !== result._id);
+        }
+        if (this.language == 'es') {
+          temporal = this.sortOn(temporal, 'regulatory_name');
+
+        } else {
+          temporal = this.sortOn(temporal, 'regulatory_name_pg');
+        }
+        console.log('consulta' + JSON.stringify(temporal));
+
+        this.RegulatoryArray = temporal;
+        this.RegulatoryArrayFilter = temporal;
+        this.dataRegulatory = temporal;
+
+        for (let result of this.RegulatoryArray) {
+          result.checked = false;
+        }
+
+
+      });
+
+    } else {
+      let temporal: any = this.dataRegulatory;
+      for (let result of this.regulatory) {
+        temporal = temporal.filter(obj => obj._id !== result._id);
+      }
+      if (this.language == 'es') {
+        temporal = this.sortOn(temporal, 'regulatory_name');
+
+      } else {
+        temporal = this.sortOn(temporal, 'regulatory_name_pg');
+      }
+      console.log('consulta' + JSON.stringify(temporal));
+      this.RegulatoryArray = temporal;
+      this.RegulatoryArrayFilter = temporal;
+
+      for (let result of this.RegulatoryArray) {
+        result.checked = false;
+      }
+    }
+
+    /*this.usuarioService.GetFiltro(this.segmento, this.familia, this.tipo, this.regulatory, 4).subscribe(data => {
+
+      let temporal: any = data;
+        for (let result of this.regulatory) {
+          temporal = temporal.filter(obj => obj._id !== result._id);
+        }
+        if (this.language == 'es') {
+          temporal = this.sortOn(temporal, 'regulatory_name');
+
+        } else {
+          temporal = this.sortOn(temporal, 'regulatory_name_pg');
+        }
+        console.log('consulta' + JSON.stringify(temporal));
+
+        this.RegulatoryArray = temporal;
+        this.RegulatoryArrayFilter = temporal;
+        this.dataRegulatory = temporal;
+
+        for (let result of this.RegulatoryArray) {
+          result.checked = false;
+        }
+
+       this.loadin5 = true;
+    });*/
+
+  }
+
+
   GetType() {
     if (this.isHasConnection()) {
-      this.usuarioService.GetType().subscribe(data => {
-        console.log('seleccionados ' + JSON.stringify(this.tipo));
-        console.log('consulta' + data);
-        let temporal: any = data;
+      if (this.dataTypeArray.length == 0) {
+        this.usuarioService.GetType().subscribe(data => {
+          //console.log('seleccionados ' + JSON.stringify(this.tipo));
+          console.log('consulta' + JSON.stringify(data));
+          let temporal: any = data;
+          for (let result of this.tipo) {
+            temporal = temporal.filter(obj => obj._id !== result._id);
+          }
+          if (this.language == 'es') {
+            temporal = this.sortOn(temporal, 'category_name');
+
+          } else {
+            temporal = this.sortOn(temporal, 'category_name_pg');
+          }
+          console.log('consulta' + JSON.stringify(temporal));
+          this.TypeArray = temporal;
+          this.TypeArrayFilter = temporal;
+          this.dataTypeArray = temporal;
+
+          for (let result of this.TypeArray) {
+            result.checked = false;
+          }
+
+        });
+      } else {
+        let temporal: any = this.dataTypeArray;
         for (let result of this.tipo) {
           temporal = temporal.filter(obj => obj._id !== result._id);
         }
+        if (this.language == 'es') {
+          temporal = this.sortOn(temporal, 'category_name');
+
+        } else {
+          temporal = this.sortOn(temporal, 'category_name_pg');
+        }
+        console.log('consulta' + JSON.stringify(temporal));
         this.TypeArray = temporal;
         this.TypeArrayFilter = temporal;
-      });
+
+        for (let result of this.TypeArray) {
+          result.checked = false;
+        }
+      }
+
+     /* this.usuarioService.GetFiltro(this.segmento, this.familia, this.tipo, this.regulatory, 1).subscribe(data => {
+
+        let temporal: any = data;
+          for (let result of this.tipo) {
+            temporal = temporal.filter(obj => obj._id !== result._id);
+          }
+          if (this.language == 'es') {
+            temporal = this.sortOn(temporal, 'category_name');
+
+          } else {
+            temporal = this.sortOn(temporal, 'category_name_pg');
+          }
+          console.log('consulta' + JSON.stringify(temporal));
+          this.TypeArray = temporal;
+          this.TypeArrayFilter = temporal;
+          this.dataTypeArray = temporal;
+
+          for (let result of this.TypeArray) {
+            result.checked = false;
+          }
+
+          this.loadin3 = true;
+
+      });*/
+
     } else {
       //modo offline
-      console.log('modo offline en GetType()');
+      //console.log('modo offline en GetType()');
       this.dbcacheService.GetCategorias((data) => {
-        console.log('seleccionados ' + JSON.stringify(this.tipo));
-        console.log('consulta' + data);
+        //console.log('seleccionados ' + JSON.stringify(this.tipo));
+        //console.log('consulta' + data);
         let temporal: any = data;
         for (let result of this.tipo) {
           temporal = temporal.filter(obj => obj._id !== result._id);
@@ -319,11 +703,23 @@ export class SincronizarPage implements OnInit, AfterViewInit {
   }
 
   getFiltroCampos() {
+
+    //console.log('languaje ' + );
+    this.radio_list_tmp = this.sortOn(this.radio_list_tmp, this.language);
     //eliminamos los que ya estan seleccionados 
     for (let result of this.value) {
-      this.radio_list_tmp = this.radio_list_tmp.filter(obj => obj.text !== result.texto);
+      console.log('ya seleccionado ' + JSON.stringify(result));
+      console.log('comparo con  ' + JSON.stringify(result));
+      this.radio_list_tmp = this.radio_list_tmp.filter(obj => obj.text !== result.text);
+
     }
+    for (let result of this.radio_list_tmp) {
+      console.log('recorrido data ', result);
+      result.checked = false;
+    }
+
     this.radio_list = this.radio_list_tmp;
+    this.filtroArrayFilter = this.radio_list_tmp;
   }
 
 
@@ -331,6 +727,12 @@ export class SincronizarPage implements OnInit, AfterViewInit {
     this.isprincial = false;
     this.renderer.removeClass(this.panel0.nativeElement, "active");
     this.renderer.addClass(this.panel0.nativeElement, "inactive");
+
+    this.loadin1 = false;
+    this.loadin2 = false;
+    this.loadin3 = false;
+    this.loadin4 = false;
+    this.loadin5 = false;
 
     if (opcion == 1) {
       this.opcionDeFiltro = 1;
@@ -356,36 +758,80 @@ export class SincronizarPage implements OnInit, AfterViewInit {
       this.renderer.addClass(this.panel4.nativeElement, "active");
       this.getFiltroCampos();
     }
+
+    if (opcion == 5) {
+      this.opcionDeFiltro = 5;
+      this.renderer.removeClass(this.panel5.nativeElement, "inactive");
+      this.renderer.addClass(this.panel5.nativeElement, "active");
+      this.getRegulatory();
+    }
+
+  }
+
+
+
+
+  filtrar_acentos(input) {
+    var acentos = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç";
+    var original = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc";
+    for (var i = 0; i < acentos.length; i++) {
+      input = input.replace(acentos.charAt(i), original.charAt(i)).toLowerCase();
+    };
+    return input;
   }
 
   getItems(ev: any) {
-    console.log(ev);
+    //console.log(ev);
     var val = ev.target.value;
-    console.log(val);
-    if (val != "" && val.length > 3) {
-      console.log("Paso por getItems");
+    //console.log(val);
+    if (val != "" && val.length > 1) {
+      //console.log("Paso por getItems");
+
+      console.log('this.opcionDeFiltro ' + this.opcionDeFiltro);
 
       if (this.opcionDeFiltro == 1) {
         this.SegmentArray = this.SegmentArrayFilter.filter(x => {
-          let buscar = val.toUpperCase();
-          return x.segment_name.toUpperCase().includes(buscar);
+          let buscar = this.filtrar_acentos(val).toUpperCase();
+          return this.filtrar_acentos(x.segment_name).toUpperCase().includes(buscar) || this.filtrar_acentos(x.segment_name_pg).toUpperCase().includes(buscar);
         });
       }
       if (this.opcionDeFiltro == 2) {
         this.FamilyArray = this.FamilyArrayFilter.filter(x => {
-          let buscar = val.toUpperCase();
-          return x.family_name.toUpperCase().includes(buscar);
+          let buscar = this.filtrar_acentos(val).toUpperCase();
+          return this.filtrar_acentos(x.family_name).toUpperCase().includes(buscar) || this.filtrar_acentos(x.family_name_pg).toUpperCase().includes(buscar);
         });
       }
       if (this.opcionDeFiltro == 3) {
         this.TypeArray = this.TypeArrayFilter.filter(x => {
-          let buscar = val.toUpperCase();
-          return x.category_name.toUpperCase().includes(buscar);
+          let buscar = this.filtrar_acentos(val).toUpperCase();
+          return this.filtrar_acentos(x.category_name).toUpperCase().includes(buscar) || this.filtrar_acentos(x.category_name_pg).toUpperCase().includes(buscar);
         });
       }
       if (this.opcionDeFiltro == 4) {
-        this.getFiltroCampos();
+
+        this.radio_list = this.filtroArrayFilter.filter(x => {
+          let buscar = this.filtrar_acentos(val).toUpperCase();
+          console.log('this.filtrar_acentos(x.es).toUpperCase() ' + this.filtrar_acentos(x.es).toUpperCase());
+          console.log('buscar ' + buscar);
+
+          return this.filtrar_acentos(x.es).toUpperCase().includes(buscar) || this.filtrar_acentos(x.pg).toUpperCase().includes(buscar);
+        });
+        //this.getFiltroCampos();
       }
+
+      if (this.opcionDeFiltro == 5) {
+
+        console.log('this.RegulatoryArrayFilter ', this.RegulatoryArrayFilter);
+        this.RegulatoryArray = this.RegulatoryArrayFilter.filter(x => {
+          let buscar = this.filtrar_acentos(val).toUpperCase();
+          //console.log('this.filtrar_acentos(x.es).toUpperCase() ' + this.filtrar_acentos(x.es).toUpperCase());
+          console.log('buscar ' + buscar);
+
+          return this.filtrar_acentos(x.regulatory_name).toUpperCase().includes(buscar) || this.filtrar_acentos(x.regulatory_name_pg).toUpperCase().includes(buscar);
+        });
+        //this.getFiltroCampos();
+      }
+
 
     }
 
@@ -403,16 +849,19 @@ export class SincronizarPage implements OnInit, AfterViewInit {
       if (this.opcionDeFiltro == 4) {
         this.getFiltroCampos();
       }
+      if (this.opcionDeFiltro == 5) {
+        this.getRegulatory();
+      }
     }
   }
 
   onClear($event) {
-    console.log("Paso onClear");
+    //console.log("Paso onClear");
 
   }
 
   onCancel($event) {
-    console.log("Paso por onCancel");
+    //console.log("Paso por onCancel");
 
   }
 
@@ -428,38 +877,149 @@ export class SincronizarPage implements OnInit, AfterViewInit {
     });
   }
 
+  RegresarAMenu() {
+
+    this.isprincial = true;
+    this.renderer.removeClass(this.panel0.nativeElement, "inactive");
+    this.renderer.addClass(this.panel0.nativeElement, "active");
+
+    this.renderer.removeClass(this.panel1.nativeElement, "active");
+    this.renderer.addClass(this.panel1.nativeElement, "inactive");
+
+    this.renderer.removeClass(this.panel2.nativeElement, "active");
+    this.renderer.addClass(this.panel2.nativeElement, "inactive");
+    this.renderer.removeClass(this.panel3.nativeElement, "active");
+    this.renderer.addClass(this.panel3.nativeElement, "inactive");
+
+    this.renderer.removeClass(this.panel4.nativeElement, "active");
+    this.renderer.addClass(this.panel4.nativeElement, "inactive");
+
+    this.renderer.removeClass(this.panel5.nativeElement, "active");
+    this.renderer.addClass(this.panel5.nativeElement, "inactive");
+
+    if (this.opcionDeFiltro == 1) {
+      for (let result of this.SegmentArray.filter(obj => obj.checked == true)) {
+        let find = this.segmento.filter(obj => obj._id == result._id);
+        if (find.length == 0) {
+          this.segmento.push(result);
+        }
+      }
+      //this.segmento = this.segmento.concat(this.SegmentArray.filter(obj => obj.checked == true));
+    }
+
+    if (this.opcionDeFiltro == 2) {
+
+      for (let result of this.FamilyArray.filter(obj => obj.checked == true)) {
+        let find = this.familia.filter(obj => obj._id == result._id);
+        if (find.length == 0) {
+          this.familia.push(result);
+        }
+      }
+
+
+      //this.familia = this.familia.concat(this.FamilyArray.filter(obj => obj.checked == true));
+    }
+    if (this.opcionDeFiltro == 3) {
+      //this.tipo = this.tipo.concat(this.TypeArray.filter(obj => obj.checked == true));
+
+      for (let result of this.TypeArray.filter(obj => obj.checked == true)) {
+        let find = this.tipo.filter(obj => obj._id == result._id);
+        if (find.length == 0) {
+          this.tipo.push(result);
+        }
+      }
+
+    }
+    if (this.opcionDeFiltro == 4) {
+      //this.value = this.value.concat(this.radio_list.filter(obj => obj.checked == true));
+
+      for (let result of this.radio_list.filter(obj => obj.checked == true)) {
+        console.log('DATA ', result);
+        let find = this.value.filter(obj => obj.id == result.id);
+        if (find.length == 0) {
+          this.value.push(result);
+        }
+      }
+
+      console.log('value ', this.value);
+
+
+    }
+
+
+    if (this.opcionDeFiltro == 5) {
+      //this.tipo = this.tipo.concat(this.TypeArray.filter(obj => obj.checked == true));
+
+      for (let result of this.RegulatoryArray.filter(obj => obj.checked == true)) {
+        let find = this.regulatory.filter(obj => obj._id == result._id);
+        if (find.length == 0) {
+          this.regulatory.push(result);
+        }
+      }
+
+    }
+
+
+
+
+
+
+  }
+
   agregarFiltro() {
 
     let data = {};
 
 
     if (this.opcionDeFiltro == 1) {
-      let temporal = this.SegmentArray.filter(obj => obj.checked == true);
-      console.log(JSON.stringify(temporal));
-      data = { operacion: 1, estado: true, seleccion: temporal };
+      //let temporal = this.SegmentArray.filter(obj => obj.checked == true);
+      //console.log(JSON.stringify(temporal));
+      //data = { operacion: 1, estado: true, seleccion: temporal };
     }
     if (this.opcionDeFiltro == 2) {
-      let temporal = this.FamilyArray.filter(obj => obj.checked == true);
-      console.log(JSON.stringify(temporal));
-      data = { operacion: 2, estado: true, seleccion: temporal };
+      //let temporal = this.FamilyArray.filter(obj => obj.checked == true);
+      //console.log(JSON.stringify(temporal));
+      //data = { operacion: 2, estado: true, seleccion: temporal };
     }
     if (this.opcionDeFiltro == 3) {
-      let temporal = this.TypeArray.filter(obj => obj.checked == true);
-      console.log(JSON.stringify(temporal));
-      data = { operacion: 3, estado: true, seleccion: temporal };
+      //let temporal = this.TypeArray.filter(obj => obj.checked == true);
+      //console.log(JSON.stringify(temporal));
+      //data = { operacion: 3, estado: true, seleccion: temporal };
     }
     if (this.opcionDeFiltro == 4) {
-      let temporal = this.radio_list.filter(obj => obj.checked == true);
-      console.log(JSON.stringify(temporal));
-      data = { operacion: 4, estado: true, seleccion: temporal };
+      //let temporal = this.radio_list.filter(obj => obj.checked == true);
+      //console.log(JSON.stringify(temporal));
+      //data = { operacion: 4, estado: true, seleccion: temporal };
 
     }
+
+    data = { operacion: 1, estado: true, tipo: this.tipo, familia: this.familia, segmento: this.segmento, filtro: this.value, regulatory: this.regulatory };
+
     this.modalController.dismiss(data);
   }
 
   cancelarFiltro() {
-    let data = { estado: false };
-    this.modalController.dismiss(data);
+    //let data = { estado: false };
+    //this.modalController.dismiss(data);
+    this.isprincial = true;
+    this.renderer.removeClass(this.panel0.nativeElement, "inactive");
+    this.renderer.addClass(this.panel0.nativeElement, "active");
+
+    this.renderer.removeClass(this.panel1.nativeElement, "active");
+    this.renderer.addClass(this.panel1.nativeElement, "inactive");
+
+    this.renderer.removeClass(this.panel2.nativeElement, "active");
+    this.renderer.addClass(this.panel2.nativeElement, "inactive");
+
+    this.renderer.removeClass(this.panel3.nativeElement, "active");
+    this.renderer.addClass(this.panel3.nativeElement, "inactive");
+
+    this.renderer.removeClass(this.panel4.nativeElement, "active");
+    this.renderer.addClass(this.panel4.nativeElement, "inactive");
+
+    this.renderer.removeClass(this.panel5.nativeElement, "active");
+    this.renderer.addClass(this.panel5.nativeElement, "inactive");
+
   }
 
   paso1() {
@@ -476,30 +1036,30 @@ export class SincronizarPage implements OnInit, AfterViewInit {
   }
   /*
     radioGroupChange(event) {
-      console.log(event);
-      console.log("radioGroupChange", event.detail);
+      //console.log(event);
+      //console.log("radioGroupChange", event.detail);
       this.selectedRadioGroup = event.detail;
       this.objectSelect = this.selectedRadioGroup.value.split("|")[1];
   
     }
   
     radioFocus() {
-      console.log("radioFocus");
+      //console.log("radioFocus");
   
     }
     radioSelect(event) {
-      console.log("radioSelect", event.detail);
+      //console.log("radioSelect", event.detail);
       this.selectedRadioItem = event.detail;
   
     }
     radioBlur() {
-      console.log("radioBlur");
+      //console.log("radioBlur");
   
-      console.log(JSON.stringify(this.radio_list));
+      //console.log(JSON.stringify(this.radio_list));
     }*/
 
   ngOnInit() {
-    console.log(this.value);
+    //console.log(this.value);
 
 
 
@@ -515,6 +1075,11 @@ export class SincronizarPage implements OnInit, AfterViewInit {
   deleteSong(data) {
 
   }
+
+  searchEnter($event) {
+    console.log('apreto enter')
+    this.keyboard.hide();
+  }
   /*getPosts() {
 
     var loader: any;
@@ -524,16 +1089,16 @@ export class SincronizarPage implements OnInit, AfterViewInit {
     }).then((res2) => {
       res2.present();
 
-      console.log('llego a la seleccion');
+      //console.log('llego a la seleccion');
       this.usuarioService.GetProductAllImage().subscribe(data => {
-        console.log('informacion ' + JSON.stringify(data));
+        //console.log('informacion ' + JSON.stringify(data));
         let contenido: any = data;
         this.books = contenido;
         res2.dismiss(); //sierro el dialogo
       });
 
       res2.onDidDismiss().then((dis) => {
-        console.log('Loading dismissed! after 2 Seconds', dis);
+        //console.log('Loading dismissed! after 2 Seconds', dis);
       });
     });
 

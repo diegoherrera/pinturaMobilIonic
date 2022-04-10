@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router, RouterEvent } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { NgForm } from '@angular/forms';
@@ -11,13 +11,15 @@ import { AutentificacionService } from 'src/app/autentificacion.service';
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage implements OnInit, AfterViewInit {
 
   activePath = '';
   pathprofile = '/dashboard/dashboard/perfil';
   pathnotification = '/dashboard/dashboard/notificaciones';
   profile: any = {
-    user_mobile: ''
+    user_mobile: '',
+    user_picture: '',
+    user_name: ''
   };
 
   pages = [
@@ -54,23 +56,31 @@ export class DashboardPage implements OnInit {
 
 
   constructor(private router: Router, private translateService: TranslateService, private storage: Storage, public autentificacionService: AutentificacionService) {
+    //console.log('paso por contructor DashboardPage');
 
-   this.storage.get('Language').then((val) => {
-      console.log('idioma tomando variable en BuscadorPage ******************** ' + val);
+  }
+
+  ngAfterViewInit(): void {
+
+    //console.log('paso por contructor ngAfterViewInit');
+
+    this.storage.get('Language').then((val) => {
+      //console.log('idioma tomando variable en BuscadorPage ******************** ' + val);
       this.translateService.setDefaultLang(val); // add this
     });
 
-    storage.get('profile').then((val) => {
+    this.storage.get('profile').then((val) => {
+      //console.log('perfil ******************** ' + JSON.stringify(val));
       this.profile = JSON.parse(val);
     });
 
-    console.log('paso por aqui  MenuPage');
+    //console.log('paso por aqui  MenuPage');
     this.router.events.subscribe((event: RouterEvent) => {
       this.activePath = event.url
     })
   }
   logout() {
-    console.log('evento logout');
+    //console.log('evento logout');
     //this.router.navigate(['/login']);
     this.autentificacionService.logout();
   }

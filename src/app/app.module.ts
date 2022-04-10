@@ -37,7 +37,13 @@ import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { RutaarchivopdfPipe } from './rutaarchivopdf.pipe';
 import { CacheInterceptorService } from './cache-interceptor.service';
 import { Network } from '@ionic-native/network/ngx';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { DownloadContentPage } from './page/download-content/download-content.page';
+import { FiltroPage } from './page/filtro/filtro.page';
+import { FiltrosustentablePage } from './page/filtrosustentable/filtrosustentable.page';
+import { PreferenciasPage } from './page/preferencias/preferencias.page';
+import { FormatoarchivoPipe } from './formatoarchivo.pipe';
+
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -64,7 +70,11 @@ export function createTranslateLoader(http: HttpClient) {
     InnovationdetallePage, 
     DownloadContentPage,
     DetallePage, 
-    RutaarchivopdfPipe
+    RutaarchivopdfPipe,
+    FiltroPage,
+    FiltrosustentablePage,
+    PreferenciasPage,
+    FormatoarchivoPipe
   ],
   entryComponents: [],
   imports: [
@@ -91,12 +101,13 @@ export function createTranslateLoader(http: HttpClient) {
     Camera,
     FileTransfer,
     Network,
+    Keyboard,
     SQLitePorter,
-    {
+    /*{
       provide: HTTP_INTERCEPTORS,
       useClass: CacheInterceptorService,
       multi: true 
-    },
+    },*/
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

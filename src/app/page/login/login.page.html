@@ -19,10 +19,19 @@
               <ion-label position="floating">{{ 'lblUsername' | translate }}</ion-label>
               <ion-input name="usuario" type="text" placeholder="User Name" ngModel required></ion-input>
             </ion-item>
-            <ion-item>
-              <ion-label position="floating">{{ 'lblPassword' | translate }}</ion-label>
-              <ion-input name="password" type="password" placeholder="Password" ngModel required></ion-input>
-            </ion-item>
+             
+            <div style="width: 70%; float: left;">
+              <ion-item>
+                <ion-label position="floating">{{ 'lblPassword' | translate }}</ion-label>
+                <ion-input name="password" [type]="show ? 'text' : 'password'" placeholder="Password" ngModel required></ion-input>              
+              </ion-item>
+            </div>
+            <div style="float: left; width: 30%;">
+              <ion-button *ngIf="!show" style="width: 100%;" size="smal" (click)="showpassword()"><ion-icon name="eye"></ion-icon></ion-button>
+              <ion-button *ngIf="show" style="width: 100%;" size="smal" (click)="hidepassword()"><ion-icon name="eye-off"></ion-icon></ion-button>
+            </div>
+            
+            
           </div>
           <div style="margin-top: 10px; margin-bottom: 10px;" *ngIf="error">
             <span style="color: red;">{{ 'lblValidation' | translate }}</span>

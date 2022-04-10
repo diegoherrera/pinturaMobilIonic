@@ -4,10 +4,11 @@
 
 export const environment = {
   production: false,
-  Servidor: 'http://192.168.1.6:9000'
+  Servidor: 'http://66.97.32.69:9000'
 };
 
 /*
+66.97.32.69
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
  *

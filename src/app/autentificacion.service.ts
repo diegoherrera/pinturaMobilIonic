@@ -9,6 +9,7 @@ export class AutentificacionService {
   islogin = new BehaviorSubject(false);
   authState = new BehaviorSubject(false);
   profile = new BehaviorSubject<string>('');
+  preferencia = new BehaviorSubject<string>('');
   language = new BehaviorSubject<string>('es');
 
   constructor(private storage: Storage, private platform: Platform) {
@@ -21,34 +22,44 @@ export class AutentificacionService {
 
   }
 
-  registrarLanguage(language: any) {
+  registrarLanguage(language: any, callback) {
     this.storage.set('Language', language).then((response) => {
       this.language.next(response);
+      callback(true);
     });
   }
 
   registrarisLogin() {
-    console.log('is registrarLogin ');
+    //console.log('is registrarLogin ');
     this.storage.set('isLogin', 'true').then((response) => {
-      console.log('is login ' + response);
+      //console.log('is login ' + response);
       this.islogin.next(true);
     });
   }
 
-  registrarLogin(profile: any) {
+  registrarLogin(profile: any, callback) {
     this.storage.set('profile', JSON.stringify(profile)).then((response) => {
-      console.log('is profile ' + response);
+      //console.log('is profile ' + response);
       this.profile.next(JSON.stringify(profile));
+      callback(true);
+    });
+  }
+
+  registrarPreferencia(preferencia: any, callback) {
+    this.storage.set('preferencias', JSON.stringify(preferencia)).then((response) => {
+      //console.log('is profile ' + response);
+      this.preferencia.next(JSON.stringify(preferencia));
+      callback(true);
     });
   }
 
   ifLoggedIn() {
-    console.log('PASO POR EL METODO DE IFLOGIN');
+    //console.log('PASO POR EL METODO DE IFLOGIN');
 
     this.storage.get('isLogin').then((response) => {
-      console.log('valor de is login ' + response);
+      //console.log('valor de is login ' + response);
       if (response) {
-        console.log('paso por condicion ');
+        //console.log('paso por condicion ');
         this.islogin.next(true);
         this.inicializado = true;
       } else {
@@ -219,6 +230,15 @@ export class AutentificacionService {
       }
     });
   }
+
+  getPreferencia(callback) {
+    this.storage.get('preferencias').then((response) => {
+      if (response) {
+        callback(response);
+      }
+    });
+  }
+
 
   getLanguage(callback) {
     this.storage.get('Language').then((response) => {

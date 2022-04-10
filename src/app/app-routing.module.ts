@@ -7,6 +7,7 @@ import { InnovacionPage } from './page/innovacion/innovacion.page';
 import { LoginPage } from './page/login/login.page';
 import { PalletsPage } from './page/pallets/pallets.page';
 import { PerfilPage } from './page/perfil/perfil.page';
+import { PreferenciasPage } from './page/preferencias/preferencias.page';
 import { SlowPage } from './page/slow/slow.page';
 import { SustentabilidadPage } from './page/sustentabilidad/sustentabilidad.page';
 import { VerificarPage } from './page/verificar/verificar.page';
@@ -27,6 +28,7 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardPage,
     canActivate: [SeguridadGuardService],
+    canActivateChild: [SeguridadGuardService],
     children: [
       { path: 'buscador', component: BuscadorPage },
       { path: 'perfil', component: PerfilPage },
@@ -34,7 +36,8 @@ const routes: Routes = [
       { path: 'sustainability', component: SustentabilidadPage },
       { path: 'innovation', component: InnovacionPage },
       { path: 'slow', component: SlowPage },
-      { path: 'offline', component: DownloadContentPage }
+      { path: 'offline', component: DownloadContentPage },
+      { path: 'preferencia', component: PreferenciasPage },
     ]
   },
   {
@@ -45,6 +48,13 @@ const routes: Routes = [
 
 
 /*
+
+,
+  {
+    path: 'filtrosustentable',
+    loadChildren: () => import('./filtrosustentable/filtrosustentable.module').then( m => m.FiltrosustentablePageModule)
+  }
+  
 const routes: Routes = [
   {
     path: '',

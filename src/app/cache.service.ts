@@ -8,7 +8,7 @@ export class CacheService {
   private requests: any;
 
   constructor() {
-    console.log('Paso por el contructor');
+    //console.log('Paso por el contructor');
     this.requests = [];
   }
 

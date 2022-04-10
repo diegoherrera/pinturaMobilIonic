@@ -20,12 +20,12 @@ export class RutaarchivoPipe implements PipeTransform {
       .get(value)
       .pipe(
         map(data => {
-          console.log('imagen true');
+          //console.log('imagen true');
           return true;
         }),
         catchError(error => {
           return of(() => {
-            console.log('imagen false');
+            //console.log('imagen false');
             return false;
           })
         })
@@ -45,11 +45,11 @@ export class RutaarchivoPipe implements PipeTransform {
         } else {
           retorno = environment.Servidor + '/public/' + value;
         }
-        console.log('que lleva el ' + retorno);
-        this.auth.isHasImageCache(retorno, (respuesta) => {
+        //console.log('que lleva el ' + retorno);
+       /* this.auth.isHasImageCache(retorno, (respuesta) => {
           //console.log('tiene cache la imagen ? ' + retorno + ' ' + respuesta);
           if (!respuesta) {
-            console.log('no tiene cache');
+            //console.log('no tiene cache');
             //primero resguardar 
             this.convertImageToBase64(retorno)
               .then(imagenbase64 => {
@@ -63,22 +63,22 @@ export class RutaarchivoPipe implements PipeTransform {
                   });
                 });
               }).catch(error => {
-                console.log(' genero error ' + retorno);
+                //console.log(' genero error ' + retorno);
               });
           } else {
             
             this.auth.GetImageCache(retorno, (base64) => {
-              console.log('si tiene cache ' + retorno);
+              //console.log('si tiene cache ' + retorno);
               //console.log('contenido 64 para ' + retorno + ' ' + base64);
               observer.next(base64);
               observer.complete();
             })
           }
-        })
+        })*/
 
 
-        //observer.next(retorno);
-        //observer.complete();
+        observer.next(retorno);
+        observer.complete();
       }
 
 
@@ -90,7 +90,7 @@ export class RutaarchivoPipe implements PipeTransform {
   transform3o(value: any): any {
     if (value != undefined) {
       let retorno: string = '';
-      console.log(value);
+      //console.log(value);
       if (value.includes('/public/')) {
         retorno = environment.Servidor + value;
       } else {
@@ -98,31 +98,31 @@ export class RutaarchivoPipe implements PipeTransform {
       }
 
       this.auth.isHasImageCache(retorno, (respuesta) => {
-        console.log('tiene cache la imagen ? ' + retorno + ' ' + respuesta);
+        //console.log('tiene cache la imagen ? ' + retorno + ' ' + respuesta);
         if (!respuesta) {
-          console.log('no tiene cache');
+          //console.log('no tiene cache');
           this.convertImageToBase64(retorno)
             .then(imagenbase64 => {
-              console.log(' genero cache ' + imagenbase64);
+              //console.log(' genero cache ' + imagenbase64);
               this.auth.SetImageCache(retorno, imagenbase64, (respuesta) => {
-                console.log('resguarde en cache ' + retorno + ' esta fue la respuesta ' + respuesta);
+                //console.log('resguarde en cache ' + retorno + ' esta fue la respuesta ' + respuesta);
                 this.auth.SetHasImageCach(retorno, (operacion) => {
-                  console.log(' Marco flag de que tiene cache para  ' + retorno);
+                  //console.log(' Marco flag de que tiene cache para  ' + retorno);
                 });
               });
             }).catch(error => {
-              console.log(' genero error ' + retorno);
+              //console.log(' genero error ' + retorno);
             });
         } else {
-          console.log('si tiene cache');
+          //console.log('si tiene cache');
           this.auth.GetImageCache(retorno, (base64) => {
-            console.log('contenido 64 para ' + retorno + ' ' + base64);
+            //console.log('contenido 64 para ' + retorno + ' ' + base64);
           })
         }
       })
-      console.log('llego  validar ' + retorno);
+      //console.log('llego  validar ' + retorno);
       if (this.validarUrl(retorno)) {
-        console.log('valido imagen');
+        //console.log('valido imagen');
         return retorno;
       } else {
         return 'imagen por defecto';

@@ -7,7 +7,7 @@
   </ion-toolbar>
   <ion-toolbar *ngIf="!isprincial" color="primary">
     <ion-searchbar placeholder="{{ 'lblbuscarholder' | translate }}" [(ngModel)]="searchString"
-      (ionInput)="getItems($event)" (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+      (ionInput)="getItems($event)"  (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -15,35 +15,98 @@
   <div #panel0 class="active">
     <ion-list>
       <ion-list-header lines="inset">
-        <ion-label>Segment</ion-label>
+        <ion-label>{{ 'lblfiltroSegmentoMenu' | translate }}</ion-label>
         <ion-button (click)="filtro(1)">Seleccionar</ion-button>
       </ion-list-header>
       <ion-list-header lines="inset">
-        <ion-label>Familia</ion-label>
+        <ion-label>{{ 'lblfiltroFamiliaMenu' | translate }}</ion-label>
         <ion-button (click)="filtro(2)">Seleccionar</ion-button>
       </ion-list-header>
       <ion-list-header lines="inset">
-        <ion-label>Tipo de Producto</ion-label>
+        <ion-label>{{ 'lblfiltroTipoMenu' | translate }}</ion-label>
         <ion-button (click)="filtro(3)">Seleccionar</ion-button>
       </ion-list-header>
       <ion-list-header lines="inset">
-        <ion-label>Otros</ion-label>
+        <ion-label>{{ 'lblfiltroOtrosMenu' | translate }}</ion-label>
         <ion-button (click)="filtro(4)">Seleccionar</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset">
+        <ion-label>{{ 'lblfiltroRegulatoryMenu' | translate }}</ion-label>
+        <ion-button (click)="filtro(5)">Seleccionar</ion-button>
+      </ion-list-header>
+    </ion-list>
+
+    <div class="primary" style="padding: 10px;background: #0085ca;margin-top: 5px;font-size: 18px;text-align: center; color: white;">
+      {{ 'lblFiltroSeleccionado' | translate }}
+    </div>
+
+    <ion-list>
+      <ion-list-header lines="inset" *ngFor="let sectioinArray of segmento">
+        <ion-label style="margin-top: 0px!important; font-weight: normal; font-size: medium;">[S] - {{ sectioinArray.segment_name }}</ion-label>
+        <ion-button style="margin-top: 0px!important;" (click)="removeFiltroSegment(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset" *ngFor="let sectioinArray of familia">
+        <ion-label style="margin-top: 0px!important; font-weight: normal; font-size: medium;">[F] - {{ sectioinArray.family_name }}</ion-label>
+        <ion-button style="margin-top: 0px!important;" (click)="removeFiltrofamilia(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset" *ngFor="let sectioinArray of tipo">
+        <ion-label style="margin-top: 0px!important; font-weight: normal; font-size: medium;">[C] - {{ sectioinArray.category_name }}</ion-label>
+        <ion-button style="margin-top: 0px!important;" (click)="removeFiltrocategoria(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset" *ngFor="let sectioinArray of value">
+        <ion-label style="margin-top: 0px!important; font-weight: normal; font-size: medium;">[A] - {{ sectioinArray.id | translate }}</ion-label>
+        <ion-button style="margin-top: 0px!important;" (click)="removeFiltro(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset" *ngFor="let sectioinArray of regulatory">
+        <ion-label style="margin-top: 0px!important; font-weight: normal; font-size: medium;">[R] - {{ sectioinArray.regulatory_name | translate }}</ion-label>
+        <ion-button style="margin-top: 0px!important;" (click)="removeFiltroregulatory(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
       </ion-list-header>
     </ion-list>
   </div>
+
+  <div #panel5 class="inactive">
+    <ion-list>
+      <ion-item *ngFor="let item of RegulatoryArray">
+        <ion-avatar slot="start">
+          <img src="assets/regulatory.png">
+        </ion-avatar>
+        <ion-label style="white-space: break-spaces;">
+          <div *ngIf="language=='es' else elsecategory_name44">
+            <h2>{{item.regulatory_name}}</h2>
+          </div>
+          <ng-template #elsecategory_name44>
+            <h2>{{item.regulatory_name_pg}}</h2>
+          </ng-template>
+        </ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
+      </ion-item>
+      <div style="padding: 10px;" *ngIf="loadin5 && RegulatoryArray.length == 0">
+        <b>{{ 'lblerrorfiltro' | translate }}</b>
+      </div>
+    </ion-list>
+  </div>
+
   <div #panel4 class="inactive">
     <ion-list>
       <ion-item *ngFor="let item of radio_list">
-        <ion-label>{{ item.id | translate }}</ion-label>
+        <ion-avatar slot="start">
+          <img src="assets/a.jpg">
+        </ion-avatar>
+        <ion-label style="white-space: break-spaces;">{{ item.id | translate }}</ion-label>
         <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
       </ion-item>
+      <div style="padding: 10px;" *ngIf="radio_list.length == 0">
+        <b>{{ 'lblerrorfiltro' | translate }}</b>
+      </div>
     </ion-list>
   </div>
   <div #panel3 class="inactive">
     <ion-list>
       <ion-item *ngFor="let item of TypeArray">
-        <ion-label>
+        <ion-avatar slot="start">
+          <img src="assets/c.jpg">
+        </ion-avatar>
+        <ion-label style="white-space: break-spaces;">
           <div *ngIf="language=='es' else elsecategory_name">
             <h2>{{item.category_name}}</h2>
           </div>
@@ -53,12 +116,18 @@
         </ion-label>
         <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
       </ion-item>
+      <div style="padding: 10px;" *ngIf="loadin3 && TypeArray.length == 0">
+        <b>{{ 'lblerrorfiltro' | translate }}</b>
+      </div>
     </ion-list>
   </div>
   <div #panel2 class="inactive">
     <ion-list>
       <ion-item *ngFor="let item of FamilyArray">
-        <ion-label>
+        <ion-avatar slot="start">
+          <img src="assets/f.png">
+        </ion-avatar>
+        <ion-label style="white-space: break-spaces;">
           <div *ngIf="language=='es' else elsefamily_name">
             <h2>{{item.family_name}}</h2>
           </div>
@@ -68,12 +137,18 @@
         </ion-label>
         <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
       </ion-item>
+      <div style="padding: 10px;" *ngIf="loadin2 && FamilyArray.length == 0">
+        <b>{{ 'lblerrorfiltro' | translate }}</b>
+      </div>
     </ion-list>
   </div>
   <div #panel1 class="inactive">
     <ion-list>
       <ion-item *ngFor="let item of SegmentArray">
-        <ion-label>
+        <ion-avatar slot="start">
+          <img src="assets/s.png">
+        </ion-avatar>
+        <ion-label style="white-space: break-spaces;">
           <div *ngIf="language=='es' else elseidiomsegment_name_pg">
             <h2>{{item.segment_name}}</h2>
           </div>
@@ -83,6 +158,9 @@
         </ion-label>
         <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
       </ion-item>
+      <div style="padding: 10px;" *ngIf="loadin1 && SegmentArray.length == 0">
+        <b>{{ 'lblerrorfiltro' | translate }}</b>
+      </div>
     </ion-list>
   </div>
 </ion-content>
@@ -90,12 +168,27 @@
   <ion-row>
     <ion-col>
       <div>
-        <ion-button (click)="agregarFiltro()" expand="block">{{ 'lblfiltrosbtnagregarfiltro' | translate }}</ion-button>
+        <ion-button (click)="RegresarAMenu()" expand="block">{{ 'lblfiltrosbtnagregarfiltro' | translate }}</ion-button>
       </div>
     </ion-col>
     <ion-col>
       <div>
         <ion-button (click)="cancelarFiltro()" expand="block">{{ 'lblfiltrosbtnCancel' | translate }}</ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+</ion-footer>
+<ion-footer *ngIf="isprincial">
+  <ion-row>
+    <ion-col>
+      <div>
+        <ion-button (click)="agregarFiltro()" expand="block">{{ 'lblfiltrobuscar' | translate }}</ion-button>
+      </div>
+    </ion-col>    
+    <ion-col>
+      <div>
+        <ion-button (click)="restablecerFiltro()" expand="block">{{ 'lblfiltrosbtnrestablecer' | translate }}</ion-button>
       </div>
     </ion-col>
   </ion-row>

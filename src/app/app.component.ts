@@ -28,18 +28,18 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      console.log('**********************SIEMPRE PASO PRIMERO ********************************');
+      //console.log('**********************SIEMPRE PASO PRIMERO ********************************');
       this.autentificacionService.ifLoggedIn();
       this.translate.addLangs(['es', 'pg']);
-      this.translate.setDefaultLang('pg'); // add this
+      this.translate.setDefaultLang('es'); // add this
       this.autentificacionService.islogin.subscribe(state => {
-        console.log('inicializado ' + this.autentificacionService.inicializado);
+        //console.log('inicializado ' + this.autentificacionService.inicializado);
         if (this.autentificacionService.inicializado) {
           if (state) {
-            console.log('ESCUCHO EL CAMBIO DE ESTADO TRUE');
+            //console.log('ESCUCHO EL CAMBIO DE ESTADO TRUE');
             this.router.navigate(['/dashboard/buscador']);
           } else {
-            console.log('ESCUCHO EL CAMBIO DE ESTADO FALSE');
+            //console.log('ESCUCHO EL CAMBIO DE ESTADO FALSE');
             this.router.navigate(['/login']);
           }
         }

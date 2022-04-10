@@ -2,6 +2,8 @@ import { Component, OnInit, NgZone, Renderer2, AfterViewInit } from '@angular/co
 import { ModalController, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { AutentificacionService } from 'src/app/autentificacion.service';
 
 @Component({
   selector: 'app-slow',
@@ -18,7 +20,8 @@ export class SlowPage implements OnInit, AfterViewInit {
     "Todos",
     "Mexico",
     "Argentina",
-    "Brasil"
+    "Brasil",
+    "Chile"
   ];
 
   familias: any = [
@@ -33,17 +36,19 @@ export class SlowPage implements OnInit, AfterViewInit {
   searchString: string = '';
   regForPage: number = 10;
   datos: any = [];
-
+  language: any = 'pg';
 
   constructor(public modalController: ModalController
     , private ngZone: NgZone
     , private renderer: Renderer2
+    , private auth: AutentificacionService
     //, private storage: Storage
+    , private keyboard: Keyboard
     , public loadingCtrl: LoadingController
     , private translateService: TranslateService
     , private usuarioService: UsuarioService) {
     /* this.storage.get('Language').then((val) => {
-       console.log('idioma tomando variable en modalController ******************** ' + val);
+       //console.log('idioma tomando variable en modalController ******************** ' + val);
        this.translateService.setDefaultLang(val); // add this
      });*/
 
@@ -57,6 +62,12 @@ export class SlowPage implements OnInit, AfterViewInit {
     });
   }
 
+  searchEnter($event) {
+    console.log('apreto enter' + this.searchString);
+    this.buscarDatos();
+    this.keyboard.hide();
+  }
+
   ngAfterViewInit(): void {
     var loader: any;
     this.traduccionMensajes("lblslowprocesando", (traduccion) => {
@@ -68,9 +79,15 @@ export class SlowPage implements OnInit, AfterViewInit {
 
         this.buscarInfo('');
         res2.onDidDismiss().then((dis) => {
-          console.log('Loading dismissed! after 2 Seconds', dis);
+          //console.log('Loading dismissed! after 2 Seconds', dis);
         });
       });
+    });
+
+    this.auth.getLanguage((retorno) => {
+      console.log('idiona **************** ' + retorno);
+      this.translateService.use(retorno);
+      this.language = retorno;
     });
   }
 
@@ -78,7 +95,7 @@ export class SlowPage implements OnInit, AfterViewInit {
   }
 
   toggleAccordion() {
-    console.log("toggleAccordion");
+    //console.log("toggleAccordion");
     if (this.isMenuOpen) {
       this.isMenuOpen = false;
     } else {
@@ -87,7 +104,7 @@ export class SlowPage implements OnInit, AfterViewInit {
   }
 
   toggleAccordionFamilia() {
-    console.log("toggleAccordion");
+    //console.log("toggleAccordion");
     if (this.isMenuOpenFamilia) {
       this.isMenuOpenFamilia = false;
     } else {
@@ -106,7 +123,7 @@ export class SlowPage implements OnInit, AfterViewInit {
 
       this.buscarInfo(this.buscartexto);
       res2.onDidDismiss().then((dis) => {
-        console.log('Loading dismissed! after 2 Seconds', dis);
+        //console.log('Loading dismissed! after 2 Seconds', dis);
       });
     });
   }
@@ -129,7 +146,7 @@ export class SlowPage implements OnInit, AfterViewInit {
 
   seleccionPais(sectioinArray) {
     this.selected = sectioinArray;
-    console.log('paso por aqui ' + this.selected);
+    //console.log('paso por aqui ' + this.selected);
     this.toggleAccordion();
     this.page = 0;
     this.buscarDatos();
@@ -137,7 +154,7 @@ export class SlowPage implements OnInit, AfterViewInit {
 
   seleccionFamilia(sectioinArray) {
     this.selectedFamilia = sectioinArray;
-    console.log('paso por aqui ' + this.selectedFamilia);
+    //console.log('paso por aqui ' + this.selectedFamilia);
     this.toggleAccordionFamilia();
     this.page = 0;
     this.buscarDatos();
@@ -156,9 +173,9 @@ export class SlowPage implements OnInit, AfterViewInit {
   }
 
   getItems(ev: any) {
-    console.log(ev);
+    //console.log(ev);
     var val = ev.target.value;
-    console.log(val);
+    //console.log(val);
     this.buscartexto = val;
     //this.buscarInfo(val);
     if (val.length > 3) {
@@ -172,20 +189,20 @@ export class SlowPage implements OnInit, AfterViewInit {
 
   buscarInfo(buscar: string) {
     this.usuarioService.getProductByLikeSlowFiltros(buscar, this.selected, this.selectedFamilia, this.page).subscribe(data => {
-      console.log(data);
+      //console.log(data);
       this.datos = data;
     });
   }
 
   onClear($event) {
-    console.log("Paso onClear");
+    //console.log("Paso onClear");
     this.page = 0;
     this.buscarInfo('sindatos');
   }
 
 
   onCancel($event) {
-    console.log("Paso por onCancel");
+    //console.log("Paso por onCancel");
     this.page = 0;
     this.buscarInfo('sindatos');
   }

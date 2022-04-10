@@ -13,12 +13,14 @@ import { AutentificacionService } from 'src/app/autentificacion.service';
 })
 export class LoginPage implements OnInit, AfterViewInit {
   error: boolean = false;
+  show: boolean = false;
+
   constructor(public usuarioService: UsuarioService
     , private storage: Storage
     , private router: Router
     , private autentificacionService: AutentificacionService
     , private translate: TranslateService) {
-     
+
   }
 
   ngAfterViewInit(): void {
@@ -26,18 +28,26 @@ export class LoginPage implements OnInit, AfterViewInit {
     this.autentificacionService.isAuthenticated((respuesta)=> {
       this.router.navigate(['/dashboard']);
     });*/
-    
-    this.autentificacionService.getProfile((retorno)=> {
-      console.log('profile ' + retorno);
+
+    this.autentificacionService.getProfile((retorno) => {
+      //console.log('profile ' + retorno);
     });
-   
+
   }
 
   ngOnInit() {
   }
 
+  showpassword() {
+    this.show = true;
+  }
+
+  hidepassword() {
+   this.show = false;
+  }
+
   login(form) {
-    console.log(form.value);
+    //console.log(form.value);
     this.error = false;
 
     if (form.valid) {
@@ -46,35 +56,43 @@ export class LoginPage implements OnInit, AfterViewInit {
       ).subscribe((event: HttpEvent<any>) => {
         switch (event.type) {
           case HttpEventType.Sent:
-            console.log('Request has been made!');
+            //console.log('Request has been made!');
             break;
           case HttpEventType.Response:
-            console.log('User successfully created!', event.body);
+            //console.log('User successfully created!', event.body);
             //this.storage.set('islogin', true);
-            console.log(JSON.stringify(event.body.profile));
-            this.autentificacionService.registrarLogin(event.body.profile);
-            //console.log('autenticated ' + this.autentificacionService.isAuthenticated());
-            //this.storage.set('profile', JSON.stringify(event.body.profile));
-            if (event.body.profile.user_IdLanguage == '5f0a242149eb5338212b2554') {
-              //console.log('idioma es');
-              //this.storage.set('Language', 'es');
-              /* this.storage.get('Language').then((val) => {
-                console.log('idioma tomando variable' + val);
-                this.translate.use('es'); // add this
+            //console.log(JSON.stringify(event.body.profile));
+            this.autentificacionService.registrarLogin(event.body.profile, (retorno) => {
+              //console.log('luego de registrar el profile ');
+              if (event.body.profile.user_IdLanguage == '5f0a242149eb5338212b2554') {
+                this.autentificacionService.registrarLanguage('es', (retorno)=> {
+                  console.log('Luego de login el idioma es = es');
 
-              });
-              this.error = false;*/
-              this.autentificacionService.registrarLanguage('es');
-              this.router.navigate(['/verificar']);
-            } else {
-              console.log('idioma pg');
-              // this.storage.set('Language', 'pg');
-              this.autentificacionService.registrarLanguage('pg');
-            }
+                  this.storage.get('profile').then((val) => {
+                    //console.log('perfil ******************** ' + JSON.stringify(val));
+                    this.autentificacionService.registrarisLogin();
+                  });
 
+                });
+                
+              } else {
+                //console.log('llego aqui en login 2');
+                console.log('Luego de login el idioma es = pg');
+                // this.storage.set('Language', 'pg');
+                this.autentificacionService.registrarLanguage('pg', (retorno)=> {
+                  //console.log('llego aqui en login 2 idioma pg');
 
+                  this.storage.get('profile').then((val) => {
+                    //console.log('perfil ******************** ' + JSON.stringify(val));
+                    this.autentificacionService.registrarisLogin();
+                  });
 
+                });
+              }
 
+              
+
+            });
         }
       },
         error => {

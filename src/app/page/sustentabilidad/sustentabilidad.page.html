@@ -8,18 +8,64 @@
   </ion-toolbar>
   <ion-toolbar color="primary">
     <ion-searchbar placeholder="{{ 'titleSustentablebuscar' | translate }}" [(ngModel)]="searchString"
-      (ionInput)="getItems($event)" (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
-  </ion-toolbar>
+      (ionInput)="getItems($event)"  (change)="searchEnter($event)" (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+  
+      <div #primariob>
+        <h2 #opcion1 class="inactive" style="margin-left: 20px; width: 100%;" (click)="toggleAccordion()">
+  
+          <div style="width: 85%; float: left;">
+            {{ 'lblFiltroSeleccionado' | translate }}
+          </div>
+          <span>&#9650;</span>
+  
+        </h2>
+      <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
+        <div style="width: 85%; float: left;">
+          {{ 'lblFiltroSeleccionado' | translate }}
+        </div>
+        <span>&#9660;</span>
+      </h2>
+      <div #panel class="inactive">
+        <ion-list>
+          <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionadoPolimero">
+            <ion-label>[Polimero] - {{ sectioinArray.polimerosustentable_name }}</ion-label>
+            <ion-button (click)="removeFiltroPolimetro(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+          </ion-list-header>
+          <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionadoProducto">
+            <ion-label>[Producto] - {{ sectioinArray.productossustentables_name }}</ion-label>
+            <ion-button (click)="removeFiltroProducto(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+          </ion-list-header>
+          <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionadoProceso">
+            <ion-label>[Proceso] - {{ sectioinArray.procesosustentables_name  }}</ion-label>
+            <ion-button (click)="removeFiltroProceso(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+          </ion-list-header>          
+        </ion-list>
+        <ion-button (click)="pushPageFilter()">{{ 'btnaddfilter' | translate }}</ion-button>
+        <ion-button (click)="limpiarFiltros()">{{ 'lblbtnclearfilter' | translate }}</ion-button>
+      </div>
+    </div>
+
+    </ion-toolbar>
 </ion-header>
 <ion-content>
   <ion-card *ngFor="let sectioinArray of datos">
     <ion-card-header>
-      <ion-card-title>{{sectioinArray.agrupacion_product_Id.product_code}}</ion-card-title>
+      <ion-card-title>
+        <div *ngIf="language=='es' else elseproductoxx3">
+          {{sectioinArray.agrupacion_name }}  {{sectioinArray.agrupacion_product_Id.product_code}}  
+        </div>
+        <ng-template #elseproductoxx3>
+          {{sectioinArray.agrupacion_name_pg }}  {{sectioinArray.agrupacion_product_Id.product_code}}  
+        </ng-template>
+        </ion-card-title>
     </ion-card-header>
     <img *ngIf="sectioinArray.agrupacion_product_Id.product_image==''" src="assets/noimagen.png" />
     <!--(error)="updateUrl($event, sectioinArray)"-->
     <img *ngIf="sectioinArray.agrupacion_product_Id.product_image!=''"
       src="{{ sectioinArray.agrupacion_product_Id.product_image | rutaarchivo | async}}"  style="width: 100%;" />
+    
+      <img src="assets/Logos.png" style="width: 50px;" />
+
     <ion-card-content>
       <div *ngIf="language=='es' else elseidioma">
         {{sectioinArray.agrupacion_product_Id.product_description}}

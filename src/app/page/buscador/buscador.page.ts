@@ -8,6 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { AutentificacionService } from 'src/app/autentificacion.service';
 import { ConnectionStatus, NetworkService } from 'src/app/network.service';
 import { DbcacheService } from 'src/app/dbcache.service';
+import { JsonpClientBackend } from '@angular/common/http';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 @Component({
   selector: 'app-buscador',
@@ -16,7 +18,7 @@ import { DbcacheService } from 'src/app/dbcache.service';
 })
 export class BuscadorPage implements OnInit, AfterViewInit {
   @ViewChild(IonContent, { static: false }) content: IonContent;
-  @ViewChild("favorito") favorito: ElementRef;
+  //@ViewChild("favorito") favorito: ElementRef;
   @ViewChild("family") family: ElementRef;
   @ViewChild("segmento") segmento: ElementRef;
   @ViewChild("type") type: ElementRef;
@@ -33,6 +35,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
   filtrosSeleccionadoSegmento: any = [];
   filtrosSeleccionadoFamilia: any = [];
   filtrosSeleccionadoTipo: any = [];
+  filtrosSeleccionadoRegulatory: any = [];
 
   searchString: string = '';
   navigate: any;
@@ -67,18 +70,16 @@ export class BuscadorPage implements OnInit, AfterViewInit {
     , private auth: AutentificacionService
     , private dbcacheService: DbcacheService
     , private networkService: NetworkService
+    , private keyboard: Keyboard
     , private usuarioService: UsuarioService) {
 
+      //console.log('constructor BuscadorPage');
     /* this.storage.get('Language').then((val) => {
-       console.log('idioma tomando variable en BuscadorPage ******************** ' + val);
+       //console.log('idioma tomando variable en BuscadorPage ******************** ' + val);
        this.translateService.setDefaultLang(val); // add this
      });*/
 
-    this.auth.getLanguage((retorno) => {
-      console.log('idiona **************** ' + retorno);
-      this.translateService.use(retorno);
-      this.language = retorno;
-    });
+    
 
     this.pagina = 0;
 
@@ -86,7 +87,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
   }
 
   isHasConnection() {
-    return false;
+    return true;
     // return this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline ? false: true;
   }
 
@@ -106,38 +107,46 @@ export class BuscadorPage implements OnInit, AfterViewInit {
 
   getSegment() {
     this.usuarioService.GetSegment().subscribe(data => {
-      console.log(data);
+      //console.log(data);
       this.SegmentArray = data;
     });
   }
 
   GetFamily() {
     this.usuarioService.GetFamily().subscribe(data => {
-      console.log(data);
+      //console.log(data);
       this.FamilyArray = data;
     });
   }
 
   GetType() {
     this.usuarioService.GetType().subscribe(data => {
-      console.log(data);
+      //console.log(data);
       this.TypeArray = data;
     });
   }
 
+  GetNombreProducto(item) {
+    return JSON.parse(item).category_name;
+  }
+
   GetFavorito() {
+
+    //console.log('paso por favoritos ');
     this.auth.getProfile((retorno) => {
       if (this.isHasConnection()) {
+        //console.log('paso por aqui ');
         this.usuarioService.GetFavorito(JSON.parse(retorno)._id).subscribe(data => {
           this.content.scrollToTop(0);
+          //console.log('JSON ' + JSON.stringify(data));
           this.FavoritoArray = data;
         });
       } else {
         //modo offline
-        console.log('trabajando modo offline  GetFavorito');
+        //console.log('trabajando modo offline  GetFavorito');
         this.dbcacheService.GetFavoritos(JSON.parse(retorno)._id, (resultado) => {
-          console.log('favoritos devueltos ' + resultado.length);
-          console.log('favoritos devueltos ' + JSON.stringify(resultado));
+          //console.log('favoritos devueltos ' + resultado.length);
+          //console.log('favoritos devueltos ' + JSON.stringify(resultado));
           this.content.scrollToTop(0);
           this.FavoritoArray = [];
           this.FavoritoArray = resultado;
@@ -155,9 +164,11 @@ export class BuscadorPage implements OnInit, AfterViewInit {
         this.filtrosSeleccionadoFamilia,
         this.filtrosSeleccionadoTipo,
         this.filtrosSeleccionado,
+        this.filtrosSeleccionadoRegulatory,
         this.buscando,
         JSON.parse(retorno).user_comercializacion,
-        this.pagina).subscribe(data => {
+        this.pagina,
+        this.language).subscribe(data => {
           // console.log('llego xxxxxxxxxxxxxxx ' + data.total);
 
           this.micantidad = data.total;
@@ -176,17 +187,19 @@ export class BuscadorPage implements OnInit, AfterViewInit {
           this.filtrosSeleccionadoFamilia,
           this.filtrosSeleccionadoTipo,
           this.filtrosSeleccionado,
+          this.filtrosSeleccionadoRegulatory,
           this.buscando,
           JSON.parse(retorno).user_comercializacion,
-          this.pagina).subscribe(data => {
-            //console.log('informacion ' + JSON.stringify(data));
+          this.pagina,
+          this.language).subscribe(data => {
+            //console.log('informacion ' + JSON.stringify(data.products));
             this.content.scrollToTop(0);
             this.ProductArray = data.products;
           });
 
       } else {
         // modo offline
-        console.log('Modo offline getProduct()');
+        //console.log('Modo offline getProduct()');
         this.dbcacheService.GetProductos(
           this.filtrosSeleccionadoSegmento,
           this.filtrosSeleccionadoFamilia,
@@ -195,7 +208,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
           this.buscando,
           JSON.parse(retorno).user_comercializacion, (resultado) => {
             this.micantidad = resultado.length;
-            console.log('informacion ' + JSON.stringify(resultado));
+            //console.log('informacion ' + JSON.stringify(resultado));
             this.content.scrollToTop(0);
             this.ProductArray = resultado.slice(1, 14); 
           });
@@ -208,23 +221,23 @@ export class BuscadorPage implements OnInit, AfterViewInit {
   async pushPageFavorito(registro) {
     if (this.isHasConnection()) {
       this.usuarioService.getProductById(registro._id).subscribe(async data => {
-        console.log('registro completo ' + JSON.stringify(data));
+       // console.log('registro completo ' + JSON.stringify(data));
         //console.log(JSON.stringify(registro));
         const modal = await this.modalController.create({
           component: ProductoPage,
           cssClass: 'my-custom-class',
-          componentProps: { 'data': data.products }
+          componentProps: { 'data': data.products, 'language': this.language }
         });
         return await modal.present();
       });
     } else {
-      console.log('trabajando modo offline para detalle');
+      //console.log('trabajando modo offline para detalle');
       this.dbcacheService.GetProductoFavorito(registro._id, async (resultado) => {
-        console.log(JSON.stringify(resultado));
+        //console.log(JSON.stringify(resultado));
         const modal = await this.modalController.create({
           component: ProductoPage,
           cssClass: 'my-custom-class',
-          componentProps: { 'data': resultado[0] }
+          componentProps: { 'data': resultado[0], 'language': this.language }
         });
         return await modal.present();
       });
@@ -232,7 +245,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
   }
 
   seleccionarSegmento(selected) {
-    console.log('llego a la seleccion');
+    //console.log('llego a la seleccion');
     this.nivel1 = selected;
     this.renderer.addClass(this.segmento.nativeElement, "inactive");
     this.renderer.removeClass(this.family.nativeElement, "inactive");
@@ -241,7 +254,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
 
 
   seleccionarFamilia(selected) {
-    console.log('llego a la seleccion');
+    //console.log('llego a la seleccion');
     this.nivel2 = selected;
     this.renderer.addClass(this.family.nativeElement, "inactive");
     this.renderer.removeClass(this.type.nativeElement, "inactive");
@@ -249,7 +262,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
   }
 
   seleccionarType(selected) {
-    console.log('llego a la seleccion');
+    //console.log('llego a la seleccion');
     this.nivel3 = selected;
     this.renderer.addClass(this.type.nativeElement, "inactive");
     this.renderer.removeClass(this.producto.nativeElement, "inactive");
@@ -264,14 +277,14 @@ export class BuscadorPage implements OnInit, AfterViewInit {
         duration: 5000
       }).then((res2) => {
         res2.present();
-        console.log('llego a la seleccion');
+        //console.log('llego a la seleccion');
         this.usuarioService.GetProduc(this.nivel1._id, this.nivel2._id, this.nivel3._id).subscribe(data => {
-          console.log('informacion ' + JSON.stringify(data));
+          //('informacion ' + JSON.stringify(data));
           this.ProductArray = data.products;
           res2.dismiss(); //sierro el dialogo
         });
         res2.onDidDismiss().then((dis) => {
-          console.log('Loading dismissed! after 2 Seconds', dis);
+          //console.log('Loading dismissed! after 2 Seconds', dis);
         });
       });
     });
@@ -279,13 +292,37 @@ export class BuscadorPage implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit(): void {
+
+    //console.log('evento ngAfterViewInit');
+    
     //this.renderer.removeClass(this.segmento.nativeElement, "inactive");
     this.renderer.addClass(this.primario.nativeElement, "active");
     this.renderer.addClass(this.primariob.nativeElement, "active");
     this.renderer.addClass(this.secundario.nativeElement, "inactive");
     var loader: any;
 
-    this.GetFavorito();
+    //this.GetFavorito();
+
+    this.auth.getPreferencia((retorno) => {
+      console.log('getPreferencia **************** ' + retorno);
+      let data = JSON.parse(retorno);
+
+      console.log('data.segmento', data.segmento);
+      console.log('data.familia', data.familia);
+      console.log('data.regulatory', data.regulatory);
+      this.filtrosSeleccionadoSegmento = data.segmento;
+      this.filtrosSeleccionadoFamilia = data.familia;
+      this.filtrosSeleccionadoRegulatory = data.regulatory;
+    });
+
+    this.getProduct();
+
+        this.renderer.removeClass(this.producto.nativeElement, "inactive");
+        this.renderer.addClass(this.producto.nativeElement, "active");
+
+      //  this.renderer.addClass(this.favorito.nativeElement, "inactive");
+      //  this.renderer.removeClass(this.favorito.nativeElement, "active");
+
     /*
      this.traduccionMensajes("lblesperandodatos", (traduccion) => {
        loader = this.loadingCtrl.create({
@@ -303,13 +340,20 @@ export class BuscadorPage implements OnInit, AfterViewInit {
          });
        });
      });*/
+
+     this.auth.getLanguage((retorno) => {
+      console.log('idiona **************** ' + retorno);
+      this.translateService.use(retorno);
+      this.language = retorno;
+    });
+
   }
 
   limpiar(nivel) {
-    console.log('paso por limpiar' + nivel);
+    //console.log('paso por limpiar' + nivel);
     this.filtro1 = false;
     if (nivel == 1) {
-      console.log('1');
+      //console.log('1');
       this.nivel1 = '';
       this.nivel2 = '';
       this.nivel3 = '';
@@ -328,7 +372,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
       this.renderer.addClass(this.producto.nativeElement, "inactive");
     }
     if (nivel == 2) {
-      console.log('2');
+      //console.log('2');
       this.nivel2 = '';
       this.nivel3 = '';
       this.renderer.removeClass(this.segmento.nativeElement, "active");
@@ -346,7 +390,7 @@ export class BuscadorPage implements OnInit, AfterViewInit {
       this.renderer.addClass(this.producto.nativeElement, "inactive");
     }
     if (nivel == 3) {
-      console.log('3');
+      //console.log('3');
       this.nivel3 = '';
       this.renderer.removeClass(this.segmento.nativeElement, "active");
       this.renderer.removeClass(this.family.nativeElement, "active");
@@ -379,21 +423,34 @@ export class BuscadorPage implements OnInit, AfterViewInit {
     this.filtrosSeleccionadoFamilia = [];
     this.filtrosSeleccionadoTipo = [];
 
-    this.renderer.removeClass(this.favorito.nativeElement, "inactive");
-    this.renderer.addClass(this.favorito.nativeElement, "active");
+    //this.renderer.removeClass(this.favorito.nativeElement, "inactive");
+    //this.renderer.addClass(this.favorito.nativeElement, "active");
 
-    this.renderer.addClass(this.producto.nativeElement, "inactive");
-    this.renderer.removeClass(this.producto.nativeElement, "active");
+    //this.renderer.addClass(this.producto.nativeElement, "inactive");
+    //this.renderer.removeClass(this.producto.nativeElement, "active");
 
     this.searchString = '';
     this.buscando = '';
-    this.GetFavorito();
+    //this.GetFavorito();
+    this.getProduct();
   }
 
   removeFiltro(item: any) {
 
     this.filtrosSeleccionado = this.filtrosSeleccionado.filter(obj => obj !== item);
     this.getProduct();
+  }
+
+  search($event) {
+    console.log('apreto enter en evento search ');
+    this.getProduct();
+    this.keyboard.hide(); 
+  }
+
+  searchEnter($event) {
+    console.log('apreto enter' + this.searchString);
+    this.getProduct();
+    this.keyboard.hide(); 
   }
 
   removeFiltroSegment(item: any) {
@@ -411,6 +468,12 @@ export class BuscadorPage implements OnInit, AfterViewInit {
     this.getProduct();
   }
 
+  removeFiltroregulatory(item: any) {
+    this.filtrosSeleccionadoRegulatory = this.filtrosSeleccionadoRegulatory.filter(obj => obj !== item);
+    this.getProduct();
+  }
+
+
 
   doInfinite(event) {
     if (this.isHasConnection()) {
@@ -421,9 +484,11 @@ export class BuscadorPage implements OnInit, AfterViewInit {
           this.filtrosSeleccionadoFamilia,
           this.filtrosSeleccionadoTipo,
           this.filtrosSeleccionado,
+          this.filtrosSeleccionadoRegulatory,
           this.buscando,
           JSON.parse(retorno).user_comercializacion,
-          this.pagina).subscribe(data => {
+          this.pagina,
+          this.language).subscribe(data => {
             if (data.products.length > 0) {
               for (let i = 0; i < data.products.length; i++) {
                 this.ProductArray.push(data.products[i]);
@@ -436,54 +501,63 @@ export class BuscadorPage implements OnInit, AfterViewInit {
   }
 
   async pushPageFilter() {
-    console.log('lelgo al pushPageFilter ' + JSON.stringify({ value: this.filtrosSeleccionado, segmento: this.filtrosSeleccionadoSegmento, familia: this.filtrosSeleccionadoFamilia, tipo: this.filtrosSeleccionadoTipo }));
+    //console.log('lelgo al pushPageFilter ' + JSON.stringify({ value: this.filtrosSeleccionado, segmento: this.filtrosSeleccionadoSegmento, familia: this.filtrosSeleccionadoFamilia, tipo: this.filtrosSeleccionadoTipo }));
 
     var registro = {};
     let modal = await this.modalController.create({
       component: SincronizarPage,
       cssClass: 'my-custom-class',
-      componentProps: { value: this.filtrosSeleccionado, segmento: this.filtrosSeleccionadoSegmento, familia: this.filtrosSeleccionadoFamilia, tipo: this.filtrosSeleccionadoTipo }
+      componentProps: { regulatory: this.filtrosSeleccionadoRegulatory ,value: this.filtrosSeleccionado, segmento: this.filtrosSeleccionadoSegmento, familia: this.filtrosSeleccionadoFamilia, tipo: this.filtrosSeleccionadoTipo , 'language': this.language }
     });
 
     modal.onDidDismiss().then(data => {
-      console.log('retorno ' + JSON.stringify(data));
+      //console.log('retorno ' + JSON.stringify(data));
       var retorno: any = data;
       if (retorno.data.estado) {
 
 
+        this.filtrosSeleccionadoSegmento = retorno.data.segmento;
+        this.filtrosSeleccionadoFamilia = retorno.data.familia;
+        this.filtrosSeleccionadoTipo = retorno.data.tipo;
+        this.filtrosSeleccionado = retorno.data.filtro;
+        this.filtrosSeleccionadoRegulatory = retorno.data.regulatory;
+
         if (retorno.data.operacion == 1) {
-          console.log('entro por opcion 1');
-          this.filtrosSeleccionadoSegmento = this.filtrosSeleccionadoSegmento.concat(retorno.data.seleccion);
-          console.log('this.retorno.data.seleccion operacion 1 ' + JSON.stringify(retorno.data.seleccion));
-          console.log('this.filtrosSeleccionado ' + JSON.stringify(this.filtrosSeleccionadoSegmento));
+          //console.log('entro por opcion 1');
+          //this.filtrosSeleccionadoSegmento = this.filtrosSeleccionadoSegmento.concat(retorno.data.seleccion);
+          //console.log('this.retorno.data.seleccion operacion 1 ' + JSON.stringify(retorno.data.seleccion));
+          //console.log('this.filtrosSeleccionado ' + JSON.stringify(this.filtrosSeleccionadoSegmento));
         }
         if (retorno.data.operacion == 2) {
-          console.log('entro por opcion 2');
-          this.filtrosSeleccionadoFamilia = this.filtrosSeleccionadoFamilia.concat(retorno.data.seleccion);
-          console.log('this.retorno.data.seleccion operacion 2 ' + JSON.stringify(retorno.data.seleccion));
-          console.log('this.filtrosSeleccionado ' + JSON.stringify(this.filtrosSeleccionadoFamilia));
+          //console.log('entro por opcion 2');
+          //this.filtrosSeleccionadoFamilia = this.filtrosSeleccionadoFamilia.concat(retorno.data.seleccion);
+          //console.log('this.retorno.data.seleccion operacion 2 ' + JSON.stringify(retorno.data.seleccion));
+          //console.log('this.filtrosSeleccionado ' + JSON.stringify(this.filtrosSeleccionadoFamilia));
         }
         if (retorno.data.operacion == 3) {
-          console.log('entro por opcion 3');
-          this.filtrosSeleccionadoTipo = this.filtrosSeleccionadoTipo.concat(retorno.data.seleccion);
-          console.log('this.retorno.data.seleccion operacion 2 ' + JSON.stringify(retorno.data.seleccion));
-          console.log('this.filtrosSeleccionado ' + JSON.stringify(this.filtrosSeleccionadoTipo));
+          //console.log('entro por opcion 3');
+          //this.filtrosSeleccionadoTipo = this.filtrosSeleccionadoTipo.concat(retorno.data.seleccion);
+          //console.log('this.retorno.data.seleccion operacion 2 ' + JSON.stringify(retorno.data.seleccion));
+          //console.log('this.filtrosSeleccionado ' + JSON.stringify(this.filtrosSeleccionadoTipo));
         }
         if (retorno.data.operacion == 4) {
-          this.filtrosSeleccionado = this.filtrosSeleccionado.concat(retorno.data.seleccion);
-          console.log('this.retorno.data.seleccion  opcion 4' + JSON.stringify(retorno.data.seleccion));
-          console.log('this.filtrosSeleccionado ' + JSON.stringify(this.filtrosSeleccionado));
+          //this.filtrosSeleccionado = this.filtrosSeleccionado.concat(retorno.data.seleccion);
+          //console.log('this.retorno.data.seleccion  opcion 4' + JSON.stringify(retorno.data.seleccion));
+          //console.log('this.filtrosSeleccionado ' + JSON.stringify(this.filtrosSeleccionado));
 
         }
+
+
+
         this.getProduct();
 
         this.renderer.removeClass(this.producto.nativeElement, "inactive");
         this.renderer.addClass(this.producto.nativeElement, "active");
 
-        this.renderer.addClass(this.favorito.nativeElement, "inactive");
-        this.renderer.removeClass(this.favorito.nativeElement, "active");
+        //this.renderer.addClass(this.favorito.nativeElement, "inactive");
+        //this.renderer.removeClass(this.favorito.nativeElement, "active");
 
-
+        //this.toggleAccordion();
 
       }
     });
@@ -504,16 +578,18 @@ export class BuscadorPage implements OnInit, AfterViewInit {
   trabajodepaneles() {
     this.renderer.removeClass(this.producto.nativeElement, "inactive");
     this.renderer.addClass(this.producto.nativeElement, "active");
-    this.renderer.addClass(this.favorito.nativeElement, "inactive");
-    this.renderer.removeClass(this.favorito.nativeElement, "active");
+   // this.renderer.addClass(this.favorito.nativeElement, "inactive");
+    //this.renderer.removeClass(this.favorito.nativeElement, "active");
   }
 
   getItems(ev: any) {
-    console.log(ev);
+
+    
+    console.log('ev',ev);
     var val = ev.target.value;
-    console.log(val);
-    if (val != "" && val.length > 3) {
-      console.log("Paso por getItems");
+    //console.log(val);
+    if (val != "" ) {
+      //console.log("Paso por getItems");
       this.buscando = val;
       this.getProduct();
       this.trabajodepaneles();
@@ -526,25 +602,25 @@ export class BuscadorPage implements OnInit, AfterViewInit {
 
   seleccionarProductoPorSegmento(sectioinArray) {
     this.usuarioService.GetProduc(sectioinArray._id, '', '').subscribe(data => {
-      console.log('informacion ' + JSON.stringify(data));
+      //console.log('informacion ' + JSON.stringify(data));
       this.ProductArrayFilter = data.products;
     });
   }
   seleccionarProductoPorFamilia(sectioinArray) {
     this.usuarioService.GetProduc('', sectioinArray._id, '').subscribe(data => {
-      console.log('informacion ' + JSON.stringify(data));
+      //console.log('informacion ' + JSON.stringify(data));
       this.ProductArrayFilter = data.products;
     });
   }
   seleccionarProductoPorType(sectioinArray) {
     this.usuarioService.GetProduc('', '', sectioinArray._id).subscribe(data => {
-      console.log('informacion ' + JSON.stringify(data));
+      //console.log('informacion ' + JSON.stringify(data));
       this.ProductArrayFilter = data.products;
     });
   }
 
   onClear($event) {
-    console.log("Paso onClear");
+    //console.log("Paso onClear");
     this.renderer.removeClass(this.primario.nativeElement, "inactive");
     this.renderer.removeClass(this.primariob.nativeElement, "inactive");
     this.renderer.removeClass(this.secundario.nativeElement, "active");
@@ -555,13 +631,13 @@ export class BuscadorPage implements OnInit, AfterViewInit {
 
 
   onCancel($event) {
-    console.log("Paso por onCancel");
+    //console.log("Paso por onCancel");
 
   }
 
 
   toggleAccordion() {
-    console.log("toggleAccordion");
+    //console.log("toggleAccordion");
     if (this.pisMenuOpen) {
       this.pisMenuOpen = false;
       this.renderer.addClass(this.panel.nativeElement, "inactive");

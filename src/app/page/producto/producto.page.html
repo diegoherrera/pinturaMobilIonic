@@ -11,7 +11,16 @@
 
   <ion-card>
     <ion-card-header style="padding: 5px;margin-bottom: 20px;margin-top: 10px;">
-      <ion-card-title style="font-size: 24px; font-weight: bolder;">{{ data.product_code }}</ion-card-title>
+      <ion-card-title style="font-size: 24px; font-weight: bolder;">
+        
+        <div *ngIf="language=='es' else elseproductoxx">
+          {{data.product_code}}  {{data.product_IdCategory.category_name }}  
+        </div>
+        <ng-template #elseproductoxx>
+          {{data.product_code}}  {{data.product_IdCategory.category_name_pg }}  
+        </ng-template>
+
+      </ion-card-title>
     </ion-card-header>
     <ion-row>
       <ion-col>
@@ -43,6 +52,24 @@
         </ng-template>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="data.product_IdRegulatory && data.product_IdRegulatory.regulatory_name !== '' && data.product_IdRegulatory !=='No Data' ">
+      <ion-col>
+        <div>
+          {{ 'lbldetalleproductoRegulatoryProduc' | translate }}
+        </div>
+      </ion-col>
+      <ion-col>        
+        <div *ngFor="let item of regulatoryArray" >
+          <div *ngIf="language=='es' else elseregulatory">
+            {{ item.regulatory_name }}
+          </div>
+          <ng-template #elseregulatory>
+            {{ item.regulatory_name_pg }}
+          </ng-template>
+        </div>
+        
+      </ion-col>
+    </ion-row>
     <ion-row>
       <ion-col>
         <div>
@@ -58,199 +85,450 @@
         </ng-template>
       </ion-col>
     </ion-row>
+
+    <ion-row *ngIf="sustentable && polimero !=''">
+      <ion-col>
+        <div>
+          {{ 'lbltitlepolimero' | translate }}
+        </div>
+      </ion-col>
+      <ion-col>
+        <div *ngIf="language=='es' else elsecategory_namex">
+          {{ polimero.polimerosustentable_name }}
+        </div>
+        <ng-template #elsecategory_namex>
+          {{ polimero.polimerosustentable_name_pg }}
+        </ng-template>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="sustentable && producto !=''">
+      <ion-col>
+        <div>
+          {{ 'lbltitleproducto' | translate }}
+        </div>
+      </ion-col>
+      <ion-col>
+        <div *ngIf="language=='es' else elsecategory_namexx">
+          {{ producto.productossustentables_name }}
+        </div>
+        <ng-template #elsecategory_namexx>
+          {{ producto.productossustentables_name_pg }}
+        </ng-template>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="sustentable && proceso !=''">
+      <ion-col>
+        <div>
+          {{ 'lbltitleproceso' | translate }}
+        </div>
+      </ion-col>
+      <ion-col>
+        <div *ngIf="language=='es' else elsecategory_namexxx">
+          {{ proceso.procesosustentables_name }}
+        </div>
+        <ng-template #elsecategory_namexxx>
+          {{ proceso.procesosustentables_name_pg }}
+        </ng-template>
+      </ion-col>
+    </ion-row>
+
+
     <img *ngIf="data.product_image==''" src="assets/noimagen.png" />
     <!--(error)="updateUrl($event, data)"-->
     <img *ngIf="data.product_image!=''" src="{{ data.product_image | rutaarchivo | async }}"  style="width: 100%;" />
-    <ion-card-content>
+    <img *ngIf="sustentable" src="assets/Logos.png" style="width: 40%;" />
+    <ion-card-content>      
       <div *ngIf="language=='es' else elseproduct_description">
-      {{ data.product_description }}
+        <div *ngIf="data.product_description != ''">
+          {{ data.product_description }}  
+        </div>      
       </div>
       <ng-template #elseproduct_description>
-        {{ data.product_description_pg }}pg
+        <div *ngIf="data.product_description_pg != ''">
+          {{ data.product_description_pg }}  
+        </div>        
       </ng-template>
-      <ion-row>
+
+      <div *ngIf="language=='es' else elseproduct_LDR_tipico">
+        <ion-row *ngIf="data.product_LDR_tipico != ''">
+          <ion-col>
+            <div>
+              {{ 'lbldetalleproductoldrtipico' | translate }}
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="data.product_LDR_tipico != ''">
+          <ion-col>            
+              <b>{{ data.product_LDR_tipico }}</b>
+          </ion-col>
+        </ion-row>
+      </div>
+      <ng-template #elseproduct_LDR_tipico>
+        <ion-row *ngIf="data.product_LDR_tipico_pg != ''">
+          <ion-col>
+            <div>
+              {{ 'lbldetalleproductoldrtipico' | translate }}
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="data.product_LDR_tipico_pg != ''">
+          <ion-col>            
+              <b>{{ data.product_LDR_tipico_pg }}</b>
+          </ion-col>
+        </ion-row>
+      </ng-template>
+      
+      
+
+<!--
+      <ion-row *ngIf="data.product_regulatorio">
         <ion-col>
           <div>
-            {{ 'lbldetalleproductoldrtipico' | translate }}
+            {{ 'lblregulatory' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_regulatorio">
         <ion-col>
-          <div *ngIf="language=='es' else elseproduct_LDR_tipico">
-            <b>{{ data.product_LDR_tipico }}</b>
+          <div *ngIf="language=='es' else elselblregulatory">
+            <b>{{ data.product_regulatorio }}</b>
           </div>
-          <ng-template #elseproduct_LDR_tipico>
-            {{ data.product_LDR_tipico_pg }}
+          <ng-template #elselblregulatory>
+            {{ data.product_regulatorio_pg }}
           </ng-template>
         </ion-col>
-      </ion-row>
-      <ion-row>
+      </ion-row>-->
+
+      <ion-row *ngIf="data.product_field_comercializationCountry != ''">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoComercializationCountry' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_field_comercializationCountry != ''">
         <ion-col>
           <div>
             <b>{{ data.product_field_comercializationCountry }}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+
+      <ion-row *ngIf="language=='es' && data.product_production != ''">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoProductionCountry' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
-        <ion-col>
-          <div *ngIf="language=='es' else elseproduct_production">
+      <ion-row *ngIf="language=='es' && data.product_production != ''">
+        <ion-col>          
             <b>{{ data.product_production }}</b>
-          </div>
-          <ng-template #elseproduct_production>
-            {{ data.product_production_pg }}
-          </ng-template>
         </ion-col>
       </ion-row>
-      <ion-row>
+
+      <ion-row *ngIf="language=='pg' && data.product_production_pg != ''">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproductoProductionCountry' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="language=='pg' && data.product_production_pg != ''"> 
+        <ion-col>
+          {{ data.product_production_pg }}
+        </ion-col>
+      </ion-row>
+
+
+
+
+
+
+      <ion-row *ngIf="language=='es' && data.product_Influencia_Optica != '' && data.product_Influencia_Optica != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoInfluenceonOptics' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="language=='es' && data.product_Influencia_Optica != '' && data.product_Influencia_Optica != null">
         <ion-col>
-          <div *ngIf="language=='es' else elseproduct_Influencia_Optica">
-            <b>{{ data.product_Influencia_Optica }}</b>
-          </div>
-          <ng-template #elseproduct_Influencia_Optica>
-            {{ data.product_Influencia_Optica_pg }}
-          </ng-template>
+          <b>{{ data.product_Influencia_Optica }}</b>
         </ion-col>
       </ion-row>
-      <ion-row>
+
+      <ion-row *ngIf="language=='pg' && data.product_Influencia_Optica_pg != '' && data.product_Influencia_Optica != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproductoInfluenceonOptics' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="language=='pg' && data.product_Influencia_Optica_pg != '' && data.product_Influencia_Optica != null">
+        <ion-col>
+          {{ data.product_Influencia_Optica_pg }}
+        </ion-col>
+      </ion-row>
+
+
+
+
+
+      <ion-row *ngIf="language=='es' && data.product_Antibloqueo_Performance != '' && data.product_Antibloqueo_Performance != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Antibloqueo_Performance' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="language=='es' && data.product_Antibloqueo_Performance != '' && data.product_Antibloqueo_Performance != null">
         <ion-col>
-          <div *ngIf="language=='es' else elseproduct_Antibloqueo_Performance_pg">
-            <b>{{ data.product_Antibloqueo_Performance }}</b>
-          </div>
-          <ng-template #elseproduct_Antibloqueo_Performance_pg>
-            {{ data.product_Antibloqueo_Performance_pg }}
-          </ng-template>
+          <b>{{ data.product_Antibloqueo_Performance }}</b>
         </ion-col>
       </ion-row>
-      <ion-row>
+
+
+      <ion-row *ngIf="language=='pg' && data.product_Antibloqueo_Performance_pg != '' && data.product_Antibloqueo_Performance != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproductoproduct_Antibloqueo_Performance' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="language=='pg' && data.product_Antibloqueo_Performance_pg != '' && data.product_Antibloqueo_Performance != null">
+        <ion-col>
+          {{ data.product_Antibloqueo_Performance_pg }}
+        </ion-col>
+      </ion-row>
+      
+
+
+
+
+
+
+      <ion-row *ngIf="language=='es' && data.product_Migracion_Lenta_Rapida != '' && data.product_Migracion_Lenta_Rapida != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Migracion_Lenta_Rapida' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="language=='es' && data.product_Migracion_Lenta_Rapida != '' && data.product_Migracion_Lenta_Rapida != null">
         <ion-col>
-          <div *ngIf="language=='es' else elseproduct_Migracion_Lenta_Rapida">
-            <b>{{ data.product_Migracion_Lenta_Rapida }}</b>
-          </div>
-          <ng-template #elseproduct_Migracion_Lenta_Rapida>
-            {{ data.product_Migracion_Lenta_Rapida_pg }}
-          </ng-template>
+          <b>{{ data.product_Migracion_Lenta_Rapida }}</b>
         </ion-col>
       </ion-row>
-      <ion-row>
+
+      <ion-row *ngIf="language=='pg' && data.product_Migracion_Lenta_Rapida_pg != '' && data.product_Migracion_Lenta_Rapida != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproductoproduct_Migracion_Lenta_Rapida' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="language=='pg' && data.product_Migracion_Lenta_Rapida_pg != '' && data.product_Migracion_Lenta_Rapida != null">
+        <ion-col>
+          {{ data.product_Migracion_Lenta_Rapida_pg }}
+        </ion-col>
+      </ion-row>
+
+
+
+
+
+
+      <ion-row *ngIf="language=='es' && data.product_Slip_Performance != '' && data.product_Slip_Performance != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Slip_Performance' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="language=='es' && data.product_Slip_Performance != '' && data.product_Slip_Performance != null">
         <ion-col>
-          <div *ngIf="language=='es' else elseproduct_Slip_Performance">
-            <b>{{ data.product_Slip_Performance }}</b>
-          </div>
-          <ng-template #elseproduct_Slip_Performance>
-            {{ data.product_Slip_Performance_pg }}
-          </ng-template>
+          <b>{{ data.product_Slip_Performance }}</b>
         </ion-col>
       </ion-row>
-      <ion-row>
+
+      <ion-row *ngIf="language=='pg' && data.product_Slip_Performance_pg != '' && data.product_Slip_Performance != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproductoproduct_Slip_Performance' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="language=='pg' && data.product_Slip_Performance_pg != '' && data.product_Slip_Performance != null">
+        <ion-col>
+          {{ data.product_Slip_Performance_pg }}
+        </ion-col>
+      </ion-row>
+
+
+
+
+      <ion-row *ngIf="language=='es' && data.product_Chemical_Resistance != '' && data.product_Chemical_Resistance != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Chemical_Resistance' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="language=='es' && data.product_Chemical_Resistance != '' && data.product_Chemical_Resistance != null">
         <ion-col>
-          <div *ngIf="language=='es' else elseproduct_Chemical_Resistance">
-            <b>{{ data.product_Chemical_Resistance }}</b>
-          </div>
-          <ng-template #elseproduct_Chemical_Resistance>
-            {{ data.product_Chemical_Resistance_pg }}
-          </ng-template>
+          <b>{{ data.product_Chemical_Resistance }}</b>
         </ion-col>
       </ion-row>
-      <ion-row>
+
+      <ion-row *ngIf="language=='pg' && data.product_Chemical_Resistance_pg != '' && data.product_Chemical_Resistance != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproductoproduct_Chemical_Resistance' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="language=='pg' && data.product_Chemical_Resistance_pg != '' && data.product_Chemical_Resistance != null">
+        <ion-col>
+          {{ data.product_Chemical_Resistance_pg }}
+        </ion-col>
+      </ion-row>
+
+
+
+
+
+      <ion-row *ngIf="language=='es' && data.product_Comentario_General != '' && data.product_Comentario_General != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Comentario_General' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="language=='es' && data.product_Comentario_General != '' && data.product_Comentario_General != null">
         <ion-col>
-          <div *ngIf="language=='es' else elseproduct_Comentario_General">
-            <b>{{ data.product_Comentario_General }}</b>
-          </div>
-          <ng-template #elseproduct_Comentario_General>
-            {{ data.product_Comentario_General_pg }}
-          </ng-template>
+          <b>{{ data.product_Comentario_General }}</b>
         </ion-col>
       </ion-row>
-      <ion-row>
+
+      <ion-row *ngIf="language=='pg' && data.product_Comentario_General != '' && data.product_Comentario_General != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproductoproduct_Comentario_General' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="language=='pg' && data.product_Comentario_General != '' && data.product_Comentario_General != null">
+        <ion-col>
+          {{ data.product_Comentario_General }}
+        </ion-col>
+      </ion-row>
+
+
+
+
+      <ion-row *ngIf="language=='es' && data.product_Ejemplo_de_aplicacion != '' && data.product_Ejemplo_de_aplicacion != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Ejemplo_de_aplicacion' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="language=='es' && data.product_Ejemplo_de_aplicacion != '' && data.product_Ejemplo_de_aplicacion != null">
         <ion-col>
-          <div *ngIf="language=='es' else elseproduct_Ejemplo_de_aplicacion">
-            <b>{{ data.product_Ejemplo_de_aplicacion }}</b>
-          </div>
-          <ng-template #elseproduct_Ejemplo_de_aplicacion>
-            {{ data.product_Ejemplo_de_aplicacion_pg }}
-          </ng-template>
+          <b>{{ data.product_Ejemplo_de_aplicacion }}</b>
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row *ngIf="language=='pg' && data.product_Ejemplo_de_aplicacion_pg != '' && data.product_Ejemplo_de_aplicacion != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproductoproduct_Ejemplo_de_aplicacion' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="language=='pg' && data.product_Ejemplo_de_aplicacion_pg != '' && data.product_Ejemplo_de_aplicacion != null">
+        <ion-col>
+          {{ data.product_Ejemplo_de_aplicacion_pg }}
+        </ion-col>
+      </ion-row>
+
+
+
+
+<ion-row *ngIf="language=='es' && data.product_CPG_Nombre != '' && data.product_CPG_Nombre != null">
+  <ion-col>
+    <div>
+      {{ 'lbldetalleproductoproduct_CPG_Nombre' | translate }}
+    </div>
+  </ion-col>
+</ion-row>
+<ion-row *ngIf="language=='es' && data.product_CPG_Nombre != '' && data.product_CPG_Nombre != null">
+  <ion-col>
+    <b>{{ data.product_CPG_Nombre }}</b>
+  </ion-col>
+</ion-row>
+
+<ion-row *ngIf="language=='pg' && data.product_CPG_Nombre_pg != '' && data.product_CPG_Nombre_pg != null">
+  <ion-col>
+    <div>
+      {{ 'lbldetalleproductoproduct_CPG_Nombre' | translate }}
+    </div>
+  </ion-col>
+</ion-row>
+<ion-row *ngIf="language=='pg' && data.product_CPG_Nombre_pg != '' && data.product_CPG_Nombre_pg != null">
+  <ion-col>
+    {{ data.product_CPG_Nombre_pg }}
+  </ion-col>
+</ion-row>
+
+
+<ion-row *ngIf="language=='es' && data.product_marca != '' && data.product_marca != null">
+  <ion-col>
+    <div>
+      {{ 'lbldetalleproductoproduct_marca' | translate }}
+    </div>
+  </ion-col>
+</ion-row>
+<ion-row *ngIf="language=='es' && data.product_marca != '' && data.product_marca != null">
+  <ion-col>
+    <b>{{ data.product_marca }}</b>
+  </ion-col>
+</ion-row>
+
+<ion-row *ngIf="language=='pg' && data.product_marca_pg != '' && data.product_marca_pg != null">
+  <ion-col>
+    <div>
+      {{ 'lbldetalleproductoproduct_marca' | translate }}
+    </div>
+  </ion-col>
+</ion-row>
+<ion-row *ngIf="language=='pg' && data.product_marca_pg != '' && data.product_marca_pg != null">
+  <ion-col>
+    {{ data.product_marca_pg }}
+  </ion-col>
+</ion-row>
+
+
+
+
+      <ion-row *ngIf="data.product_Pelicula_agricola_solpada != '' && data.product_Pelicula_agricola_solpada != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Pelicula_agricola_solpada' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Pelicula_agricola_solpada != '' && data.product_Pelicula_agricola_solpada != null">
         <ion-col>
           <div>
             <b>{{ data.product_Pelicula_agricola_solpada | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Pelicula_de_extrusion_plana_en_PE != '' && data.product_Pelicula_de_extrusion_plana_en_PE != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Pelicula_de_extrusion_plana_en_PE' | translate }}
@@ -258,162 +536,160 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col>
+        <ion-col *ngIf="data.product_Pelicula_de_extrusion_plana_en_PE != '' && data.product_Pelicula_de_extrusion_plana_en_PE != null">
           <div>
             <b>{{ data.product_Pelicula_de_extrusion_plana_en_PE | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_peliculas_sopladas != '' && data.product_peliculas_sopladas != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_peliculas_sopladas' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_peliculas_sopladas != '' && data.product_peliculas_sopladas != null">
         <ion-col>
           <div>
             <b>{{ data.product_peliculas_sopladas | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>      
-      <ion-row>
+      <ion-row *ngIf="data.product_Pelicula_laminada != '' && data.product_Pelicula_laminada != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Pelicula_laminada' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Pelicula_laminada != '' && data.product_Pelicula_laminada != null">
         <ion-col>
           <div>
             <b>{{ data.product_Pelicula_laminada | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Pelicula_de_extrusion_plana_en_PP != '' && data.product_Pelicula_de_extrusion_plana_en_PP != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Pelicula_de_extrusion_plana_en_PP' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Pelicula_de_extrusion_plana_en_PP != '' && data.product_Pelicula_de_extrusion_plana_en_PP != null">
         <ion-col>
           <div>
             <b>{{ data.product_Pelicula_de_extrusion_plana_en_PP | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Film_de_PP_biorientado != '' && data.product_Film_de_PP_biorientado != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Film_de_PP_biorientado' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Film_de_PP_biorientado != '' && data.product_Film_de_PP_biorientado != null">
         <ion-col>
           <div>
             <b>{{ data.product_Film_de_PP_biorientado | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Fibras_Raffia != '' && data.product_Fibras_Raffia != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Fibras_Raffia' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Fibras_Raffia != '' && data.product_Fibras_Raffia != null">
         <ion-col>
           <div>
             <b>{{ data.product_Fibras_Raffia | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Fibras_telas_spun_bonded_y_no_tejidas != '' && data.product_Fibras_telas_spun_bonded_y_no_tejidas != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Fibras_telas_spun_bonded_y_no_tejidas' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Fibras_telas_spun_bonded_y_no_tejidas != '' && data.product_Fibras_telas_spun_bonded_y_no_tejidas != null">
         <ion-col>
           <div>
             <b>{{ data.product_Fibras_telas_spun_bonded_y_no_tejidas | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Fibras != '' && data.product_Fibras != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Fibras' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Fibras != '' && data.product_Fibras != null">
         <ion-col>
           <div>
             <b>{{ data.product_Fibras | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Moldeo_por_soplado != '' && data.product_Moldeo_por_soplado != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Moldeo_por_soplado' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Moldeo_por_soplado != '' && data.product_Moldeo_por_soplado != null">
         <ion-col>
           <div>
             <b>{{ data.product_Moldeo_por_soplado | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Moldeo_por_inyeccion != '' && data.product_Moldeo_por_inyeccion != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Moldeo_por_inyeccion' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Moldeo_por_inyeccion != '' && data.product_Moldeo_por_inyeccion != null">
         <ion-col>
           <div>
             <b>{{ data.product_Moldeo_por_inyeccion | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-
-      <ion-row>
+      <ion-row *ngIf="data.product_Moldeo_por_compresion != '' && data.product_Moldeo_por_compresion != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Moldeo_por_compresion' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Moldeo_por_compresion != '' && data.product_Moldeo_por_compresion != null">
         <ion-col>
           <div>
             <b>{{ data.product_Moldeo_por_compresion | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-
-      <ion-row>
+      <ion-row *ngIf="data.product_Compuestos != '' && data.product_Compuestos != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Compuestos' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Compuestos != '' && data.product_Compuestos != null">
         <ion-col>
           <div>
             <b>{{ data.product_Compuestos | formatCheck}}</b>
@@ -421,14 +697,14 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row *ngIf="data.product_Extrusion_de_tuberia != '' && data.product_Extrusion_de_tuberia != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Extrusion_de_tuberia' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Extrusion_de_tuberia != '' && data.product_Extrusion_de_tuberia != null">
         <ion-col>
           <div>
             <b>{{ data.product_Extrusion_de_tuberia | formatCheck}}</b>
@@ -436,14 +712,14 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row *ngIf="data.product_Tuberia_de_irrigacion_por_goteo != '' && data.product_Tuberia_de_irrigacion_por_goteo != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Tuberia_de_irrigacion_por_goteo' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Tuberia_de_irrigacion_por_goteo != '' && data.product_Tuberia_de_irrigacion_por_goteo != null">
         <ion-col>
           <div>
             <b>{{ data.product_Tuberia_de_irrigacion_por_goteo | formatCheck}}</b>
@@ -451,14 +727,14 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row *ngIf="data.product_Extrusion_de_laminas_placas != '' && data.product_Extrusion_de_laminas_placas != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Extrusion_de_laminas_placas' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Extrusion_de_laminas_placas != '' && data.product_Extrusion_de_laminas_placas != null">
         <ion-col>
           <div>
             <b>{{ data.product_Extrusion_de_laminas_placas | formatCheck}}</b>
@@ -466,76 +742,155 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row *ngIf="data.product_Cables != '' && data.product_Cables != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Cables' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Cables != '' && data.product_Cables != null">
         <ion-col>
           <div>
             <b>{{ data.product_Cables | formatCheck}}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Extrusion_de_perfiles != '' && data.product_Extrusion_de_perfiles != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Extrusion_de_perfiles' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Extrusion_de_perfiles != '' && data.product_Extrusion_de_perfiles != null">
         <ion-col>
           <div>
             <b>{{ data.product_Extrusion_de_perfiles | formatCheck }}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Moldeo_rotomoldeo != '' && data.product_Moldeo_rotomoldeo != null">
         <ion-col>
           <div>
             {{ 'lbldetalleproductoproduct_Moldeo_rotomoldeo' | translate }}
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Moldeo_rotomoldeo != '' && data.product_Moldeo_rotomoldeo != null">
         <ion-col>
           <div>
             <b>{{ data.product_Moldeo_rotomoldeo | formatCheck }}</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="data.product_Espumados != '' && data.product_Espumados != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproduct_Espumados' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="data.product_Espumados != '' && data.product_Espumados != null">
+        <ion-col>
+          <div>
+            <b>{{ data.product_Espumados | formatCheck }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      
+      <ion-row *ngIf="data.product_Non_Woven != '' && data.product_Non_Woven != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproduct_Non_Woven' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="data.product_Non_Woven != '' && data.product_Non_Woven != null">
+        <ion-col>
+          <div>
+            <b>{{ data.product_Non_Woven | formatCheck }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="data.product_Caps_Closures != '' && data.product_Caps_Closures != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproduct_Caps_Closures' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="data.product_Caps_Closures != '' && data.product_Caps_Closures != null">
+        <ion-col>
+          <div>
+            <b>{{ data.product_Caps_Closures | formatCheck }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row *ngIf="data.product_Picasso_Aprovacion != '' && data.product_Picasso_Aprovacion != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproduct_Picasso_Aprovacion' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="data.product_Picasso_Aprovacion != '' && data.product_Picasso_Aprovacion != null">
+        <ion-col>
+          <div>
+            <b>{{ data.product_Picasso_Aprovacion | formatCheck }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row *ngIf="data.product_Econoblend != '' && data.product_Econoblend != null">
+        <ion-col>
+          <div>
+            {{ 'lbldetalleproduct_Econoblend' | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="data.product_Econoblend != '' && data.product_Econoblend != null">
+        <ion-col>
+          <div>
+            <b>{{ data.product_Econoblend | formatCheck }}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row *ngIf="showDataEs && data.product_link != ''">
         <ion-col>
           <div>
             <b>{{ 'lbldetalleproductosectiondocument' | translate }} Español</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="showDataEs && data.product_link != ''">
         <ion-col>
           <div>
             <li *ngFor="let archivo of data.product_link.split('|')">
-              <a target="blank" href="{{ archivo | rutaarchivopdf}}" mat-menu-item>{{ archivo }}</a>
+              <a target="blank" href="{{ archivo | rutaarchivopdf}}" mat-menu-item>{{ archivo | formatoarchivo: data.product_code }}</a>
             </li>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="showDataPg && data.product_link_pg != ''">
         <ion-col>
           <div>
-            <b>{{ 'lbldetalleproductosectiondocument' | translate }} Portuguez</b>
+            <b>{{ 'lbldetalleproductosectiondocument' | translate }} Portugues</b>
           </div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="showDataPg && data.product_link_pg != ''">
         <ion-col>
           <div>
             <li *ngFor="let archivo of data.product_link_pg.split('|')">
-              <a target="blank" href="{{ archivo | rutaarchivopdf}}" mat-menu-item>{{ archivo }}</a>
+              <a target="blank" href="{{ archivo | rutaarchivopdf}}" mat-menu-item>{{ archivo | formatoarchivo: data.product_code}}</a>
             </li>
           </div>
         </ion-col>
@@ -547,6 +902,6 @@
 
 </ion-content>
 <ion-footer>
-  <ion-button *ngIf="!procesando" (click)="pushPage(data._id)" expand="block">Quote Product</ion-button>
-  <ion-button *ngIf="procesando" disabled (click)="pushPage(data._id)" expand="block">Quote Product</ion-button>
+  <ion-button *ngIf="!procesando" (click)="pushPage(data._id)" expand="block">{{ 'lblcotizacion' | translate }}</ion-button>
+  <ion-button *ngIf="procesando" disabled (click)="pushPage(data._id)" expand="block">{{ 'lblcotizacion' | translate }}</ion-button>
 </ion-footer>

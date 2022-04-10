@@ -1,17 +1,18 @@
 <ion-app>
   <ion-menu contentId="main-content" side="start">
     <ion-header style="background-color:#0085CA;">
-      <div style="margin: 10px;">
-        <div style="width: 50px; float: left;">
+      <div style="margin: 20px;">
+       <!-- <div style="width: 50px; float: left;">
          <ion-avatar>
             <img *ngIf="profile.user_picture==''" src="assets/noimagen.png" />
             <img *ngIf="profile.user_picture!=''" src="{{ profile.user_picture | rutaarchivo | async }}" />
+            
           </ion-avatar>
-        </div>
-        <div style="float: left; margin-left: 30px; margin-bottom: 30px;">
+        </div>-->
+        <div style="float: left; margin-top: 20px;  margin-bottom: 10px;">
           <p style="margin: 5px; color: white;">{{ profile.user_name }} <br> {{ profile.user_email }}</p>
           <ion-menu-toggle auto-hide="false">
-            <ion-button style="margin-top: 10px;" [routerLink]="pathprofile" routerDirection="root" size="small"><ion-icon name="person-outline"></ion-icon>&nbsp;{{ 'lblVerPerfilUsuario' | translate }}</ion-button>
+            <!--<ion-button style="margin-top: 10px;" [routerLink]="pathprofile" routerDirection="root" size="small"><ion-icon name="person-outline"></ion-icon>&nbsp;{{ 'lblVerPerfilUsuario' | translate }}</ion-button>-->
           </ion-menu-toggle>
         </div>
       </div>
@@ -40,19 +41,32 @@
           <ion-item [routerLink]="'/dashboard/slow'" routerDirection="root">
             <ion-icon name="duplicate-outline"></ion-icon> &nbsp; {{ 'menuslowmover' | translate }}
           </ion-item>
-          <ion-item [routerLink]="'/dashboard/offline'" routerDirection="root">
+          <ion-item [routerLink]="'/dashboard/preferencia'" routerDirection="root">
+            <ion-icon name="duplicate-outline"></ion-icon> &nbsp; {{ 'menuspreferencia' | translate }}
+          </ion-item>
+          <!--<ion-item [routerLink]="'/dashboard/offline'" routerDirection="root">
             <ion-icon name="cloud-download"></ion-icon> &nbsp; {{ 'menusoffline' | translate }}
           </ion-item>
-          <!--<ion-item [routerLink]="page.path" routerDirection="root" [class.active-menu]="activePath === page.path">
+          <ion-item [routerLink]="page.path" routerDirection="root" [class.active-menu]="activePath === page.path">
             <ion-icon name="{{page.image}}"></ion-icon> &nbsp; {{page.name}}
           </ion-item>-->
         </ion-menu-toggle>
        
 
-      </ion-list>
+      </ion-list>      
     </ion-content>
     <ion-footer>
       <ion-toolbar>
+        <ion-card-content style="padding: 5px;">
+          <ion-row class="row">
+            <div class="fire-logo" style="flex-direction: row;padding: 5px;">          
+              <img src="assets/logo.jpg" style="width: 80px;" class="img-logo">
+              <ion-text padding>
+                <h2 style="margin-top: 10px; font-weight: bold;" no-margin margin-vertical text-center>AMPACET</h2>
+              </ion-text>
+            </div>
+          </ion-row>
+        </ion-card-content>
         <ion-button (click)="logout()" expand="block"><ion-icon name="log-in-outline"></ion-icon>&nbsp;{{ 'btnlogout' | translate }}</ion-button>
       </ion-toolbar>
     </ion-footer>

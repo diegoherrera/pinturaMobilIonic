@@ -29,32 +29,32 @@ export class CacheInterceptorService implements HttpInterceptor {
  /* async procesarFavorito(req: any) {
     let newSalaries = [];
     let detornarfavorios = await this.dbcacheService.GetFavoritos(req.body.favorito_user_Id);
-    console.log('Paso contenido');
-    console.log('contenido ' + detornarfavorios);
+    //console.log('Paso contenido');
+    //console.log('contenido ' + detornarfavorios);
    // return await detornarfavorios;
     return newSalaries;
   }*/
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('info interceptor ' + JSON.stringify(req));
-    console.log('incluir en cache ' + this.operationExlude(req.url, req.method));
+    //console.log('info interceptor ' + JSON.stringify(req));
+    //console.log('incluir en cache ' + this.operationExlude(req.url, req.method));
     /*
         if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline) {
-          console.log('MODO OFFLINE');
+          //console.log('MODO OFFLINE');
         } else {
-          console.log('MODO ONNLINE');
+          //console.log('MODO ONNLINE');
         }*/
     let offline = false;
     if (offline) {
       /*let final = [];      
       return of(null).pipe(mergeMap(() => {
-        console.log('Paso 0');
+        //console.log('Paso 0');
         if (req.url.includes("/api/find-favorito")) {
-          console.log('Paso 1 ');
+          //console.log('Paso 1 ');
           final = this.procesarFavorito(req);
-          console.log('Paso 2 '); 
+          //console.log('Paso 2 '); 
         }
-        console.log('Paso 3');
+        //console.log('Paso 3');
         return of(new HttpResponse({ status: 200, body: final }));
       }));*/
 
@@ -68,20 +68,20 @@ export class CacheInterceptorService implements HttpInterceptor {
       }
 
       if (this.cacheService.check(req.url, req.method, req.body)) {
-        console.log('logica si');
+        //console.log('logica si');
         // Busco en cache la solicitud 
         const cachedResponse: HttpResponse<any> = this.cacheService.get(req.url, req.method, req.body);
         // si tengo cache en servicio para la solicitud  
         if (cachedResponse) {
           //si tengo cache respondo lo que tengo en cache
-          console.log(`Respondiendo desde cache: ${cachedResponse.url}`);
+          //console.log(`Respondiendo desde cache: ${cachedResponse.url}`);
           //Devuelve un Observable que emite un valor concreto
           return of(cachedResponse);
         }
 
       }
 
-      console.log('logica flujo');
+      //console.log('logica flujo');
 
 
       // Flujo de llamada a otro interceptor o el servicio 
@@ -91,7 +91,7 @@ export class CacheInterceptorService implements HttpInterceptor {
             //Si llego aqui quiere decir que no tengo esto en cache por lo 
             //resguardo 
             if (resp instanceof HttpResponse) {
-              console.log(`agregando a  cache: ${req.url}`);
+              //console.log(`agregando a  cache: ${req.url}`);
               this.cacheService.put(req.url, req.method, req.body, resp);
               return resp;
             }

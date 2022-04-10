@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { FormBuilder, FormsModule, FormGroup, Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -12,7 +12,12 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
   templateUrl: './perfil.page.html',
   styleUrls: ['./perfil.page.scss'],
 })
-export class PerfilPage implements OnInit {
+export class PerfilPage implements OnInit, AfterViewInit {
+
+  @ViewChild("panel0") panel0: ElementRef;
+  @ViewChild("panel1") panel1: ElementRef;
+  @ViewChild("panel2") panel2: ElementRef;
+  
   @ViewChild('testForm') testFormElement;
   clickedImage: string = '';
   fotonueva: boolean = false;
@@ -27,7 +32,8 @@ export class PerfilPage implements OnInit {
   opcion3 = false;
   opcion4 = false;
   opcion5 = false;
-  opcion6 = false;
+  //opcion6 = false;
+
   validandoanycheckbox: boolean = false;
 
 
@@ -57,21 +63,22 @@ export class PerfilPage implements OnInit {
     private storage: Storage,
     private formBuilder: FormBuilder,
     public Api: UsuarioService, 
+    private renderer: Renderer2,
     public loadingCtrl: LoadingController,
     private camera: Camera,
     private translateService: TranslateService) {
 
     /*this.storage.get('Language').then((val) => {
-      console.log('idioma tomando variable en PerfilPage ******************** ' + val);
+      //console.log('idioma tomando variable en PerfilPage ******************** ' + val);
       this.translateService.setDefaultLang(val); // add this
     });*/
 
     Api.getLanguage().subscribe(data => {
-      console.log(JSON.stringify(data));
+      //console.log(JSON.stringify(data));
       this.LanguageArray = data;
     });
     Api.getType().subscribe(data => {
-      console.log(JSON.stringify(data));
+      //console.log(JSON.stringify(data));
       this.TypeArray = data;
     });
 
@@ -88,16 +95,23 @@ export class PerfilPage implements OnInit {
       opcion3: [false],
       opcion4: [false],
       opcion5: [false],
-      opcion6: [false],
       type: ['']
     });
 
-    storage.get('profile').then((val) => {
+    
+
+   
+  }
+  ngAfterViewInit(): void {
+    
+
+    this.storage.get('profile').then((val) => {
+
+      //console.log('llego por aqui ' + JSON.stringify(val));
+
       this.identificador = JSON.parse(val)._id;
       this.Api.GetUserProfile(JSON.parse(val)._id).subscribe(data => {
         
-        console.log('llego 2 xxxxxxxxxxxxxxx ' + JSON.stringify(data));
-                
         this.profile = data;
         
         let idioma ='pg';
@@ -105,7 +119,7 @@ export class PerfilPage implements OnInit {
 
         this.selectedType = this.profile.user_IdTipo;
         this.selectedLanguage = this.profile.user_IdLanguage;
-        this.slideOneForm = formBuilder.group({
+        this.slideOneForm = this.formBuilder.group({
           user_first: [this.profile.user_first, Validators.required],
           user_last: [this.profile.user_last, Validators.required],
           user_email: [this.profile.user_email, Validators.required],
@@ -118,7 +132,7 @@ export class PerfilPage implements OnInit {
           opcion3: [this.validarOpcion('PA', this.profile.user_comercializacion)],
           opcion4: [this.validarOpcion('AR', this.profile.user_comercializacion)],
           opcion5: [this.validarOpcion('BZ', this.profile.user_comercializacion)],
-          opcion6: [this.validarOpcion('MTZ', this.profile.user_comercializacion)],
+         // opcion6: [this.validarOpcion('MTZ', this.profile.user_comercializacion)],
           type: [this.profile.user_IdTipo]
         });
 
@@ -129,6 +143,7 @@ export class PerfilPage implements OnInit {
 
 
     });
+
   }
 
   ngOnInit() {
@@ -149,7 +164,6 @@ export class PerfilPage implements OnInit {
     if (this.slideOneForm.controls["opcion3"].value) retorno = true;
     if (this.slideOneForm.controls["opcion4"].value) retorno = true;
     if (this.slideOneForm.controls["opcion5"].value) retorno = true;
-    if (this.slideOneForm.controls["opcion6"].value) retorno = true;
 
     return retorno;
   }
@@ -184,18 +198,18 @@ export class PerfilPage implements OnInit {
       zona = zona + "BZ";
     }
 
-    if (this.slideOneForm.value.opcion6) {
+   /* if (this.slideOneForm.value.opcion6) {
       if (zona != "") zona = zona + "|";
       zona = zona + "MTZ";
-    }
+    }*/
 
     return zona;
   }
 
   submitForm() {
-    console.log('evento que dispara el formulario');
+    //console.log('evento que dispara el formulario');
     if (this.slideOneForm.valid && this.validarCheckbox()) {
-      console.log('validooooo');
+      //console.log('validooooo');
 
       var loader: any;
       this.traduccionMensajes("lblbuscandoproductos", (traduccion) => {
@@ -204,7 +218,7 @@ export class PerfilPage implements OnInit {
           duration: 5000
         }).then((res2) => {
           res2.present();
-          console.log('llego a la seleccion');
+          //console.log('llego a la seleccion');
           let languageidioma = '5f0a242149eb5338212b2554';
           if (this.slideOneForm.controls["idioma"].value=='pg') languageidioma = '5f0a242949eb5338212b2556';
 
@@ -217,12 +231,12 @@ export class PerfilPage implements OnInit {
             languageidioma,
             this.getZoneComercializacion(),
             this.base64ImageCrudo ).subscribe(data => {
-            console.log('informacion ' + JSON.stringify(data));
+            //console.log('informacion ' + JSON.stringify(data));
             //this.ProductArray = data.products;
             res2.dismiss(); //sierro el dialogo
           });
           res2.onDidDismiss().then((dis) => {
-            console.log('Loading dismissed! after 2 Seconds', dis);
+            //console.log('Loading dismissed! after 2 Seconds', dis);
           });
         });
       });
@@ -249,7 +263,7 @@ export class PerfilPage implements OnInit {
       let base64Image = 'data:image/jpeg;base64,' + imageData;
       this.clickedImage = base64Image;
     }, (err) => {
-      console.log(err);
+      //console.log(err);
       // Handle error
     });
 
@@ -265,18 +279,47 @@ export class PerfilPage implements OnInit {
       let base64Image = 'data:image/jpeg;base64,' + imageData;
       this.clickedImage = base64Image;
     }, (err) => {
-      console.log(err);
+      //console.log(err);
       // Handle error
     });
   }
 
   updateProfile(form) {
-    console.log(form.value);
+    //console.log(form.value);
   }
 
   ejecutarFormulario() {
-    console.log('xxxxxxxxxx');
+    //console.log('xxxxxxxxxx');
     this.submitForm();
+  }
+
+  segmentChanged(ev: any) {
+    console.log('Segment changed', ev);
+
+    this.renderer.removeClass(this.panel0.nativeElement, "active");
+    this.renderer.removeClass(this.panel1.nativeElement, "active");
+    this.renderer.removeClass(this.panel2.nativeElement, "active");
+    this.renderer.addClass(this.panel0.nativeElement, "inactive");
+    this.renderer.addClass(this.panel1.nativeElement, "inactive");
+    this.renderer.addClass(this.panel2.nativeElement, "inactive");
+
+
+    if (ev.detail.value == 'Informacion') {
+      console.log('a');
+      this.renderer.removeClass(this.panel0.nativeElement, "inactive");
+      this.renderer.addClass(this.panel0.nativeElement, "active");
+    }
+    if (ev.detail.value == 'Idioma') {
+      console.log('b');
+      this.renderer.removeClass(this.panel1.nativeElement, "inactive");
+      this.renderer.addClass(this.panel1.nativeElement, "active");
+    }
+    if (ev.detail.value == 'Comercializacion') {
+      console.log('c');
+      this.renderer.removeClass(this.panel2.nativeElement, "inactive");
+      this.renderer.addClass(this.panel2.nativeElement, "active");
+    }
+
   }
 
 }

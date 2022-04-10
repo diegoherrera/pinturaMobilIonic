@@ -1,20 +1,72 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>{{ 'titleinnovation' | translate }}</ion-title>
-    <!-- Side menu button -->
-    <ion-buttons slot="start">
-      <ion-menu-button autoHide="false"></ion-menu-button>
-    </ion-buttons>
-  </ion-toolbar>
-  <ion-toolbar color="primary">
-    <ion-searchbar placeholder="{{ 'innovationbuscar' | translate }}" [(ngModel)]="searchString" (ionInput)="getItems($event)"
-      (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+    <!--<ion-title>{{ 'titleinnovation' | translate }}</ion-title>
+     Side menu button -->
+     <div style="float: left; margin-top: 5px;">
+      <ion-buttons>
+        <ion-menu-button autoHide="false"></ion-menu-button>
+      </ion-buttons>
+    </div>
+    <div style="width: 75%; float: left; margin-top: 5px;">
+      <ion-searchbar placeholder="{{ 'innovationbuscar' | translate }}" [(ngModel)]="searchString" (ionInput)="getItems($event)"
+      (ionClear)="onClear($event)"  (change)="searchEnter($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+    </div>
+    <div  class="active" style="margin: 5px;float: left;" (click)="pushPageFilter()">        
+      <img src="assets/filtro.png" style="width: 34px;">
+    </div>
+
+    <div #primariob>
+      <!-- <h2 #opcion1 class="inactive" style="margin-left: 20px; width: 100%;" (click)="toggleAccordion()">
+ 
+         <div style="width: 85%; float: left;">
+           {{ 'lblFiltroSeleccionado' | translate }}
+         </div>
+         <span>&#9650;</span>
+ 
+       </h2>
+     <h2 #opcion2 class="active" style="margin-left: 20px;width: 100%;" (click)="toggleAccordion()">
+       <div style="width: 85%; float: left;">
+         {{ 'lblFiltroSeleccionado' | translate }}
+       </div>
+       <span>&#9660;</span>
+     </h2>-->
+     <div #panel class="inactive">
+       <ion-list>
+         <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionadoFamilia">
+           <ion-label>[F] - {{ sectioinArray.family_name }}</ion-label>
+           <ion-button (click)="removeFiltrofamilia(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+         </ion-list-header>
+         <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionadoTipo">
+           <ion-label>[C] - {{ sectioinArray.category_name }}</ion-label>
+           <ion-button (click)="removeFiltrocategoria(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+         </ion-list-header>
+         <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionadoRegion">
+           <ion-label>[R] - {{ sectioinArray.region_name | translate }}</ion-label>
+           <ion-button (click)="removeFiltroRegion(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+         </ion-list-header>
+         <ion-list-header lines="inset" *ngFor="let sectioinArray of filtrosSeleccionado">
+           <ion-label>[A] - {{ sectioinArray.id | translate }}</ion-label>
+           <ion-button (click)="removeFiltro(sectioinArray)">{{ 'btnClear' | translate }}</ion-button>
+         </ion-list-header>
+       </ion-list>
+       <ion-button (click)="pushPageFilter()">{{ 'btnaddfilter' | translate }}</ion-button>
+       <ion-button (click)="limpiarFiltros()">{{ 'lblbtnclearfilter' | translate }}</ion-button>
+     </div>
+   </div>
+
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <ion-card *ngFor="let sectioinArray of datos">
     <ion-card-header>
-      <ion-card-title>{{sectioinArray.product_code}}</ion-card-title>
+      <ion-card-title>
+        <div *ngIf="language=='es' else elseidiomabbb">
+          {{sectioinArray.product_name}}          
+        </div>
+        <ng-template #elseidiomabbb>
+          {{sectioinArray.product_name_pg}}
+        </ng-template>  
+        {{sectioinArray.product_code}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <div *ngIf="language=='es' else elseidioma">
@@ -27,5 +79,10 @@
       </ng-template>
     </ion-card-content>
     <ion-button (click)="pushPage(sectioinArray)" expand="block">{{ 'innovationdetalleproducto' | translate }}</ion-button>
+  </ion-card>
+  <ion-card *ngIf="datos.length == 0">
+    <ion-card-content>
+      <b>No tenemos Datos para los filtros indicados</b>
+    </ion-card-content>    
   </ion-card>
 </ion-content>

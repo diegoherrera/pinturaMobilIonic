@@ -82,13 +82,38 @@ export class UsuarioService {
     return this.http.get(`${this.base_path}/all-segment`)
   }
 
+  GetRegulatory() {
+    return this.http.get(`${this.base_path}/all-regulatory`)
+  }
+
   GetFamily() {
     return this.http.get(`${this.base_path}/all-family`)
+  }
+
+  getRegion() {
+    return this.http.get(`${this.base_path}/all-region`);
   }
 
   GetType() {
     return this.http.get(`${this.base_path}/all-category`)
   }
+
+  GetTypeinnovation() {
+    return this.http.get(`${this.base_path}/all-category-innovation`)
+  }
+
+  GetProducto() {
+    return this.http.get(`${this.base_path}/all-productosustentable`)
+  }
+
+  GetProceso() {
+    return this.http.get(`${this.base_path}/all-procesosustentable`);
+  }
+
+  GetPolimero() {
+    return this.http.get(`${this.base_path}/all-polimerossustentable`)
+  }
+
 
   GetProductAll() {
     return this.http.get(`${this.base_path}/all-product`)
@@ -96,40 +121,40 @@ export class UsuarioService {
 
 
   DownloadAllImage() {
-    return this.http.post<any>(`${this.base_path}/download-imagen`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-imagen`, {}, { headers: this.headers })
   }
 
   DownloadAllProductos() {
-    return this.http.post<any>(`${this.base_path}/download-producto`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-producto`, {}, { headers: this.headers })
   }
 
   DownloadAllSlowProduct() {
-    return this.http.post<any>(`${this.base_path}/download-slow-movers`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-slow-movers`, {}, { headers: this.headers })
   }
   DownloadAllSegment() {
-    return this.http.post<any>(`${this.base_path}/download-segment`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-segment`, {}, { headers: this.headers })
   }
   DownloadAllFamily() {
-    return this.http.post<any>(`${this.base_path}/download-family`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-family`, {}, { headers: this.headers })
   }
   DownloadAllCategory() {
-    return this.http.post<any>(`${this.base_path}/download-category`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-category`, {}, { headers: this.headers })
   }
 
   DownloadAllPallete() {
-    return this.http.post<any>(`${this.base_path}/download-palette`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-palette`, {}, { headers: this.headers })
   }
 
   DownloadAllProductSustentable() {
-    return this.http.post<any>(`${this.base_path}/download-sustentables`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-sustentables`, {}, { headers: this.headers })
   }
 
   DownloadAllFavoritos() {
-    return this.http.post<any>(`${this.base_path}/download-favoritos`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-favoritos`, {}, { headers: this.headers })
   }
 
   DownloadAllInnovation() {
-    return this.http.post<any>(`${this.base_path}/download-innovations`, { }, { headers: this.headers })
+    return this.http.post<any>(`${this.base_path}/download-innovations`, {}, { headers: this.headers })
   }
 
 
@@ -143,7 +168,7 @@ export class UsuarioService {
   }
 
   GetUserProfile(usuarioId) {
-    console.log('usuarioId' + usuarioId);
+    //console.log('usuarioId' + usuarioId);
     return this.http.get(`${this.base_path}/get-user/` + usuarioId)
   }
 
@@ -153,7 +178,7 @@ export class UsuarioService {
   }
 
   getProductByLike(buscar: string) {
-    console.log('llegue ' + buscar);
+    //console.log('llegue ' + buscar);
     return this.http.post<any>(`${this.base_path}/find-like-product-ionic`, { buscar: buscar }, { headers: this.headers })
   }
 
@@ -167,17 +192,17 @@ export class UsuarioService {
     language: string,
     user_comercializacion: string,
     picture: string) {
-    
-    return this.http.post<any>(`${this.base_path}/update-profile-ionic/${id}`, 
-    { 
-      user_name: user_name, 
-      user_password: user_password,
-      user_first: user_first,
-      user_last: user_last,
-      language: language,
-      user_comercializacion:  user_comercializacion,
-      picture: picture
-    }, { headers: this.headers })
+
+    return this.http.post<any>(`${this.base_path}/update-profile-ionic/${id}`,
+      {
+        user_name: user_name,
+        user_password: user_password,
+        user_first: user_first,
+        user_last: user_last,
+        language: language,
+        user_comercializacion: user_comercializacion,
+        picture: picture
+      }, { headers: this.headers })
   }
 
   GetProduc(
@@ -185,9 +210,9 @@ export class UsuarioService {
     product_IdFamily: string,
     product_IdCategory: string): Observable<any> {
     var formData: any = new FormData();
-    console.log('segmento ' + product_IdSegment);
-    console.log('family  ' + product_IdFamily);
-    console.log('category ' + product_IdCategory);
+    //console.log('segmento ' + product_IdSegment);
+    //console.log('family  ' + product_IdFamily);
+    //console.log('category ' + product_IdCategory);
     return this.http.post<any>(`${this.base_path}/find-get-product`,
       {
         "product_IdSegment": product_IdSegment
@@ -196,14 +221,35 @@ export class UsuarioService {
       }, this.httpOptions)
   }
 
+
+  GetFiltro(
+    segmentos: string,
+    familias: string,
+    categorias: string,
+    regulatory: string,
+    opcion: number): Observable<any> {
+    var formData: any = new FormData();
+
+    return this.http.post<any>(`${this.base_path}/get-filtros`,
+      {
+        "segmentos": segmentos
+        , "familias": familias
+        , "categorias": categorias
+        , "regulatory": regulatory
+        , "opcion": opcion
+      }, this.httpOptions)
+  }
+
   GetProducByHome(
     segmentos: string,
     familias: string,
     categorias: string,
     acciones: string,
+    regulatory: string,
     buscar: string,
-    comercializacion: string, 
-    pagina: number): Observable<any> {
+    comercializacion: string,
+    pagina: number,
+    idioma: string): Observable<any> {
     var formData: any = new FormData();
 
     return this.http.post<any>(`${this.base_path}/find-get-product-home`,
@@ -212,9 +258,11 @@ export class UsuarioService {
         , "familias": familias
         , "categorias": categorias
         , "acciones": acciones
+        , "regulatory": regulatory
         , "buscar": buscar
         , "comercializacion": comercializacion
-        , "pagina" : pagina
+        , "pagina": pagina
+        , "idioma": idioma
       }, this.httpOptions)
   }
 
@@ -225,9 +273,11 @@ export class UsuarioService {
     familias: string,
     categorias: string,
     acciones: string,
+    regulatory: string,
     buscar: string,
-    comercializacion: string, 
-    pagina: number): Observable<any> {
+    comercializacion: string,
+    pagina: number,
+    idioma: string): Observable<any> {
     var formData: any = new FormData();
 
     return this.http.post<any>(`${this.base_path}/find-get-product-home-count`,
@@ -236,9 +286,11 @@ export class UsuarioService {
         , "familias": familias
         , "categorias": categorias
         , "acciones": acciones
+        , "regulatory": regulatory
         , "buscar": buscar
         , "comercializacion": comercializacion
-        , "pagina" : pagina
+        , "pagina": pagina
+        , "idioma": idioma
       }, this.httpOptions)
   }
 
@@ -275,7 +327,7 @@ export class UsuarioService {
       // Get server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    console.log(errorMessage);
+    //console.log(errorMessage);
     return throwError(errorMessage);
   }
 
@@ -286,8 +338,8 @@ export class UsuarioService {
     formData.append("user_name", user_name);
     formData.append("user_password", user_password);
 
-    console.log(user_name);
-    console.log(user_password);
+    //console.log(user_name);
+    //console.log(user_password);
     return this.http.post<any>(`${this.base_path}/login-user`, { "user_name": user_name, "user_password": user_password }, {
       reportProgress: true,
       observe: 'events'
@@ -296,16 +348,33 @@ export class UsuarioService {
 
   GetProducGroup(
     id: string,
+    polimero: string,
+    proceso: string,
+    producto: string,
     buscar: string,
     paginado: number): Observable<any> {
 
-    return this.http.get(`${this.base_path}/all-group-product/${id}/${buscar}`,
+    let request = {
+      polimero: polimero,
+      proceso: proceso,
+      producto: producto
+    };
+    return this.http.post<any>(`${this.base_path}/all-group-product/${id}/${buscar}`, request,
       this.httpOptions)
   }
 
-  getProductByLikeInnovation(buscar: string) {
-    console.log('llegue ' + buscar);
-    return this.http.post<any>(`${this.base_path}/find-like-innovation-ionic`, { buscar: buscar }, { headers: this.headers })
+  getProductByLikeInnovation(buscar: string, aplicacion: any, region: any, familia: any, tipo: any, regulatory: any, segment: any) {
+    //console.log('llegue ' + buscar);
+    return this.http.post<any>(`${this.base_path}/find-like-innovation-ionic`,
+      {
+        buscar: buscar,
+        acciones: aplicacion,
+        regiones: region,
+        familias: familia,
+        categorias: tipo,
+        regulatory: regulatory,
+        segment: segment
+      }, { headers: this.headers })
   }
 
   sendCotizacion(usuario: string, producto: string) {
@@ -319,12 +388,12 @@ export class UsuarioService {
 
 
   getProductByLikeSlowFiltros(buscar: string, pais: string, familia: string, page: number) {
-    console.log('llegue ' + buscar);
+    //console.log('llegue ' + buscar);
     return this.http.post<any>(`${this.base_path}/find-like-slow-filtro`, { buscar: buscar, pais: pais, familia: familia, pagina: page }, { headers: this.headers })
   }
 
   getProductByLikeSlow(buscar: string) {
-    console.log('llegue ' + buscar);
+    //console.log('llegue ' + buscar);
     return this.http.post<any>(`${this.base_path}/find-like-slow`, { buscar: buscar }, { headers: this.headers })
   }
 

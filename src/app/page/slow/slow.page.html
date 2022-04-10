@@ -8,7 +8,7 @@
   </ion-toolbar>
   <ion-toolbar color="primary">
     <ion-searchbar placeholder="{{ 'lblslowbuscar' | translate }}" [(ngModel)]="searchString" (ionInput)="getItems($event)"
-      (ionClear)="onClear($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+      (ionClear)="onClear($event)"   (change)="searchEnter($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
 
     <div>
       <h3 style="margin-left: 20px;" (click)="toggleAccordion()">
@@ -68,8 +68,7 @@
       {{ 'lblslowLote' | translate }} : {{sectioinArray.Lote}}<br>
       {{ 'lblslowOnHan' | translate }} : {{sectioinArray.OnHan}}<br>
       {{ 'lblslowUm' | translate }} : {{sectioinArray.UM}}<br>
-      {{ 'lblslowAplicacion' | translate }} : {{sectioinArray.Aplication}}<br>
-      {{ 'lblslowEstado' | translate }} : {{sectioinArray.State}}<br>
+      {{ 'lblslowAplicacion' | translate }} : {{sectioinArray.Aplication}}<br>      
     </ion-card-content>
     <ion-button *ngIf="sectioinArray.State" (click)="pushPage(sectioinArray)" expand="block">{{ 'lblslowbtnCambiarEstado' | translate }}</ion-button>
     <ion-button *ngIf="!sectioinArray.State" disabled color="danger" expand="block">{{ 'lblslowbtnEstadonodisponible' | translate }}</ion-button>

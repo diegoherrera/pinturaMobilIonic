@@ -9,7 +9,7 @@ export class RutaarchivopdfPipe implements PipeTransform {
   transform(value: any): any {
     if (value != undefined) {
       let retorno: string = '';
-      console.log(value);
+      //console.log(value);
       if (value.includes('/public/')) {
         retorno = environment.Servidor + value;
       } else {

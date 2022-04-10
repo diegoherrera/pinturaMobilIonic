@@ -37,9 +37,9 @@ export class VerificarPage implements OnInit, AfterViewInit {
   ) {
    
 
-    console.log('evento del contructor ');
+    //console.log('evento del contructor ');
     this.auth.getLanguage((retorno) => {
-      console.log('idiona **************** ' + retorno);
+      //console.log('idiona **************** ' + retorno);
       this.translateService.use(retorno);
     });
 
@@ -51,29 +51,29 @@ export class VerificarPage implements OnInit, AfterViewInit {
       //solicito verificacion de Numero por sm 
       this.solicitarVerificacion();
     });
-    /*console.log('contructor de verificar');
+    /*//console.log('contructor de verificar');
     storage.get('profile').then((val) => {
       this.profile = JSON.parse(val);
     });*/
 
   }
   ngAfterViewInit(): void {
-    console.log('Method not implemented.');
+    //console.log('Method not implemented.');
   }
 
   ExpectingSMS() {
 
     SMSReceive.startWatch(() => {
-      console.log('Empezo ha esperar');
+      //console.log('Empezo ha esperar');
 
       document.addEventListener('onSMSArrive', (e: any) => {
         var sms = e.data;
-        console.log({ mensaje_entrante: sms });
-        console.log(sms.body);
-        console.log(this.miCodigo);
-        console.log(sms.body.includes(this.miCodigo));
+        //console.log({ mensaje_entrante: sms });
+        //console.log(sms.body);
+        //console.log(this.miCodigo);
+        //console.log(sms.body.includes(this.miCodigo));
         if (sms.body.includes(this.miCodigo)) {
-          console.log("cumple condicion");
+          //console.log("cumple condicion");
           //this.codigoInput = this.miCodigo;
           this.codigoVerificado();
 
@@ -97,28 +97,28 @@ export class VerificarPage implements OnInit, AfterViewInit {
       duration: 3000
     });
     this.loader.present();
-    console.log("telefono " + this.miTelefono);
+    //console.log("telefono " + this.miTelefono);
     this.autentificarProvider.obtenerInformacionTelefono({ Telefono: this.miTelefono }).then(data => {
       this.loader.dismiss();
-      console.log(data);
+      //console.log(data);
       this.datos = data;
-      console.log('paso 1');
+      //console.log('paso 1');
       window.localStorage.setItem('isLogin', 'True');
       window.localStorage.setItem('usuario', JSON.stringify(this.datos.usuario));
       if (this.datos.info.comercio != null) {
-        console.log("*********************************+condicion true");
+        //console.log("*********************************+condicion true");
         window.localStorage.setItem('isComercio', 'True');
         window.localStorage.setItem('comercio', JSON.stringify(this.datos.info.comercio));
       } else {
-        console.log("*********************************condicion false");
+        //console.log("*********************************condicion false");
         window.localStorage.setItem('isComercio', 'False');
       }
-      console.log('paso 4');
+      //console.log('paso 4');
       window.localStorage.setItem('sincronizar', 'False');
       this.navCtrl.setRoot(InfoperfilPage);
     }, error => {
       this.loader.dismiss();
-      console.log(error);
+      //console.log(error);
     })*/
 
   }
@@ -140,16 +140,16 @@ export class VerificarPage implements OnInit, AfterViewInit {
       }).then((res) => {
         res.present();
         //LLAMAMOS AL  SERVICIO PARA VERIFICAR EL NUMERO INGRESADO
-        console.log("NUMERO A VERIFICAR " + this.profile.user_mobile);
+        //console.log("NUMERO A VERIFICAR " + this.profile.user_mobile);
 
         this.autentificacionService
           .verificNumberPhone({ telefono: this.profile.user_mobile }).subscribe(
             data => {
               res.dismiss(); //sierro el dialogo
-              console.log("LO QUE RETORNO LA VERIFICACION DEL NUMERO DE TELEFONO" + JSON.stringify(data));
+              //console.log("LO QUE RETORNO LA VERIFICACION DEL NUMERO DE TELEFONO" + JSON.stringify(data));
               //ASIGNO EL RETORNO A RESPUESTA
               this.respuesta = data;
-              console.log("this.respuesta.error " + this.respuesta.error);
+              //console.log("this.respuesta.error " + this.respuesta.error);
               if (this.respuesta.error == 0) {
                 this.traduccionMensajes("LblEnviandocodigosms", (traduccion) => {
                   this.loader = this.loadingCtrl.create({
@@ -157,20 +157,20 @@ export class VerificarPage implements OnInit, AfterViewInit {
                     duration: 5000
                   }).then((res2) => {
                     res2.present();
-                    console.log('ENVIO CODIGO ' + this.miCodigo);
+                    //console.log('ENVIO CODIGO ' + this.miCodigo);
                     this.autentificacionService
                       .sendSMS({ telefono: this.profile.user_mobile, codigo: this.miCodigo })
                       .subscribe(data2 => {
-                        console.log("lo que responde luego de enviar sms " + JSON.stringify(data));
+                        //console.log("lo que responde luego de enviar sms " + JSON.stringify(data));
                         //ASIGNO EL RETORNO A RESPUESTA
                         this.respuesta = data;
                         this.autentificacionService.verificarAcount(this.profile._id).subscribe(data => {
-                          console.log(JSON.stringify(data));
+                          //console.log(JSON.stringify(data));
                         });
 
                       });
                     res2.onDidDismiss().then((dis) => {
-                      console.log('Loading dismissed! after 2 Seconds', dis);
+                      //console.log('Loading dismissed! after 2 Seconds', dis);
                       this.OTP = this.miCodigo;
                       this.isenabledBotton = true;
                     });
@@ -202,7 +202,7 @@ export class VerificarPage implements OnInit, AfterViewInit {
           );
 
         res.onDidDismiss().then((dis) => {
-          console.log('Loading dismissed! after 2 Seconds', dis);
+          //console.log('Loading dismissed! after 2 Seconds', dis);
         });
       });
 
@@ -215,17 +215,17 @@ export class VerificarPage implements OnInit, AfterViewInit {
               //CERRAMOS EL LOADER
               this.loader.dismiss();
               //SALIMOS  POR CONSOLA
-              console.log("LO QUE RETORNO LA VERIFICACION DEL NUMERO DE TELEFONO" + JSON.stringify(data));
+              //console.log("LO QUE RETORNO LA VERIFICACION DEL NUMERO DE TELEFONO" + JSON.stringify(data));
               //ASIGNO EL RETORNO A RESPUESTA
               this.respuesta = data;
               //SI EL ERROR ES 0 EL TELEFONO ES VALIDO
-              console.log("this.respuesta.error " + this.respuesta.error);
+              //console.log("this.respuesta.error " + this.respuesta.error);
               if (this.respuesta.error == 0) {
                 //LLAMO EL SERVICIO PARA ENVIAR SMS CON EL NUMERO INGRESADO
                 this.autentificacionService.sendSMS({ telefono: this.miTelefono, codigo: this.miCodigo })
                   .subscribe(data => {
                     //loader.dismiss();
-                    console.log("lo que responde luego de enviar sms " + JSON.stringify(data));
+                    //console.log("lo que responde luego de enviar sms " + JSON.stringify(data));
                     //ASIGNO EL RETORNO A RESPUESTA
                     this.respuesta = data;
                     //SI LA OPERACION ES CORRECTA
@@ -239,7 +239,7 @@ export class VerificarPage implements OnInit, AfterViewInit {
                     }
                   }, error => {
                     this.loader.dismiss();
-                    console.log(error);
+                    //console.log(error);
                   })
               } else {
                 //SI EL TELEFONO NO ES VALIDO 
@@ -262,7 +262,7 @@ export class VerificarPage implements OnInit, AfterViewInit {
               }
             }, error => {
               this.loader.dismiss();
-              console.log(JSON.stringify(error));
+              //console.log(JSON.stringify(error));
             })*/
 
 
@@ -288,7 +288,7 @@ export class VerificarPage implements OnInit, AfterViewInit {
   }
 
   VerificarEvent() {
-    console.log('paso por el evento de verificar');
+    //console.log('paso por el evento de verificar');
     this.auth.registrarisLogin();
     //this.router.navigate(['/dashboard/buscador']);
   }

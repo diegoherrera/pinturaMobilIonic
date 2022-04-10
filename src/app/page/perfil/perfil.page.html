@@ -11,7 +11,7 @@
     </ion-button>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content style="height: 500px;">
   <form style="height: 100%;" (ngSubmit)="submitForm()" [formGroup]="slideOneForm" #testForm>
     <div>
       <div style="width: 100%; height: 200px; background-color: #0085CA;">
@@ -25,35 +25,49 @@
         </ion-avatar>
       </div>
       <ion-button (click)="captureImageGaleria()" size="smal"  expand="block">
-        <ion-icon name="save-outline"></ion-icon>&nbsp;Cargar Desde Galeria
+        <ion-icon name="save-outline"></ion-icon>&nbsp;{{ 'lblmenugaleria' | translate }}
       </ion-button>
-      <div padding>
-        <ion-item>
-          <ion-label position="floating">{{ 'lblfirstname' | translate }}</ion-label>
-          <ion-input formControlName="user_first" type="text"></ion-input>
-        </ion-item>
-        <ion-label style="padding: 10px;" color="danger"
-          *ngIf="slideOneForm.controls.user_first.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
-          {{ 'lblValidFirstName' | translate }} </ion-label>
-        <ion-item>
-          <ion-label position="floating">{{ 'lbllastname' | translate }}</ion-label>
-          <ion-input formControlName="user_last" type="text"></ion-input>
-        </ion-item>
-        <ion-label style="padding: 10px;" color="danger"
-          *ngIf="slideOneForm.controls.user_last.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
-          {{ 'lblValidLastName' | translate }} </ion-label>
-        <ion-item>
-          <ion-label position="floating">{{ 'lblusuario' | translate }}</ion-label>
-          <ion-input formControlName="usuario" type="text"></ion-input>
-        </ion-item>
-        <ion-label style="padding: 10px;" color="danger"
-          *ngIf="slideOneForm.controls.usuario.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
-          {{ 'lblvalidUsuario' | translate }} </ion-label>
-        <ion-item>
-          <ion-label position="floating">{{ 'lblclave' | translate }}</ion-label>
-          <ion-input formControlName="password" type="password"></ion-input>
-        </ion-item>
-        <ion-label style="padding: 10px;" color="danger"
+      <div>
+        <ion-segment (ionChange)="segmentChanged($event)">
+          <ion-segment-button value="Informacion">
+            <ion-label>{{ 'lblmenuinformacion' | translate }}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Idioma">
+            <ion-label>{{ 'lblmenuidioma' | translate }}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Comercializacion">
+            <ion-label>{{ 'lblmenucomercializacion' | translate }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+        <div #panel0 class="active">
+          <ion-item>
+            <ion-label position="floating">{{ 'lblfirstname' | translate }}</ion-label>
+            <ion-input formControlName="user_first" type="text"></ion-input>
+          </ion-item>
+          <ion-label style="padding: 10px;" color="danger"
+            *ngIf="slideOneForm.controls.user_first.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
+            {{ 'lblValidFirstName' | translate }} </ion-label>
+          <ion-item>
+            <ion-label position="floating">{{ 'lbllastname' | translate }}</ion-label>
+            <ion-input formControlName="user_last" type="text"></ion-input>
+          </ion-item>
+          <ion-label style="padding: 10px;" color="danger"
+            *ngIf="slideOneForm.controls.user_last.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
+            {{ 'lblValidLastName' | translate }} </ion-label>
+          <ion-item>
+            <ion-label position="floating">{{ 'lblusuario' | translate }}</ion-label>
+            <ion-input formControlName="usuario" type="text"></ion-input>
+          </ion-item>
+          <ion-label style="padding: 10px;" color="danger"
+            *ngIf="slideOneForm.controls.usuario.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
+            {{ 'lblvalidUsuario' | translate }} </ion-label>
+          <ion-item>
+            <ion-label position="floating">{{ 'lblclave' | translate }}</ion-label>
+            <ion-input formControlName="password" type="password"></ion-input>
+          </ion-item>
+        </div>
+        <div #panel1 class="inactive">
+          <ion-label style="padding: 10px;" color="danger"
           *ngIf="slideOneForm.controls.password.errors?.required && (slideOneForm.touched || slideOneForm.dirty)">*
           {{ 'lblvalidclave' | translate }} </ion-label>
         <ion-radio-group allow-empty-selection formControlName="idioma">
@@ -69,39 +83,47 @@
             <ion-radio slot="end" color="secondary" value="pg"></ion-radio>
           </ion-item>
         </ion-radio-group>
-        <ion-item>
-          <b>{{ 'lblComercializacion' | translate }}</b>
-        </ion-item>
-        <ion-item>
-          <ion-label>MX</ion-label>
-          <ion-checkbox formControlName="opcion1"></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>CA</ion-label>
-          <ion-checkbox formControlName="opcion2"></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>PA</ion-label>
-          <ion-checkbox formControlName="opcion3"></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>AR</ion-label>
-          <ion-checkbox formControlName="opcion4"></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>BZ</ion-label>
-          <ion-checkbox formControlName="opcion5"></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>MTZ</ion-label>
-          <ion-checkbox formControlName="opcion6"></ion-checkbox>
-        </ion-item>
+        </div>
+        <div #panel2 class="inactive">
+          <ion-item>
+            <b>{{ 'lblComercializacion' | translate }}</b>
+          </ion-item>
+          <ion-item>
+            <ion-label>MX</ion-label>
+            <ion-checkbox formControlName="opcion1"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>CA</ion-label>
+            <ion-checkbox formControlName="opcion2"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>PA</ion-label>
+            <ion-checkbox formControlName="opcion3"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>AR</ion-label>
+            <ion-checkbox formControlName="opcion4"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>BZ</ion-label>
+            <ion-checkbox formControlName="opcion5"></ion-checkbox>
+          </ion-item>
+          <!--<ion-item>
+            <ion-label>MTZ</ion-label>
+            <ion-checkbox formControlName="opcion6"></ion-checkbox>
+          </ion-item>-->
+        </div>
+        <ion-label style="padding: 10px;" color="danger" *ngIf="!validarCheckbox()"> {{ 'lblvalidCheckbox' | translate }}
+        </ion-label>
+        
+        
       </div>
-      <ion-label style="padding: 10px;" color="danger" *ngIf="!validarCheckbox()"> {{ 'lblvalidCheckbox' | translate }}
-      </ion-label>
+      
+      
     </div>
 
   </form>
+  
 </ion-content>
 <ion-footer>
   <!--<ion-button size="smal" type="submit" [disabled]="!slideOneForm.valid" expand="block">

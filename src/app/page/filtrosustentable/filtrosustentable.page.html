@@ -1,0 +1,96 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons (click)="dismiss()" slot="start">
+      <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-buttons>
+    <ion-title>{{ 'lblfiltrostitle' | translate }}</ion-title>
+  </ion-toolbar>  
+</ion-header>
+
+<ion-content>
+  <div #panel0 class="active">
+    <ion-list>
+      <ion-list-header lines="inset">
+        <ion-label>{{ 'lblfiltroProducto' | translate }}</ion-label>
+        <ion-button (click)="filtro(1)">Seleccionar</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset">
+        <ion-label>{{ 'lblfiltroProceso' | translate }}</ion-label>
+        <ion-button (click)="filtro(2)">Seleccionar</ion-button>
+      </ion-list-header>
+      <ion-list-header lines="inset">
+        <ion-label>{{ 'lblfiltroPolimero' | translate }}</ion-label>
+        <ion-button (click)="filtro(3)">Seleccionar</ion-button>
+      </ion-list-header>      
+    </ion-list>
+  </div>  
+  <div #panel3 class="inactive">
+    <ion-list>
+      <ion-item *ngFor="let item of PolimeroArray">
+        <!--<ion-avatar slot="start">
+          <img src="assets/p.png">
+        </ion-avatar>-->
+        <ion-label>
+          <div *ngIf="language=='es' else elsecategory_name">
+            <h2>{{item.polimerosustentable_name}}</h2>
+          </div>
+          <ng-template #elsecategory_name>
+            <h2>{{item.polimerosustentable_name_pg}}</h2>
+          </ng-template>
+        </ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </div>
+  <div #panel2 class="inactive">
+    <ion-list>
+      <ion-item *ngFor="let item of ProcesoArray">
+        <!--<ion-avatar slot="start">
+          <img src="assets/f.png">
+        </ion-avatar>-->
+        <ion-label>
+          <div *ngIf="language=='es' else elsefamily_name">
+            <h2>{{item.procesosustentables_name}}</h2>
+          </div>
+          <ng-template #elsefamily_name>
+            <h2>{{item.procesosustentables_name_pg}}</h2>
+          </ng-template>
+        </ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </div>
+  <div #panel1 class="inactive">
+    <ion-list>
+      <ion-item *ngFor="let item of ProductoArray">
+        <!--<ion-avatar slot="start">
+          <img src="assets/R.jpeg">
+        </ion-avatar>-->
+        <ion-label>
+          <div *ngIf="language=='es' else elseidiomsegment_name_pg">
+            <h2>{{item.productossustentables_name}}</h2>
+          </div>
+          <ng-template #elseidiomsegment_name_pg>
+            <h2>{{item.productossustentables_name_pg}}</h2>
+          </ng-template>
+        </ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="item.checked"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+<ion-footer *ngIf="!isprincial">
+  <ion-row>
+    <ion-col>
+      <div>
+        <ion-button (click)="agregarFiltro()" expand="block">{{ 'lblfiltrosbtnagregarfiltro' | translate }}</ion-button>
+      </div>
+    </ion-col>
+    <ion-col>
+      <div>
+        <ion-button (click)="cancelarFiltro()" expand="block">{{ 'lblfiltrosbtnCancel' | translate }}</ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+</ion-footer>

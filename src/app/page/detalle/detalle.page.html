@@ -6,10 +6,35 @@
     <ion-title>{{ 'titledetallepallete' | translate }}</ion-title>    
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content>  
+  <div style="position: relative; z-index: 10; padding: 5px;">    
+    <div *ngIf="coloractual !=''">
+      <b>{{ 'lblcodigocolor' | translate }}:</b> {{coloractual}}
+      <br>
+    </div>
+    <div *ngIf="indice !='' && indice !=undefined"><b>{{ 'lblindice' | translate }}:</b> {{indice}}
+      <br>
+    </div>
+    <div *ngIf="pantone !='' && pantone !=undefined"><b>{{ 'lblpantone' | translate }}:</b> {{pantone}}
+      <br>
+    </div>
+    <div *ngIf="fda !='' && fda !=undefined"><b>{{ 'lblfda' | translate }}:</b> {{fda}}
+      <br>
+    </div>
+    <div *ngIf="calimento !='' && calimento !=undefined"><b>{{ 'lblcalimento' | translate }}:</b> {{calimento}}
+      <br>
+    </div>
+    <div *ngIf="ldr !='' && ldr !=undefined"><b>{{ 'lblldr' | translate }}:</b> {{ldr}}
+      <br>
+    </div>
+    <div *ngIf="proceso !='' && proceso !=undefined"><b>{{ 'lblprocesocolor' | translate }}:</b> {{proceso}}
+      <br>
+    </div>
+    <div *ngIf="resistencia !='' && resistencia !=undefined"><b>{{ 'lblresistencia' | translate }}:</b> {{resistencia}}</div>    
+  </div>
+
   <div style=" width: 100%;height: {{altura}}px;width: 100%;text-align: center;background-color:{{ selected }} ; white-space: nowrap;">
-    <span class="helper"></span>
-    <!--<img src="{{ imagen }}" style="margin: auto;" class="img-logo">-->
+    
   </div>  
 </ion-content>
 <ion-footer>
@@ -20,11 +45,16 @@
     <span *ngIf="!isMenuOpen">&#9650;</span>
     <span *ngIf="isMenuOpen">&#9660;</span>
   </h2>
-  <div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'" style="height: 400px; overflow:scroll;">
     <ion-list>
       <ion-list-header lines="inset" *ngFor="let sectioinArray of data.colores">
-        <div style="width: 80%; height: 30px; color:white; background-color:{{ sectioinArray.color }} ;">
-         <pan style="padding: 10px; margin-top: 10px;vertical-align: middle;"> {{sectioinArray.description}}</pan>
+        <div style="width: 80%; height: 100%;white-space: break-spaces; color: black; background-color:{{ sectioinArray.color }} ;">
+          <div *ngIf="language=='es' else elsecategory_namexxx">
+            <pan style=" margin-top: 10px;vertical-align: middle;">{{sectioinArray.description}}</pan>
+          </div>
+          <ng-template #elsecategory_namexxx>
+            <pan style=" margin-top: 10px;vertical-align: middle;">{{sectioinArray.descriptionpg}}</pan>
+          </ng-template>         
         </div>
         <ion-button (click)="seleccionColor(sectioinArray)"> {{ 'lblbtnSeleccionColor' | translate }}</ion-button>
       </ion-list-header>      
